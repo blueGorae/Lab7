@@ -19,7 +19,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
 	wire [2:0]ALUOp;
 	wire MemtoReg;
 	wire MemRead;
-	//wire readM1;
+	wire readM1;
 	wire B_OP;
 	wire R_type, I_type, J_type, S_type, L_type;
 	wire is_wwd;
@@ -116,7 +116,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_cond);
 
     EX_MEM ex_mem( clk, reset_n, target_address, B_cond, ALU_Result, r_data2, rd, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
-    assign readM1 = 1; // TODO : stall implementation
+    //assign readM1 = 1; // TODO : stall implementation
     assign readM2 = MemRead ;
     assign writeM2 = MemWrite;
     assign address1 = (B_cond && B_OP) ? target_address : PC_next;
