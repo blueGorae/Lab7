@@ -119,7 +119,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_cond);
 
     EX_MEM ex_mem( clk, reset_n, target_address, B_cond, ALU_Result, r_data2, rd, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
-    assign readM1 = 1; // TODO : stall implementation
+    //assign readM1 = 1; // TODO : stall implementation
     assign readM2 = MemRead ;
     assign writeM2 = MemWrite;
     assign address1 = PC;
