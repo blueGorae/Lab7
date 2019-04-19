@@ -28,8 +28,8 @@ module MEM_WB( Clk, Reset_N, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB)
         MemData_reg <= `WORD_SIZE'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
-        MemtoReg <= 1'bz;
-        RegWrite <= 1'bz;
+        MemtoReg_reg <= 1'bz;
+        RegWrite_reg <= 1'bz;
         is_WB <= 0;        
     end
 

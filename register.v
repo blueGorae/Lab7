@@ -25,7 +25,7 @@ module register(Clk, Reset_N, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 			r[i] = 0;
 	end
 
-	always @(negedge reset_n) begin
+	always @(negedge Reset_N) begin
 		for (i = 0 ; i < 4 ; i = i + 1)
 			r[i] = 0;
 	end
