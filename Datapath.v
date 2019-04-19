@@ -106,7 +106,6 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     immGenerator immG(clk, reset_n, instruction, imm);
     register registers(clk, reset_n, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 
-    //ControlUnit ~~
     ControlUnit controlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
     ID_EX id_ex(clk, reset_n, PC_wire, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
     assign ALUIn_A = r_data1;
@@ -116,11 +115,11 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_cond);
 
     EX_MEM ex_mem( clk, reset_n, target_address, B_cond, ALU_Result, r_data2, rd, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
-    //assign readM1 = 1; // TODO : stall implementation
+    assign readM1 = 1; // TODO : stall implementation
     assign readM2 = MemRead ;
     assign writeM2 = MemWrite;
-    assign address1 = (B_cond && B_OP) ? target_address : PC_next;
-    assign address2 = (MemRead || MemWrite) ? ALU_Result : `WORD_SIZE'bz;
+    assign address1 = PC;
+    assign address2 = (MemRead || MemWrite) ? ALU_Result : `WORD_SIZE'b0;
     assign MemData = data2;
 
     MEM_WB mem_wb( clk, reset_n, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB);
