@@ -15,12 +15,12 @@ module IF_ID(clk, reset_n, PC, Instruction);
 
     initial begin
         PC_reg <= `WORD_SIZE'bz;
-        Instruction_reg <= `WORD_SIZE'bz0;
+        Instruction_reg <= `WORD_SIZE'b0;
     end
 
     always @(negedge reset_n) begin
         PC_reg <= `WORD_SIZE'bz;
-        Instruction_reg <= `WORD_SIZE'bz0;
+        Instruction_reg <= `WORD_SIZE'b0;
     end
 
     always @(posedge clk) begin

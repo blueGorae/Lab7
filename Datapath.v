@@ -43,7 +43,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
 	output [`WORD_SIZE-1:0] output_port;	// this will be used for a "WWD" instruction
 	output is_halted;
 
-    wire [`WORD_SIZE-1:0] instruction; //instruction
+    //wire [`WORD_SIZE-1:0] instruction; //instruction
     wire [`WORD_SIZE-1:0] MemData; // Data read from the memory
     reg [`WORD_SIZE-1:0] num_inst_reg;
     wire [1:0] rs;
@@ -69,7 +69,6 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     reg [`WORD_SIZE-1:0] PC;
     wire [`WORD_SIZE-1:0] PC_wire;
     wire [`WORD_SIZE-1:0] PC_next;
-    wire halted_op;
 
     assign is_halted = halted_op;
     
@@ -99,17 +98,17 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, opcode, PC_next);
 
     IF_ID if_id(clk, reset_n, PC_wire, data1);
-    assign instruction = data1;
+    //assign instruction = data1;
 
-    assign rs = instruction[11:10];
-    assign rt = instruction[9:8];
-    assign rd = J_type ? 2 : ( R_type ? instruction[7:6] : (( I_type || S_type ) ? instruction[9:8]: 2'bz)) ; 
-    assign opcode = instruction[`WORD_SIZE-1:12];
-    assign func = instruction[5:0];
-    immGenerator immG(clk, reset_n, instruction, imm);
+    assign rs = data1[11:10];
+    assign rt = data1[9:8];
+    assign rd = J_type ? 2 : ( R_type ? data1[7:6] : (( I_type || S_type ) ? data1[9:8]: 2'bz)) ; 
+    assign opcode = data1[`WORD_SIZE-1:12];
+    assign func = data1[5:0];
+    immGenerator immG(clk, reset_n, data1, imm);
     register registers(clk, reset_n, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 
-    ControlUnit controlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
+    ControlUnit controlUnit(clk, reset_n, data1, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
     
     ID_EX id_ex(clk, reset_n, PC_wire, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
     assign ALUIn_A = r_data1;
