@@ -48,7 +48,6 @@ module MEM_WB( clk, reset_n, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB)
         rd_reg <= rd;
         MemtoReg_reg <= MemtoReg;
         RegWrite_reg <= RegWrite;
-        is_WB <= 1;
     end
     
 endmodule // 

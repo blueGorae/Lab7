@@ -236,7 +236,7 @@ module Memory(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, 
 			end
 		else
 			begin
-				if(readM1)data1 <= (writeM2 & address1==address2)?data2:memory[address1];
+				if(readM1)data1 <= (writeM2 & address1==address2) ? data2:memory[address1];
 				if(readM2)outputData2 <= memory[address2];
 				if(writeM2)memory[address2] <= data2;															  
 			end
