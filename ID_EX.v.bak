@@ -9,7 +9,7 @@ module ID_EX(clk, reset_n, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB
     inout [1:0] rd;
     
     inout [2:0] ALUOp;
-    inout ALUSrcB;
+    inout [1:0] ALUSrcB;
     inout MemRead, MemWrite;
     inout B_OP;
     inout RegWrite;
