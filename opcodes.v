@@ -37,16 +37,11 @@
 `define INST_FUNC_JRL 6'd26
 
 // state stage
-`define IF1 4'd0
-`define IF2 4'd1
-`define IF3 4'd2
-`define ID 4'd3
-`define EX1 4'd4
-`define EX2 4'd5
-`define MEM1 4'd6
-`define MEM2 4'd7
-`define MEM3 4'd8
-`define WB 4'd9
+`define IF 3'd0
+`define ID 3'd1
+`define EX 3'd2
+`define MEM 3'd3
+`define WB 3'd4
 
 
 

@@ -1,15 +1,14 @@
 `include "opcodes.v"
 
-    module ALU(ALUIn_A, ALUIn_B, PCUpdate, B_OP, ALUOp, opcode, ALU_Result, B_cond, reset_n, clk);
+module ALU(Clk, Reset_N, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_cond);
 
 	input [`WORD_SIZE-1:0] ALUIn_A;
 	input [`WORD_SIZE-1:0] ALUIn_B;
-	input PCUpdate;
 	input B_OP;
 	input [2:0] ALUOp;
 	input [3:0] opcode;
-	input reset_n;
-	input clk;
+	input Reset_N;
+	input Clk;
 	
 	output [`WORD_SIZE-1:0] ALU_Result;
 	output	B_cond;
@@ -22,7 +21,8 @@
 		ALU_Result <= `WORD_SIZE'bz;
 		B_cond <= 0;
 	end
-	always @(negedge reset_n) begin
+
+	always @(negedge Reset_N) begin
 		ALU_Result <= `WORD_SIZE'bz;
 		B_cond <= 0;
 	end
@@ -30,11 +30,8 @@
 	// TODO: You should implement the functionality of ALU!
 	// (HINT: Use 'always @(...) begin ... end')
 
-	always @(posedge PCUpdate) begin
-		ALU_Result <= $signed(ALUIn_A) + $signed(ALUIn_B);
-	end
 
-	always @(posedge clk) begin
+	always @(posedge Clk) begin
 		if(B_OP)begin
 			B_cond = 0;
 			case (opcode) 

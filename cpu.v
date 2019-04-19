@@ -28,9 +28,11 @@ module cpu(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, dat
 	wire [`WORD_SIZE-1:0] output_port;
 	output is_halted;
 	wire is_halted;
+	
 	// TODO : Implement your pipelined CPU!
 
-	
+	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
+
 
 
 endmodule
