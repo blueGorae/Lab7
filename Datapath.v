@@ -7,7 +7,9 @@
 `include "EX_MEM.v"
 `include "MEM_WB.v"
 `include "Adder.v"
-module Datapath (Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
+
+module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, 
+RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, B_OP, is_wwd, R_type, I_type, J_type, S_type, L_type, num_inst, output_port, is_halted);
     
     wire ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg;
 

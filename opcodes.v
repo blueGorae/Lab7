@@ -35,6 +35,8 @@
 `define INST_FUNC_SHR 6'd7
 `define INST_FUNC_JPR 6'd25
 `define INST_FUNC_JRL 6'd26
+`define WWD 6'd28;
+`define HALT 6'd29;
 
 // state stage
 `define IF 3'd0
