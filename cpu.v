@@ -39,7 +39,6 @@ module cpu(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, dat
 	// TODO : Implement your pipelined CPU!
 
 
-
 	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
 
 

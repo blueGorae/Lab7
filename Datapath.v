@@ -11,7 +11,7 @@
 
 
 module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
-    
+    reg is_WB;
     wire RegWrite;
 	wire ALUSrcB;
 	wire MemWrite;
@@ -32,7 +32,7 @@ module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2,
     output [`WORD_SIZE-1:0] address1;	
 
     //Memory Data
-    inout [`WORD_SIZE-1:0] data1; 
+    inout [`WORD_SIZE-1:0] data2; 
     output readM2;
     output writeM2;								
     output [`WORD_SIZE-1:0] address2; //address that we refer
@@ -40,15 +40,6 @@ module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2,
     output [`WORD_SIZE-1:0] num_inst;		// number of instruction during execution (for debuging & testing purpose)
 	output [`WORD_SIZE-1:0] output_port;	// this will be used for a "WWD" instruction
 	output is_halted;
-
-    wire [`WORD_SIZE-1:0] data_out;
-    wire readM;									
-    wire writeM;								
-    wire [`WORD_SIZE-1:0] address;	
-
-    wire [`WORD_SIZE-1:0] num_inst;		// number of instruction during execution (for debuging & testing purpose)
-	wire [`WORD_SIZE-1:0] output_port;	// this will be used for a "WWD" instruction
-	wire is_halted;
 
     wire [`WORD_SIZE-1:0] instruction; //instruction
 
@@ -64,7 +55,6 @@ module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2,
 
     wire [`WORD_SIZE-1:0] target_address;
 
-
     wire [`WORD_SIZE-1:0] w_data;
     wire [`WORD_SIZE-1:0] r_data1; // register file from rs
     wire [`WORD_SIZE-1:0] r_data2; // register file from rt
@@ -78,35 +68,27 @@ module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2,
     reg [`WORD_SIZE-1:0] PC;
     wire [`WORD_SIZE-1:0] PC_next;
     
-
-    reg [2:0]current_state;
-    reg [2:0]next_state;
-
     initial 
     begin
 	    PC <= 0;
         num_inst_reg <= 0;     
-        instruction <= 0;
         MemData <= 0;
-        ALUOut <= 0;
-        current_state <= -1;
-        next_state <= 0;
+        is_WB <=0 ;
     end
 
     always @(negedge reset_n) begin
 	    PC <= 0;
         num_inst_reg <= 0;     
-        instruction <= 0;
         MemData <= 0;
-        ALUOut <= 0;
-        current_state <= -1;
-        next_state <= 0;
+        is_WB <=0 ;
     end
 
     
     //this is depends on previous clock control bits. careful
-    always @(posedge clk) begin
-        current_state <= next_state;
+    always @(*) begin
+        if(is_WB) begin
+            num_inst_reg = num_inst_reg + 1;
+        end
     end
 
     Adder add1(Clk, Reset_N, PC, 1, opcode, PC_next);
@@ -139,7 +121,7 @@ module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2,
     assign address2 = (MemRead || MemWrite) ? ALU_Result : `WORD_SIZE'bz;
     assign MemData = data2;
 
-    MEM_WB mem_wb( Clk, Reset_N, MemData, ALU_Result, rd, MemtoReg, RegWrite);
+    MEM_WB mem_wb( Clk, Reset_N, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB);
 
     assign w_data =  MemtoReg ? MemData : ALU_Result;
     assign output_port = r_data1;
