@@ -67,7 +67,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     wire B_cond; // Branch condition
 
     reg [`WORD_SIZE-1:0] PC;
-    wire[`WORD_SIZE-1:0] PC_wire;
+    wire [`WORD_SIZE-1:0] PC_wire;
     wire [`WORD_SIZE-1:0] PC_next;
     
     initial 
