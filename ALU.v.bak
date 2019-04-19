@@ -62,4 +62,5 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_co
 			default : ALU_Result <= `WORD_SIZE'bz;
 		endcase
 	end	
+
 endmodule
