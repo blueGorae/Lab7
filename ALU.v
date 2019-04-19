@@ -54,10 +54,12 @@ module ALU(Clk, Reset_N, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_co
 			`FUNC_TCP: ALU_Result <= ~$signed(ALUIn_A)  + 1;
 			`FUNC_SHL: ALU_Result <= $signed(ALUIn_A)  << 1;
 			`FUNC_SHR: ALU_Result <= $signed(ALUIn_A) >>> 1;
+			default : ALU_Result <= `WORD_SIZE'bz;
 		endcase
 
 		case (opcode) 
 			`LHI_OP : ALU_Result <= (ALUIn_B)  << 8;
+			default : ALU_Result <= `WORD_SIZE'bz;
 		endcase
 	end	
 
