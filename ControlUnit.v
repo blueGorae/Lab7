@@ -41,7 +41,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	    ALUOp <= 3'b0;
 	    MemtoReg <= 1'b0;
 	    MemRead <= 1'b0;
-	    readM1 <= 1'b0;
+	    readM1 <= 1'b1;
 	    B_OP <= 1'b0;
 	    R_type <= 1'b0;
 	    I_type <= 1'b0;
@@ -60,7 +60,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	    ALUOp <= 3'b0;
 	    MemtoReg <= 1'b0;
 	    MemRead <= 1'b0;
-	    readM1 <= 1'b0;
+	    readM1 <= 1'b1;
 	    B_OP <= 1'b0;
 	    R_type <= 1'b0;
 	    I_type <= 1'b0;
