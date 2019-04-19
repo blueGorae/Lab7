@@ -49,7 +49,7 @@ module ControlUnit(Clk, Reset_N, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	    S_type <= 1'bz;
 	    L_type <= 1'bz;
 	    is_wwd <= 1'bz;
-        halted_op <= 1'bz;;
+        halted_op <= 1'bz;
 	end
 	
 	//when reset was set, initialize each value. 
@@ -68,7 +68,7 @@ module ControlUnit(Clk, Reset_N, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	    S_type <= 1'bz;
 	    L_type <= 1'bz;
 	    is_wwd <= 1'bz;
-        halted_op <= 1'bz;;
+        halted_op <= 1'bz;
 	end
 
 	always @(posedge Clk) begin
