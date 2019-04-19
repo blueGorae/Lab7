@@ -11,13 +11,6 @@ module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd, Me
     inout B_OP;
     inout RegWrite;
     inout MemtoReg;
-
-    //control bits
-    inout MemRead = MemRead_reg;
-    inout MemWrite = MemWrite_reg;
-    inout B_OP = B_OP_reg;
-    inout RegWrite = RegWrite_reg;
-    inout PCSource = PCSource_reg;
     
 
     reg [`WORD_SIZE-1 : 0] target_address_reg;

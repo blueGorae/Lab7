@@ -43,9 +43,9 @@ module ID_EX(Clk, Reset_N, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB
 
     initial begin
         PC_reg <= `WORD_SIZE'bz;
-        r_data1_reg <= `WORD_SIZE'bz';
+        r_data1_reg <= `WORD_SIZE'bz;
         r_data2_reg <= `WORD_SIZE'bz;
-        imm_reg <= `WORD_SIZE'bz';
+        imm_reg <= `WORD_SIZE'bz;
         opcode_reg <= 4'bz;
         rd_reg <= 2'bz;
         ALUOp_reg <= 3'bz;
@@ -59,9 +59,9 @@ module ID_EX(Clk, Reset_N, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB
 
     always @(negedge Reset_N) begin
         PC_reg <= `WORD_SIZE'bz;
-        r_data1_reg <= `WORD_SIZE'bz';
+        r_data1_reg <= `WORD_SIZE'bz;
         r_data2_reg <= `WORD_SIZE'bz;
-        imm_reg <= `WORD_SIZE'bz';
+        imm_reg <= `WORD_SIZE'bz;
         opcode_reg <= 4'bz;
         rd_reg <= 2'bz;
         ALUOp_reg <= 3'bz;
