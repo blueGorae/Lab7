@@ -56,12 +56,9 @@ module ALU(Clk, Reset_N, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_co
 			`FUNC_SHR: ALU_Result <= $signed(ALUIn_A) >>> 1;
 		endcase
 
-		if(!PCUpdate) begin
-			case (opcode) 
-					`JMP_OP : ALU_Result <= ($signed(ALUIn_A)  & (16'hf000)) | $signed(ALUIn_B);
-					`JAL_OP : ALU_Result <= ($signed(ALUIn_A)  & (16'hf000)) | $signed(ALUIn_B);
-					`LHI_OP : ALU_Result <= (ALUIn_B)  << 8;
-			endcase
+		case (opcode) 
+			`LHI_OP : ALU_Result <= (ALUIn_B)  << 8;
+		endcase
 		end
 
 
