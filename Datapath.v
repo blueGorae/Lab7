@@ -7,12 +7,22 @@
 `include "EX_MEM.v"
 `include "MEM_WB.v"
 `include "Adder.v"
+`include "ControlUnit.v"
 
-module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, 
-RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, B_OP, is_wwd, R_type, I_type, J_type, S_type, L_type, num_inst, output_port, is_halted);
+
+module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
     
-    wire ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg;
-
+    wire RegWrite;
+	wire ALUSrcB;
+	wire MemWrite;
+	wire [2:0]ALUOp;
+	wire MemtoReg;
+	wire MemRead;
+	//wire readM1;
+	wire B_OP;
+	wire R_type, I_type, J_type, S_type, L_type;
+	wire is_wwd;
+    wire is_halted;
 
     input Reset_N, Clk; 
 
@@ -113,6 +123,7 @@ RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, B_OP, is_wwd, R_type, I_t
     register registers(Clk, Reset_N, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 
     //ControlUnit ~~
+    ControlUnit controlUnit(Clk, Reset_N, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, is_halted, R_type, I_type, J_type, S_type, L_type);
     ID_EX id_ex(Clk, Reset_N, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
     assign ALUIn_A = r_data1;
     assign ALUIn_B = ALUSrcB ? imm : r_data2;
