@@ -6,21 +6,20 @@ module cpu(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, dat
 	wire Clk;
 	input Reset_N;
 	wire Reset_N;
-lll
-	output readM1;
+	output readM1; // instruction fetch
 	wire readM1;
-	output [`WORD_SIZE-1:0] address1;
+	output [`WORD_SIZE-1:0] address1; //instruction fetch
 	wire [`WORD_SIZE-1:0] address1;
-	output readM2;
+	output readM2; // load 
 	wire readM2;
-	output writeM2;
+	output writeM2; //store
 	wire writeM2;
-	output [`WORD_SIZE-1:0] address2;
+	output [`WORD_SIZE-1:0] address2; //load or store
 	wire [`WORD_SIZE-1:0] address2;
 
-	input [`WORD_SIZE-1:0] data1;
+	input [`WORD_SIZE-1:0] data1; // instruction
 	wire [`WORD_SIZE-1:0] data1;
-	inout [`WORD_SIZE-1:0] data2;
+	inout [`WORD_SIZE-1:0] data2; //memory data
 	wire [`WORD_SIZE-1:0] data2;
 
 	output [`WORD_SIZE-1:0] num_inst;
@@ -30,5 +29,8 @@ lll
 	output is_halted;
 	wire is_halted;
 	// TODO : Implement your pipelined CPU!
+
+	
+
 
 endmodule
