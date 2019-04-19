@@ -93,13 +93,10 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
             num_inst_reg = num_inst_reg + 1;
         end
     end
-    always @(posedge clk) begin
-        PC <= (B_cond && B_OP) ? target_address : PC_next;
-    end
 
     assign is_WB = is_WB_reg;
     assign PC_wire = PC;
-    Adder add1(clk, reset_n, PC_wire, 1, opcode, PC_next);
+    Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, opcode, PC_next);
 
     IF_ID if_id(clk, reset_n, PC_wire, data1);
     assign instruction = data1;
@@ -112,7 +109,6 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     immGenerator immG(clk, reset_n, instruction, imm);
     register registers(clk, reset_n, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 
-    //ControlUnit ~~
     ControlUnit controlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
     
     ID_EX id_ex(clk, reset_n, PC_wire, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
