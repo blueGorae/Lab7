@@ -35,40 +35,40 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	assign func = instruction[5:0];
 
 	initial begin
-	    RegWrite <= 1'bz;
-	    ALUSrcB <= 1'bz;
-	    MemWrite <= 1'bz;
-	    ALUOp <= 3'bz;
-	    MemtoReg <= 1'bz;
-	    MemRead <= 1'bz;
-	    readM1 <= 1'bz;
+	    RegWrite <= 1'b0;
+	    ALUSrcB <= 1'b0;
+	    MemWrite <= 1'b0;
+	    ALUOp <= 3'b0;
+	    MemtoReg <= 1'b0;
+	    MemRead <= 1'b0;
+	    readM1 <= 1'b0;
 	    B_OP <= 1'b0;
-	    R_type <= 1'bz;
-	    I_type <= 1'bz;
-	    J_type <= 1'bz;
-	    S_type <= 1'bz;
-	    L_type <= 1'bz;
-	    is_wwd <= 1'bz;
-        halted_op <= 1'bz;
+	    R_type <= 1'b0;
+	    I_type <= 1'b0;
+	    J_type <= 1'b0;
+	    S_type <= 1'b0;
+	    L_type <= 1'b0;
+	    is_wwd <= 1'b0;
+        halted_op <= 1'b0;
 	end
 	
 	//when reset was set, initialize each value. 
 	always @ (negedge reset_n) begin
-	    RegWrite <= 1'bz;
-	    ALUSrcB <= 1'bz;
-	    MemWrite <= 1'bz;
-	    ALUOp <= 3'bz;
-	    MemtoReg <= 1'bz;
-	    MemRead <= 1'bz;
-	    readM1 <= 1'bz;
+	    RegWrite <= 1'b0;
+	    ALUSrcB <= 1'b0;
+	    MemWrite <= 1'b0;
+	    ALUOp <= 3'b0;
+	    MemtoReg <= 1'b0;
+	    MemRead <= 1'b0;
+	    readM1 <= 1'b0;
 	    B_OP <= 1'b0;
-	    R_type <= 1'bz;
-	    I_type <= 1'bz;
-	    J_type <= 1'bz;
-	    S_type <= 1'bz;
-	    L_type <= 1'bz;
-	    is_wwd <= 1'bz;
-        halted_op <= 1'bz;
+	    R_type <= 1'b0;
+	    I_type <= 1'b0;
+	    J_type <= 1'b0;
+	    S_type <= 1'b0;
+	    L_type <= 1'b0;
+	    is_wwd <= 1'b0;
+        halted_op <= 1'b0;
 	end
 
 	always @(posedge clk) begin
