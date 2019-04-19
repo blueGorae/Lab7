@@ -90,13 +90,10 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
             num_inst_reg = num_inst_reg + 1;
         end
     end
-    always @(posedge clk) begin
-        PC <= (B_cond && B_OP) ? target_address : PC_next;
-    end
 
     assign is_WB = is_WB_reg;
     assign PC_wire = PC;
-    Adder add1(clk, reset_n, PC_wire, 1, opcode, PC_next);
+    Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, opcode, PC_next);
 
     IF_ID if_id(clk, reset_n, PC_wire, data1);
     assign instruction = data1;
@@ -122,7 +119,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     assign readM1 = 1; // TODO : stall implementation
     assign readM2 = MemRead ;
     assign writeM2 = MemWrite;
-    assign address1 = PC;
+    assign address1 = (B_cond && B_OP) ? target_address : PC_next;
     assign address2 = (MemRead || MemWrite) ? ALU_Result : `WORD_SIZE'bz;
     assign MemData = data2;
 
