@@ -12,6 +12,14 @@ module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd, Me
     inout RegWrite;
     inout MemtoReg;
 
+    //control bits
+    inout MemRead = MemRead_reg;
+    inout MemWrite = MemWrite_reg;
+    inout B_OP = B_OP_reg;
+    inout RegWrite = RegWrite_reg;
+    inout PCSource = PCSource_reg;
+    
+
     reg [`WORD_SIZE-1 : 0] target_address_reg;
     reg B_cond_reg;
     reg [`WORD_SIZE-1 : 0] ALU_Result_reg;
@@ -53,6 +61,11 @@ module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd, Me
         ALU_Result_reg <= `WORD_SIZE'bz;
         r_data2_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
+        MemRead_reg <= 1'bz;
+        MemWrite_reg <= 1'bz;
+        B_OP_reg <= 1'bz;
+        RegWrite_reg <= 1'bz;
+        MemtoReg_reg <= 1'bz;
     end
 
     always @(posedge Clk) begin
@@ -61,6 +74,11 @@ module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd, Me
         ALU_Result_reg <= ALU_Result;
         r_data2_reg <= r_data2;
         rd_reg <= rd;
+        MemRead_reg <= MemRead;
+        MemWrite_reg <= MemWrite;
+        B_OP_reg <= B_OP;
+        RegWrite_reg <= RegWrite;
+        MemtoReg_reg <= MemtoReg;
     end
-    
+
 endmodule // 
