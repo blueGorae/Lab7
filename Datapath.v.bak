@@ -91,7 +91,6 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
         end
     end
 
-    assign is_WB = is_WB_reg;
     assign PC_wire = PC;
     Adder add1(clk, reset_n, PC_wire, 1, opcode, PC_next);
 
