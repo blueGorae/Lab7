@@ -14,11 +14,11 @@ module immGenerator(clk, reset_n, instruction, imm) ;
       imm <= 0;
     end
 
-
+ 
     always @(*) begin
       case(opcode)
         `JMP_OP : imm <= instruction[11:0];
-      	`JAL_OP : imm <= instruction[11:0];
+      `JAL_OP : imm <= instruction[11:0];
         `ADI_OP : imm <= $signed(instruction[7:0]);
         `ORI_OP : imm <= $signed(instruction[7:0]);
         `LHI_OP : imm <= $signed(instruction[7:0]);
