@@ -69,6 +69,9 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     reg [`WORD_SIZE-1:0] PC;
     wire [`WORD_SIZE-1:0] PC_wire;
     wire [`WORD_SIZE-1:0] PC_next;
+    wire halted_op;
+
+    assign is_halted = halted_op;
     
     initial 
     begin
@@ -111,6 +114,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
 
     //ControlUnit ~~
     ControlUnit controlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
+    
     ID_EX id_ex(clk, reset_n, PC_wire, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
     assign ALUIn_A = r_data1;
     assign ALUIn_B = ALUSrcB ? imm : r_data2;
