@@ -13,14 +13,19 @@ module IF_ID(Clk, Reset_N, PC, Instruction);
     assign PC = PC_reg;
     assign Instruction = Instruction_reg;
 
+    initial begin
+        PC_reg <= `WORD_SIZE'bz;
+        Instruction_reg <= `WORD_SIZE'bz0;
+    end
+
     always @(negedge Reset_N) begin
-        PC_reg = `WORD_SIZE'bz;
-        Instruction_reg = `WORD_SIZE'bz0;
+        PC_reg <= `WORD_SIZE'bz;
+        Instruction_reg <= `WORD_SIZE'bz0;
     end
 
     always @(posedge Clk) begin
-        PC_reg = PC;
-        Instruction_reg = Instruction;
+        PC_reg <= PC;
+        Instruction_reg <= Instruction;
     end
 
 endmodule
