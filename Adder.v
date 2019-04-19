@@ -18,9 +18,9 @@ module Adder(Clk, Reset_N, ADDIn_A, ADDIn_B, opcode, ADD_Result);
 
     always @(*) begin
         case (opcode) 
-			`JMP_OP : ADD_Result <= ($signed(ALUIn_A)  & (16'hf000)) | $signed(ALUIn_B);
-			`JAL_OP : ADD_Result <= ($signed(ALUIn_A)  & (16'hf000)) | $signed(ALUIn_B);
-            default : ADD_Result <= ALUIn_A + ALUIn_B;
+			`JMP_OP : ADD_Result <= ($signed(ADDIn_A)  & (16'hf000)) | $signed(ADDIn_B);
+			`JAL_OP : ADD_Result <= ($signed(ADDIn_A)  & (16'hf000)) | $signed(ADDIn_B);
+            default : ADD_Result <= $signed(ADDIn_A) + $signed(ADDIn_B);
         endcase
     end
     

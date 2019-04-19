@@ -59,10 +59,6 @@ module ALU(Clk, Reset_N, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_co
 		case (opcode) 
 			`LHI_OP : ALU_Result <= (ALUIn_B)  << 8;
 		endcase
-		end
-
-
 	end	
 
-    
 endmodule
