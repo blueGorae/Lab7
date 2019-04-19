@@ -10,11 +10,11 @@ module Adder(clk, reset_n, ADDIn_A, ADDIn_B, opcode, ADD_Result);
 	reg [`WORD_SIZE-1:0] ADD_Result;
 
     initial begin
-        ADD_Result <= `WORD_SIZE'bz;
+        ADD_Result <= `WORD_SIZE'b0;
     end
 
     always @(negedge reset_n) begin
-        ADD_Result <= `WORD_SIZE'bz;
+        ADD_Result <= `WORD_SIZE'b0;
     end
 
     always @(*) begin
