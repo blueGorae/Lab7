@@ -1,12 +1,20 @@
 `include "opcodes.v"
 
-module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd);
+module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd, );
     input Clk, Reset_N;
     inout [`WORD_SIZE-1 : 0] target_address;
     inout B_cond;
     inout [`WORD_SIZE-1 : 0] ALU_Result;
     inout [`WORD_SIZE-1 : 0] r_data2;
     inout [1:0] rd;
+
+    //control bits
+    inout MemRead = MemRead_reg;
+    inout MemWrite = MemWrite_reg;
+    inout B_OP = B_OP_reg;
+    inout RegWrite = RegWrite_reg;
+    inout PCSource = PCSource_reg;
+    
 
     reg [`WORD_SIZE-1 : 0] target_address_reg;
     reg B_cond_reg;
@@ -43,5 +51,5 @@ module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd);
         r_data2_reg <= r_data2;
         rd_reg <= rd;
     end
-    
+
 endmodule // 
