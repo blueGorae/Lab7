@@ -19,7 +19,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
 	wire [2:0]ALUOp;
 	wire MemtoReg;
 	wire MemRead;
-	//wire readM1;
+	wire readM1;
 	wire B_OP;
 	wire R_type, I_type, J_type, S_type, L_type;
 	wire is_wwd;
@@ -123,7 +123,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     assign readM2 = MemRead ;
     assign writeM2 = MemWrite;
     assign address1 = PC;
-    assign address2 = (MemRead || MemWrite) ? ALU_Result : `WORD_SIZE'bz;
+    assign address2 = (MemRead || MemWrite) ? ALU_Result : `WORD_SIZE'b0;
     assign MemData = data2;
 
     MEM_WB mem_wb( clk, reset_n, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB);
