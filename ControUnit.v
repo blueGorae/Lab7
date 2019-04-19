@@ -85,8 +85,8 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 			`INST_FUNC_SHR : ALUOp <= `FUNC_SHR ;
 			`INST_FUNC_JPR : ALUOp <= `FUNC_ADD ; 
 			`INST_FUNC_JRL : ALUOp <= `FUNC_ADD ;
-            `WWD :  is_wwd <= 1;
-            `HALT : halted_op <= 1;
+            6'd28:  is_wwd <= 1;
+            6'd29 : halted_op <= 1;
             default : ALUOp <= 3'bz;
 		endcase
 
