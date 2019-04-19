@@ -28,6 +28,7 @@ module immGenerator(clk, reset_n, instruction, imm) ;
         `BEQ_OP	: imm <= $signed(instruction[7:0]);
         `BGZ_OP	: imm <= $signed(instruction[7:0]);
         `BLZ_OP : imm <= $signed(instruction[7:0]);
+        default : imm <= 0;
       endcase
     end
 endmodule
