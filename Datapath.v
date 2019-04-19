@@ -22,7 +22,7 @@ module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2,
 	wire B_OP;
 	wire R_type, I_type, J_type, S_type, L_type;
 	wire is_wwd;
-    wire is_halted;
+    wire halted_op;
 
     input Reset_N, Clk; 
 
@@ -123,7 +123,7 @@ module	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2,
     register registers(Clk, Reset_N, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 
     //ControlUnit ~~
-    ControlUnit controlUnit(Clk, Reset_N, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, is_halted, R_type, I_type, J_type, S_type, L_type);
+    ControlUnit controlUnit(Clk, Reset_N, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
     ID_EX id_ex(Clk, Reset_N, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
     assign ALUIn_A = r_data1;
     assign ALUIn_B = ALUSrcB ? imm : r_data2;
