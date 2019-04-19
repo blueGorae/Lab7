@@ -1,14 +1,14 @@
 `include "opcodes.v"
 
-module ALU(Clk, Reset_N, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_cond);
+module ALU(clk, reset_n, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_cond);
 
 	input [`WORD_SIZE-1:0] ALUIn_A;
 	input [`WORD_SIZE-1:0] ALUIn_B;
 	input B_OP;
 	input [2:0] ALUOp;
 	input [3:0] opcode;
-	input Reset_N;
-	input Clk;
+	input reset_n;
+	input clk;
 	
 	output [`WORD_SIZE-1:0] ALU_Result;
 	output	B_cond;
@@ -22,7 +22,7 @@ module ALU(Clk, Reset_N, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_co
 		B_cond <= 0;
 	end
 
-	always @(negedge Reset_N) begin
+	always @(negedge reset_n) begin
 		ALU_Result <= `WORD_SIZE'bz;
 		B_cond <= 0;
 	end
@@ -31,7 +31,7 @@ module ALU(Clk, Reset_N, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_co
 	// (HINT: Use 'always @(...) begin ... end')
 
 
-	always @(posedge Clk) begin
+	always @(posedge clk) begin
 		if(B_OP)begin
 			B_cond = 0;
 			case (opcode) 

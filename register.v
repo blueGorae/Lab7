@@ -1,13 +1,13 @@
 `include "opcodes.v"
 
-module register(Clk, Reset_N, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
+module register(clk, reset_n, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 	
 	input [1:0] rs;
 	input [1:0] rt;
 	input [1:0] rd;
 	input [`WORD_SIZE-1:0] w_data;
 	input RegWrite;
-	input Reset_N, Clk;
+	input reset_n, clk;
 
 	output [`WORD_SIZE-1:0] r_data1;
 	output [`WORD_SIZE-1:0] r_data2;
@@ -25,7 +25,7 @@ module register(Clk, Reset_N, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 			r[i] = 0;
 	end
 
-	always @(negedge Reset_N) begin
+	always @(negedge reset_n) begin
 		for (i = 0 ; i < 4 ; i = i + 1)
 			r[i] = 0;
 	end

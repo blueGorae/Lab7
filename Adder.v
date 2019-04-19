@@ -1,7 +1,7 @@
 `include "opcodes.v"
 
-module Adder(Clk, Reset_N, ADDIn_A, ADDIn_B, opcode, ADD_Result);
-    input Clk, Reset_N;
+module Adder(clk, reset_n, ADDIn_A, ADDIn_B, opcode, ADD_Result);
+    input clk, reset_n;
     input [`WORD_SIZE-1 :0] ADDIn_A, ADDIn_B;
     input [3:0] opcode;
 
@@ -12,7 +12,7 @@ module Adder(Clk, Reset_N, ADDIn_A, ADDIn_B, opcode, ADD_Result);
         ADD_Result <= `WORD_SIZE'bz;
     end
 
-    always @(negedge Reset_N) begin
+    always @(negedge reset_n) begin
         ADD_Result <= `WORD_SIZE'bz;
     end
 

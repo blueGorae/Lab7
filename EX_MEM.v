@@ -1,7 +1,7 @@
 `include "opcodes.v"
 
-module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
-    input Clk, Reset_N;
+module EX_MEM( clk, reset_n, target_address, B_cond, ALU_Result, r_data2, rd, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
+    input clk, reset_n;
     inout [`WORD_SIZE-1 : 0] target_address;
     inout B_cond;
     inout [`WORD_SIZE-1 : 0] ALU_Result;
@@ -48,7 +48,7 @@ module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd, Me
         MemtoReg_reg <= 1'bz;
     end
 
-    always @(negedge Reset_N) begin
+    always @(negedge reset_n) begin
         target_address_reg <= `WORD_SIZE'bz;
         B_cond_reg <= 1'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
@@ -61,7 +61,7 @@ module EX_MEM( Clk, Reset_N, target_address, B_cond, ALU_Result, r_data2, rd, Me
         MemtoReg_reg <= 1'bz;
     end
 
-    always @(posedge Clk) begin
+    always @(posedge clk) begin
         target_address_reg <= target_address;
         B_cond_reg <= B_cond;
         ALU_Result_reg <= ALU_Result;

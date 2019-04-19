@@ -5,12 +5,12 @@
 `timescale 1ns/1ns
 //`define WORD_SIZE 16    // data and address word size
 
-module cpu(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
+module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
 
-	input Clk;
-	wire Clk;
-	input Reset_N;
-	wire Reset_N;
+	input clk;
+	wire clk;
+	input reset_n;
+	wire reset_n;
 	output readM1; // instruction fetch
 	wire readM1;
 	output [`WORD_SIZE-1:0] address1; //instruction fetch
@@ -39,7 +39,7 @@ module cpu(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, dat
 	// TODO : Implement your pipelined CPU!
 
 
-	Datapath datapath(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
+	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
 
 
 

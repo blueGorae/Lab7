@@ -1,8 +1,8 @@
 `include "opcodes.v"
 
-module MEM_WB( Clk, Reset_N, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB);
+module MEM_WB( clk, reset_n, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB);
 
-    input Clk, Reset_N;
+    input clk, reset_n;
     inout [`WORD_SIZE-1 : 0] MemData;
     inout [`WORD_SIZE-1 : 0] ALU_Result;
     inout [1:0] rd;
@@ -33,7 +33,7 @@ module MEM_WB( Clk, Reset_N, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB)
         is_WB <= 0;        
     end
 
-    always @(negedge Reset_N) begin
+    always @(negedge reset_n) begin
         MemData_reg <= `WORD_SIZE'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
@@ -42,7 +42,7 @@ module MEM_WB( Clk, Reset_N, MemData, ALU_Result, rd, MemtoReg, RegWrite, is_WB)
         is_WB <= 0;
     end
 
-    always @(posedge Clk) begin
+    always @(posedge clk) begin
         MemData_reg <= MemData;
         ALU_Result_reg <= ALU_Result;
         rd_reg <= rd;

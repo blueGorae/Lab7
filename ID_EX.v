@@ -1,7 +1,7 @@
 `include "opcodes.v"
 
-module ID_EX(Clk, Reset_N, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
-    input Clk, Reset_N;
+module ID_EX(clk, reset_n, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
+    input clk, reset_n;
     inout [`WORD_SIZE-1:0] PC;
     inout [`WORD_SIZE-1:0] r_data1, r_data2, imm;
     inout [3:0] opcode;
@@ -57,7 +57,7 @@ module ID_EX(Clk, Reset_N, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB
         MemtoReg_reg <= 2'bz;
     end
 
-    always @(negedge Reset_N) begin
+    always @(negedge reset_n) begin
         PC_reg <= `WORD_SIZE'bz;
         r_data1_reg <= `WORD_SIZE'bz;
         r_data2_reg <= `WORD_SIZE'bz;
@@ -73,7 +73,7 @@ module ID_EX(Clk, Reset_N, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB
         MemtoReg_reg <= 2'bz;
     end
 
-    always @(posedge Clk) begin
+    always @(posedge clk) begin
         PC_reg <= PC;
         r_data1_reg <= r_data1;
         r_data2_reg <= r_data2;

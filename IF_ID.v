@@ -1,7 +1,7 @@
 `include "opcodes.v"
 
-module IF_ID(Clk, Reset_N, PC, Instruction);
-    input Clk, Reset_N;
+module IF_ID(clk, reset_n, PC, Instruction);
+    input clk, reset_n;
     inout [`WORD_SIZE-1:0] PC, Instruction;
     
     reg [`WORD_SIZE-1:0] PC_reg;
@@ -18,12 +18,12 @@ module IF_ID(Clk, Reset_N, PC, Instruction);
         Instruction_reg <= `WORD_SIZE'bz0;
     end
 
-    always @(negedge Reset_N) begin
+    always @(negedge reset_n) begin
         PC_reg <= `WORD_SIZE'bz;
         Instruction_reg <= `WORD_SIZE'bz0;
     end
 
-    always @(posedge Clk) begin
+    always @(posedge clk) begin
         PC_reg <= PC;
         Instruction_reg <= Instruction;
     end

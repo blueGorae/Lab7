@@ -1,9 +1,9 @@
 `include "opcodes.v"
 
-module ControlUnit(Clk, Reset_N, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
+module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
 
 	inout [`WORD_SIZE-1:0] instruction;
-	input Reset_N, Clk;
+	input reset_n, clk;
 	
 	output RegWrite;
 	output ALUSrcB;
@@ -53,7 +53,7 @@ module ControlUnit(Clk, Reset_N, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	end
 	
 	//when reset was set, initialize each value. 
-	always @ (negedge Reset_N) begin
+	always @ (negedge reset_n) begin
 	    RegWrite <= 1'bz;
 	    ALUSrcB <= 1'bz;
 	    MemWrite <= 1'bz;
@@ -71,7 +71,7 @@ module ControlUnit(Clk, Reset_N, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
         halted_op <= 1'bz;
 	end
 
-	always @(posedge Clk) begin
+	always @(posedge clk) begin
 	    is_wwd <= 0;
         halted_op <= 0;
 		case (func)
