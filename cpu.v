@@ -6,7 +6,7 @@ module cpu(Clk, Reset_N, readM1, address1, data1, readM2, writeM2, address2, dat
 	wire Clk;
 	input Reset_N;
 	wire Reset_N;
-
+lll
 	output readM1;
 	wire readM1;
 	output [`WORD_SIZE-1:0] address1;
