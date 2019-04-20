@@ -169,13 +169,11 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign is_WB = is_WB_reg;
 
     always@(posedge clk) begin
-        if(reset_n && i == 0) begin
-            PC = 0;
-            i = i + 1;
-        end
-		else if(reset_n)begin
-            PC = (PCSrc_EX_MEM_out==2) ? r_data1_EX_MEM_out : (((B_cond_EX_MEM_out && B_OP_EX_MEM_out) || (PCSrc_EX_MEM_out == 1)) ? target_address_EX_MEM_out : PC_next) ;
-        end
+        // if(reset_n && i == 0) begin
+        //     PC = 0;
+        //     i = i + 1;
+        // end
+        PC = (PCSrc_EX_MEM_out==2) ? r_data1_EX_MEM_out : (((B_cond_EX_MEM_out && B_OP_EX_MEM_out) || (PCSrc_EX_MEM_out == 1)) ? target_address_EX_MEM_out : PC_next) ;
         
     end
     
