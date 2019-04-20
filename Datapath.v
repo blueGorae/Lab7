@@ -194,6 +194,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     assign PC_ID_EX_in = PC_IF_ID_out;
     assign rd_ID_EX_in = rd;
+    assign is_wwd_ID_EX_in = is_wwd;
 
     ID_EX id_ex(clk, reset_n, flush_signal, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rd_ID_EX_in, PCSrc_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, B_OP_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, is_wwd_ID_EX_in, is_done_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rd_ID_EX_out, PCSrc_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, B_OP_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out, is_wwd_ID_EX_out, is_done_ID_EX_out);
     assign ALUIn_A = r_data1_ID_EX_out;
