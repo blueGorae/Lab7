@@ -18,7 +18,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     output [`WORD_SIZE-1 : 0] ALU_Result_out;
     output [`WORD_SIZE-1 : 0] r_data2_out;
     output [1:0] rd_out;
-    output MemRead, MemWrite_out;
+    output MemRead_out, MemWrite_out;
     output B_OP_out;
     output RegWrite_out;
     output MemtoReg_out;
@@ -28,7 +28,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     reg [`WORD_SIZE-1 : 0] ALU_Result_out;
     reg [`WORD_SIZE-1 : 0] r_data2_out;
     reg [1:0] rd_out;
-    reg MemRead, MemWrite_out;
+    reg MemRead_out, MemWrite_out;
     reg B_OP_out;
     reg RegWrite_out;
     reg MemtoReg_out;
