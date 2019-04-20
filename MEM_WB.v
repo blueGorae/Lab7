@@ -37,8 +37,8 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         MemData_reg <= `WORD_SIZE'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
-        MemtoReg_reg <= 1'bz;
-        RegWrite_reg <= 1'bz;
+        MemtoReg_reg <= 1'b0;
+        RegWrite_reg <= 1'b0;
         is_WB <= 0;        
     end
 
@@ -46,8 +46,8 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         MemData_reg <= `WORD_SIZE'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
-        MemtoReg_reg <= 1'bz;
-        RegWrite_reg <= 1'bz;
+        MemtoReg_reg <= 1'b0;
+        RegWrite_reg <= 1'b0;
         is_WB <= 0;
     end
 

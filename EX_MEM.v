@@ -50,11 +50,11 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
         ALU_Result_reg <= `WORD_SIZE'bz;
         r_data2_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
-        MemRead_reg <= 1'bz;
-        MemWrite_reg <= 1'bz;
-        B_OP_reg <= 1'bz;
-        RegWrite_reg <= 1'bz;
-        MemtoReg_reg <= 1'bz;
+        MemRead_reg <= 1'b0;
+        MemWrite_reg <= 1'b0;
+        B_OP_reg <= 1'b0;
+        RegWrite_reg <= 1'b0;
+        MemtoReg_reg <= 1'b0;
     end
 
     always @(negedge reset_n) begin
@@ -63,11 +63,11 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
         ALU_Result_reg <= `WORD_SIZE'bz;
         r_data2_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
-        MemRead_reg <= 1'bz;
-        MemWrite_reg <= 1'bz;
-        B_OP_reg <= 1'bz;
-        RegWrite_reg <= 1'bz;
-        MemtoReg_reg <= 1'bz;
+        MemRead_reg <= 1'b0;
+        MemWrite_reg <= 1'b0;
+        B_OP_reg <= 1'b0;
+        RegWrite_reg <= 1'b0;
+        MemtoReg_reg <= 1'b0;
     end
 
     always @(posedge clk) begin

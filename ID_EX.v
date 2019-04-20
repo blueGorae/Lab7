@@ -56,12 +56,12 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         opcode_reg <= 4'bz;
         rd_reg <= 2'bz;
         ALUOp_reg <= 3'bz;
-        ALUSrcB_reg <= 2'bz;
-        MemRead_reg <= 1'bz;
-        MemWrite_reg <= 1'bz;
-        B_OP_reg <= 1'bz;
-        RegWrite_reg <= 1'bz;
-        MemtoReg_reg <= 2'bz;
+        ALUSrcB_reg <= 2'b0;
+        MemRead_reg <= 1'b0;
+        MemWrite_reg <= 1'b0;
+        B_OP_reg <= 1'b0;
+        RegWrite_reg <= 1'b0;
+        MemtoReg_reg <= 2'b0;
     end
 
     always @(negedge reset_n) begin
@@ -72,12 +72,12 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         opcode_reg <= 4'bz;
         rd_reg <= 2'bz;
         ALUOp_reg <= 3'bz;
-        ALUSrcB_reg <= 2'bz;
-        MemRead_reg <= 1'bz;
-        MemWrite_reg <= 1'bz;
-        B_OP_reg <= 1'bz;
-        RegWrite_reg <= 1'bz;
-        MemtoReg_reg <= 2'bz;
+        ALUSrcB_reg <= 2'b0;
+        MemRead_reg <= 1'b0;
+        MemWrite_reg <= 1'b0;
+        B_OP_reg <= 1'b0;
+        RegWrite_reg <= 1'b0;
+        MemtoReg_reg <= 2'b0;
     end
 
     always @(posedge clk) begin
