@@ -158,7 +158,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     assign is_WB = is_WB_reg;
     assign PC_wire = PC;
-    
+    assign instruction_IF_ID_in = data1;
+    assign PC_IF_ID_in = PC_wire;
+
     Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, 4'b0000, PC_next);
 
     IF_ID if_id(clk, reset_n, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
@@ -174,6 +176,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     ControlUnit controlUnit(clk, reset_n, instruction_IF_ID_out, RegWrite_ID_EX_in, ALUSrcB_ID_EX_in, MemWrite_ID_EX_in, ALUOp_ID_EX_in, MemtoReg_ID_EX_in, MemRead_ID_EX_in, readM1, B_OP_ID_EX_in, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
     assign PC_ID_EX_in = PC_IF_ID_out;
+    assign rd_ID_EX_in = rd;
 
     ID_EX id_ex(clk, reset_n, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rd_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, B_OP_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rd_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, B_OP_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out);
     assign ALUIn_A = r_data1_ID_EX_out;
