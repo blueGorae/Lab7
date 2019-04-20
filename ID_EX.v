@@ -52,36 +52,64 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
 
     initial begin
         i = 0;
-        PC_reg <= `WORD_SIZE'bz;
-        r_data1_reg <= `WORD_SIZE'bz;
-        r_data2_reg <= `WORD_SIZE'bz;
-        imm_reg <= `WORD_SIZE'bz;
-        opcode_reg <= 4'bz;
-        rd_reg <= 2'bz;
-        ALUOp_reg <= 3'bz;
-        ALUSrcB_reg <= 2'b0;
-        MemRead_reg <= 1'b0;
-        MemWrite_reg <= 1'b0;
-        B_OP_reg <= 1'b0;
-        RegWrite_reg <= 1'b0;
-        MemtoReg_reg <= 2'b0;
+        PC_reg = `WORD_SIZE'bz;
+        r_data1_reg = `WORD_SIZE'bz;
+        r_data2_reg = `WORD_SIZE'bz;
+        imm_reg = `WORD_SIZE'bz;
+        opcode_reg = 4'bz;
+        rd_reg = 2'bz;
+        ALUOp_reg = 3'bz;
+        ALUSrcB_reg = 2'b0;
+        MemRead_reg = 1'b0;
+        MemWrite_reg = 1'b0;
+        B_OP_reg = 1'b0;
+        RegWrite_reg = 1'b0;
+        MemtoReg_reg = 2'b0;
+
+        PC_out = PC_reg;
+        r_data1_out = r_data1_reg;
+        r_data2_out = r_data2_reg;
+        imm_out = imm_reg;
+        opcode_out = opcode_reg;
+        rd_out = rd_reg;
+        ALUOp_out = ALUOp_reg;
+        ALUSrcB_out = ALUSrcB_reg;
+        MemRead_out = MemRead_reg;
+        MemWrite_out = MemWrite_reg;
+        B_OP_out = B_OP_reg;
+        RegWrite_out = RegWrite_reg;
+        MemtoReg_out = MemtoReg_reg;  
     end
 
     always @(negedge reset_n) begin
         i = 0;
-        PC_reg <= `WORD_SIZE'bz;
-        r_data1_reg <= `WORD_SIZE'bz;
-        r_data2_reg <= `WORD_SIZE'bz;
-        imm_reg <= `WORD_SIZE'bz;
-        opcode_reg <= 4'bz;
-        rd_reg <= 2'bz;
-        ALUOp_reg <= 3'bz;
-        ALUSrcB_reg <= 2'b0;
-        MemRead_reg <= 1'b0;
-        MemWrite_reg <= 1'b0;
-        B_OP_reg <= 1'b0;
-        RegWrite_reg <= 1'b0;
-        MemtoReg_reg <= 2'b0;
+        PC_reg = `WORD_SIZE'bz;
+        r_data1_reg = `WORD_SIZE'bz;
+        r_data2_reg = `WORD_SIZE'bz;
+        imm_reg = `WORD_SIZE'bz;
+        opcode_reg = 4'bz;
+        rd_reg = 2'bz;
+        ALUOp_reg = 3'bz;
+        ALUSrcB_reg = 2'b0;
+        MemRead_reg = 1'b0;
+        MemWrite_reg = 1'b0;
+        B_OP_reg = 1'b0;
+        RegWrite_reg = 1'b0;
+        MemtoReg_reg = 2'b0;
+
+        PC_out = PC_reg;
+        r_data1_out = r_data1_reg;
+        r_data2_out = r_data2_reg;
+        imm_out = imm_reg;
+        opcode_out = opcode_reg;
+        rd_out = rd_reg;
+        ALUOp_out = ALUOp_reg;
+        ALUSrcB_out = ALUSrcB_reg;
+        MemRead_out = MemRead_reg;
+        MemWrite_out = MemWrite_reg;
+        B_OP_out = B_OP_reg;
+        RegWrite_out = RegWrite_reg;
+        MemtoReg_out = MemtoReg_reg;  
     end
 
     always @(posedge clk) begin

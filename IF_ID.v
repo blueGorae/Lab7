@@ -13,13 +13,19 @@ module IF_ID(clk, reset_n, PC_in, Instruction_in, PC_out, Instruction_out);
 
 
     initial begin
-        PC_reg <= `WORD_SIZE'bz;
-        Instruction_reg <= `WORD_SIZE'bz;
+        PC_reg = `WORD_SIZE'bz;
+        Instruction_reg = `WORD_SIZE'bz;
+
+        PC_out = PC_reg;
+        Instruction_out = Instruction_reg;
     end
 
     always @(negedge reset_n) begin
-        PC_reg <= `WORD_SIZE'bz;
-        Instruction_reg <= `WORD_SIZE'bz;
+        PC_reg = `WORD_SIZE'bz;
+        Instruction_reg = `WORD_SIZE'bz;
+        
+        PC_out = PC_reg;
+        Instruction_out = Instruction_reg;
     end
 
     always @(posedge clk) begin

@@ -48,30 +48,53 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
 
     initial begin
         i = 0;
-        target_address_reg <= `WORD_SIZE'bz;
-        B_cond_reg <= 1'bz;
-        ALU_Result_reg <= `WORD_SIZE'bz;
-        r_data2_reg <= `WORD_SIZE'bz;
-        rd_reg <= 2'bz;
-        MemRead_reg <= 1'b0;
-        MemWrite_reg <= 1'b0;
-        B_OP_reg <= 1'b0;
-        RegWrite_reg <= 1'b0;
-        MemtoReg_reg <= 1'b0;
+        target_address_reg = `WORD_SIZE'bz;
+        B_cond_reg = 1'bz;
+        ALU_Result_reg = `WORD_SIZE'bz;
+        r_data2_reg = `WORD_SIZE'bz;
+        rd_reg = 2'bz;
+        MemRead_reg = 1'b0;
+        MemWrite_reg = 1'b0;
+        B_OP_reg = 1'b0;
+        RegWrite_reg = 1'b0;
+        MemtoReg_reg = 1'b0;
+
+        target_address_out = target_address_reg;
+        B_cond_out = B_cond_reg;
+        ALU_Result_out = ALU_Result_reg;
+        r_data2_out = r_data2_reg;
+        rd_out = rd_reg;
+        MemRead_out = MemRead_reg;
+        MemWrite_out = MemWrite_reg;
+        B_OP_out = B_OP_reg;
+        RegWrite_out = RegWrite_reg;
+        MemtoReg_out = MemtoReg_reg;
     end
 
     always @(negedge reset_n) begin
         i = 0;
-        target_address_reg <= `WORD_SIZE'bz;
-        B_cond_reg <= 1'bz;
-        ALU_Result_reg <= `WORD_SIZE'bz;
-        r_data2_reg <= `WORD_SIZE'bz;
-        rd_reg <= 2'bz;
-        MemRead_reg <= 1'b0;
-        MemWrite_reg <= 1'b0;
-        B_OP_reg <= 1'b0;
-        RegWrite_reg <= 1'b0;
-        MemtoReg_reg <= 1'b0;
+        target_address_reg = `WORD_SIZE'bz;
+        B_cond_reg = 1'bz;
+        ALU_Result_reg = `WORD_SIZE'bz;
+        r_data2_reg = `WORD_SIZE'bz;
+        rd_reg = 2'bz;
+        MemRead_reg = 1'b0;
+        MemWrite_reg = 1'b0;
+        B_OP_reg = 1'b0;
+        RegWrite_reg = 1'b0;
+        MemtoReg_reg = 1'b0;
+
+        target_address_out = target_address_reg;
+        B_cond_out = B_cond_reg;
+        ALU_Result_out = ALU_Result_reg;
+        r_data2_out = r_data2_reg;
+        rd_out = rd_reg;
+        MemRead_out = MemRead_reg;
+        MemWrite_out = MemWrite_reg;
+        B_OP_out = B_OP_reg;
+        RegWrite_out = RegWrite_reg;
+        MemtoReg_out = MemtoReg_reg;
+
     end
 
     always @(posedge clk) begin

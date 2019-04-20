@@ -36,22 +36,35 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
 
     initial begin
         i = 0;
-        MemData_reg <= `WORD_SIZE'bz;
-        ALU_Result_reg <= `WORD_SIZE'bz;
-        rd_reg <= 2'bz;
-        MemtoReg_reg <= 1'b0;
-        RegWrite_reg <= 1'b0;
-        is_WB <= 0;        
+        MemData_reg = `WORD_SIZE'bz;
+        ALU_Result_reg = `WORD_SIZE'bz;
+        rd_reg = 2'bz;
+        MemtoReg_reg = 1'b0;
+        RegWrite_reg = 1'b0;
+        is_WB = 0;
+
+        MemData_out = MemData_reg;
+        ALU_Result_out = ALU_Result_reg;
+        rd_out = rd_reg;
+        MemtoReg_out = MemtoReg_reg;
+        RegWrite_out = RegWrite_reg;
     end
 
     always @(negedge reset_n) begin
         i = 0;
-        MemData_reg <= `WORD_SIZE'bz;
-        ALU_Result_reg <= `WORD_SIZE'bz;
-        rd_reg <= 2'bz;
-        MemtoReg_reg <= 1'b0;
-        RegWrite_reg <= 1'b0;
-        is_WB <= 0;
+        MemData_reg = `WORD_SIZE'bz;
+        ALU_Result_reg = `WORD_SIZE'bz;
+        rd_reg = 2'bz;
+        MemtoReg_reg = 1'b0;
+        RegWrite_reg = 1'b0;
+        is_WB = 0;
+
+        MemData_out = MemData_reg;
+        ALU_Result_out = ALU_Result_reg;
+        rd_out = rd_reg;
+        MemtoReg_out = MemtoReg_reg;
+        RegWrite_out = RegWrite_reg;
+
     end
 
     always @(posedge clk) begin
