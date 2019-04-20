@@ -8,6 +8,7 @@
 `include "MEM_WB.v"
 `include "Adder.v"
 `include "ControlUnit.v"
+`include "PC.v"
 
 
 module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
@@ -45,8 +46,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
 
     // reg [`WORD_SIZE-1:0] PC;
-    reg [`WORD_SIZE-1:0] PC_reg;
-    wire [`WORD_SIZE-1:0] PC;
+    //reg [`WORD_SIZE-1:0] PC_reg;
+    wire [`WORD_SIZE-1:0] PC_in;
+    wire [`WORD_SIZE-1:0] PC_out;
     wire [`WORD_SIZE-1:0] PC_next;
 
     //IF_ID_in
@@ -140,24 +142,17 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire [`WORD_SIZE-1:0] ALU_Result_MEM_WB_out;
     wire [1:0] rd_MEM_WB_out;
 
-    wire [`WORD_SIZE-1:0] PC_wire;
-    
-    integer  i;
-
     initial 
     begin
-        i <= 0;
-	    PC_reg <= 0;
+       
         num_inst_reg <= 0;     
     end
 
     always @(negedge reset_n) begin
-        i <= 0;
-	    PC_reg <= 0;
+        
         num_inst_reg <= 0;     
     end
 
-    
     //this is depends on previous clock control bits. careful
     always @(*) begin
         if(is_WB) begin
@@ -165,27 +160,13 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
         end
     end
 
-    // always@(posedge clk) begin
-    //     // if(reset_n && i == 0) begin
-    //     //     PC = 0;
-    //     //     i = i + 1;
-    //     // end
-    //     if(reset_n)
-    //         PC = (PCSrc_EX_MEM_out==2) ? r_data1_EX_MEM_out : (((B_cond_EX_MEM_out && B_OP_EX_MEM_out) || (PCSrc_EX_MEM_out == 1)) ? target_address_EX_MEM_out : PC_next) ;
-        
-    // end 
+    assign PC_in = (PCSrc_EX_MEM_out==2) ? r_data1_EX_MEM_out : (((B_cond_EX_MEM_out && B_OP_EX_MEM_out) || (PCSrc_EX_MEM_out == 1)) ? target_address_EX_MEM_out : PC_next);
+    PC pc(clk, reset_n, PC_in, PC_out);
 
 
-    assign PC = (reset_n) ? ((PCSrc_EX_MEM_out==2) ? r_data1_EX_MEM_out : (((B_cond_EX_MEM_out && B_OP_EX_MEM_out) || (PCSrc_EX_MEM_out == 1)) ? target_address_EX_MEM_out : PC_next)) : PC_reg ;
-
-    always @(posedge clk) begin
-        PC_reg <= PC;
-    end
-    
-    assign PC_wire = PC;
     assign instruction_IF_ID_in = data1;
-    assign PC_IF_ID_in = PC_wire;
-    Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, 4'b0000, PC_next);
+    assign PC_IF_ID_in = PC_out;
+    Adder add1(clk, reset_n, PC_out, `WORD_SIZE'b1, 4'b0000, PC_next);
 
     IF_ID if_id(clk, reset_n, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
     //assign instruction = data1;
@@ -224,7 +205,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign readM1 = 1; // TODO : stall implementation
     assign readM2 = MemRead_EX_MEM_out;
     assign writeM2 = MemWrite_EX_MEM_out;
-    assign address1 = PC;
+    assign address1 = PC_out;
     assign address2 = (MemRead_EX_MEM_out || MemWrite_EX_MEM_out) ? ALU_Result_EX_MEM_out : `WORD_SIZE'b0;
     assign MemData_MEM_WB_in = data2;
 
