@@ -37,7 +37,7 @@ module HazardDetectionUnit(clk, reset_n, MemRead, LWD_rd, new_instruction, PCWri
 
     always @(posedge clk) begin
         new_rs = new_instruction[11:10];
-        new_rt = new_intstruction[9:8];
+        new_rt = new_instruction[9:8];
 
         if(MemRead && ((LWD_rd == new_rs) || (LWD_rd == new_rt))) begin
             PCWrite = 0;
