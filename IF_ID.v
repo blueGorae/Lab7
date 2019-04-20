@@ -7,6 +7,7 @@ module IF_ID(clk, reset_n, PC_in, Instruction_in, PC_out, Instruction_out);
     output [`WORD_SIZE-1:0] PC_out, Instruction_out;
 
     reg [`WORD_SIZE-1:0] PC_out, Instruction_out;
+    
     reg [`WORD_SIZE-1:0] PC_reg;
     reg [`WORD_SIZE-1:0] Instruction_reg;
 
