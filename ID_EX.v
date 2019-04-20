@@ -1,12 +1,13 @@
 `include "opcodes.v"
 
-module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out);
+module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, PCSrc_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, PCSrc_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out);
     input clk, reset_n;
 
     input [`WORD_SIZE-1:0] PC_in;
     input [`WORD_SIZE-1:0] r_data1_in, r_data2_in, imm_in;
     input [3:0] opcode_in;
     input [1:0] rd_in;
+    input [1:0] PCSrc_in;
     input [2:0] ALUOp_in;
     input ALUSrcB_in;
     input MemRead_in, MemWrite_in;
@@ -18,6 +19,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     output [`WORD_SIZE-1:0] r_data1_out, r_data2_out, imm_out;
     output [3:0] opcode_out;
     output [1:0] rd_out;
+    output [1:0] PCSrc_out;
     output [2:0] ALUOp_out;
     output ALUSrcB_out;
     output MemRead_out, MemWrite_out;
@@ -29,6 +31,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     reg [`WORD_SIZE-1:0] r_data1_out, r_data2_out, imm_out;
     reg [3:0] opcode_out;
     reg [1:0] rd_out;
+    reg [1:0] PCSrc_out;
     reg [2:0] ALUOp_out;
     reg ALUSrcB_out;
     reg MemRead_out, MemWrite_out;
@@ -40,6 +43,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     reg [`WORD_SIZE-1:0] r_data1_reg, r_data2_reg, imm_reg;
     reg [3:0] opcode_reg;
     reg [1:0] rd_reg;
+    reg [1:0] PCSrc_reg;
     reg [2:0] ALUOp_reg;
     reg [1:0] ALUSrcB_reg;
     reg MemRead_reg;
@@ -58,6 +62,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         imm_reg = `WORD_SIZE'bz;
         opcode_reg = 4'bz;
         rd_reg = 2'bz;
+        PCSrc_reg = 2'b00;
         ALUOp_reg = 3'bz;
         ALUSrcB_reg = 2'b0;
         MemRead_reg = 1'b0;
@@ -72,6 +77,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         imm_out = imm_reg;
         opcode_out = opcode_reg;
         rd_out = rd_reg;
+        PCSrc_out = PCSrc_reg;
         ALUOp_out = ALUOp_reg;
         ALUSrcB_out = ALUSrcB_reg;
         MemRead_out = MemRead_reg;
@@ -89,6 +95,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         imm_reg = `WORD_SIZE'bz;
         opcode_reg = 4'bz;
         rd_reg = 2'bz;
+        PCSrc_reg = 2'b00;
         ALUOp_reg = 3'bz;
         ALUSrcB_reg = 2'b0;
         MemRead_reg = 1'b0;
@@ -103,6 +110,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         imm_out = imm_reg;
         opcode_out = opcode_reg;
         rd_out = rd_reg;
+        PCSrc_out = PCSrc_reg;
         ALUOp_out = ALUOp_reg;
         ALUSrcB_out = ALUSrcB_reg;
         MemRead_out = MemRead_reg;
@@ -120,6 +128,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
             imm_out = imm_reg;
             opcode_out = opcode_reg;
             rd_out = rd_reg;
+            PCSrc_out = PCSrc_reg;
             ALUOp_out = ALUOp_reg;
             ALUSrcB_out = ALUSrcB_reg;
             MemRead_out = MemRead_reg;
@@ -134,6 +143,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
             imm_reg = imm_in;
             opcode_reg = opcode_in;
             rd_reg = rd_in;
+            PCSrc_reg = PCSrc_in;
             ALUOp_reg = ALUOp_in;
             ALUSrcB_reg = ALUSrcB_in;
             MemRead_reg = MemRead_in;

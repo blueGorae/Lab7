@@ -1,10 +1,11 @@
 `include "opcodes.v"
 
-module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
+module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
 
 	inout [`WORD_SIZE-1:0] instruction;
 	input reset_n, clk;
 	
+	output [1:0] PCSrc;
 	output RegWrite;
 	output ALUSrcB;
 	output MemWrite;
@@ -17,6 +18,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	output is_wwd;
     output halted_op;
 
+	reg [1:0] PCSrc;
 	reg RegWrite;
 	reg ALUSrcB;
 	reg MemWrite;
@@ -35,6 +37,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	assign func = instruction[5:0];
 
 	initial begin
+		PCSrc <= 2'b0;
 	    RegWrite <= 1'b0;
 	    ALUSrcB <= 1'b0;
 	    MemWrite <= 1'b0;
@@ -54,6 +57,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 	
 	//when reset was set, initialize each value. 
 	always @ (negedge reset_n) begin
+		PCSrc <= 2'b0;
 	    RegWrite <= 1'b0;
 	    ALUSrcB <= 1'b0;
 	    MemWrite <= 1'b0;
@@ -85,13 +89,14 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 			`INST_FUNC_SHR : ALUOp <= `FUNC_SHR ;
 			`INST_FUNC_JPR : ALUOp <= `FUNC_ADD ; 
 			`INST_FUNC_JRL : ALUOp <= `FUNC_ADD ;
-            6'd28 :  is_wwd <= 1;
-            6'd29 : halted_op <= 1;
+            `WWD :  is_wwd <= 1;
+            `HALT : halted_op <= 1;
             default : ALUOp <= 3'bz;
 		endcase
 
 		case (opcode) 
 			`ALU_OP: begin // 15
+				PCSrc <= 2'b0;
 				RegWrite <= 1;
 				ALUSrcB <= 0;
 				MemWrite <= 0;
@@ -106,6 +111,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end
 			`ADI_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 1;
 				ALUOp <= `FUNC_ADD;
 				ALUSrcB <= 1;
@@ -122,6 +128,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
 				
 			end
 			`ORI_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 1;
 				ALUOp <= `FUNC_ORR;
 				ALUSrcB <= 1;
@@ -137,6 +144,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end
 			`LHI_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 1;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1;
@@ -152,6 +160,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end
 			`LWD_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 1;
 				ALUOp <= `FUNC_ADD;
 				ALUSrcB <= 1;
@@ -167,6 +176,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 1;
 			end
 			`SWD_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 0;
 				ALUOp <= `FUNC_ADD;
 				ALUSrcB <= 1;
@@ -182,6 +192,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end  
 			`BNE_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 0;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1;
@@ -197,6 +208,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end 
 			`BEQ_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 0;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1;
@@ -212,6 +224,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end 	
 			`BGZ_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 0;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1;
@@ -227,6 +240,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end
 			`BLZ_OP: begin
+				PCSrc <= 2'b0;
 				RegWrite <= 0;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1;
@@ -242,6 +256,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end 
 			`JMP_OP: begin
+				PCSrc <= 2'b01;
 				RegWrite <= 0;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1'bz;
@@ -257,6 +272,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end 
 			`JAL_OP: begin
+				PCSrc <= 2'b01;
 				RegWrite <= 1;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1'bz;
@@ -272,6 +288,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end 
 			`JPR_OP: begin
+				PCSrc <= 2'b10;
 				RegWrite <= 0;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1'bz;
@@ -287,6 +304,7 @@ module ControlUnit(clk, reset_n, instruction, RegWrite, ALUSrcB, MemWrite, ALUOp
                 L_type <= 0;
 			end 
 			`JRL_OP: begin
+				PCSrc <= 2'b10;
 				RegWrite <= 1;
 				ALUOp <= 3'bz;
 				ALUSrcB <= 1'bz;
