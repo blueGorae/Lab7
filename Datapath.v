@@ -141,6 +141,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire halted_op_MEM_WB_in;
     wire [`WORD_SIZE-1:0] MemData_MEM_WB_in;
     wire [`WORD_SIZE-1:0] ALU_Result_MEM_WB_in;
+    wire [`WORD_SIZE-1:0] r_data1_MEM_WB_in; // register file from rs
     wire [1:0] rd_MEM_WB_in;
     wire is_done_MEM_WB_in;
     //MEM_WB_out
@@ -150,6 +151,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire halted_op_MEM_WB_out;
     wire [`WORD_SIZE-1:0] MemData_MEM_WB_out;
     wire [`WORD_SIZE-1:0] ALU_Result_MEM_WB_out;
+    wire [`WORD_SIZE-1:0] r_data1_MEM_WB_out; // register file from rs
     wire [1:0] rd_MEM_WB_out;
     wire is_done_MEM_WB_out;
 
@@ -159,7 +161,6 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     end
 
     always @(negedge reset_n) begin
-        
         num_inst_reg <= 0;     
     end
 
@@ -230,10 +231,10 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     FlushUnit flushUnit(clk, reset_n, PCSrc_EX_MEM_out, B_OP_EX_MEM_out, B_cond_EX_MEM_out, flush_signal);
 
-    MEM_WB mem_wb( clk, reset_n, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, is_done_MEM_WB_in, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_done_MEM_WB_out );
+    MEM_WB mem_wb(clk, reset_n, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, is_done_MEM_WB_in, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_done_MEM_WB_out );
 
     assign w_data =  MemtoReg_MEM_WB_out ? MemData_MEM_WB_out : ALU_Result_MEM_WB_out;
-    assign output_port = r_data1_ID_EX_in;
+    assign output_port = r_data1_MEM_WB_out;
     assign num_inst = num_inst_reg;
     
 
