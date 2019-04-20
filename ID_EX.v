@@ -82,32 +82,32 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
 
     always @(posedge clk) begin
 
-        PC_out <= PC_reg;
-        r_data1_out <= r_data1_reg;
-        r_data2_out <= r_data2_reg;
-        imm_out <= imm_reg;
-        opcode_out <= opcode_reg;
-        rd_out <= rd_reg;
-        ALUOp_out <= ALUOp_reg;
-        ALUSrcB_out <= ALUSrcB_reg;
-        MemRead_out <= MemRead_reg;
-        MemWrite_out <= MemWrite_reg;
-        B_OP_out <= B_OP_reg;
-        RegWrite_out <= RegWrite_reg;
-        MemtoReg_out <= MemtoReg_reg;  
+        PC_out = PC_reg;
+        r_data1_out = r_data1_reg;
+        r_data2_out = r_data2_reg;
+        imm_out = imm_reg;
+        opcode_out = opcode_reg;
+        rd_out = rd_reg;
+        ALUOp_out = ALUOp_reg;
+        ALUSrcB_out = ALUSrcB_reg;
+        MemRead_out = MemRead_reg;
+        MemWrite_out = MemWrite_reg;
+        B_OP_out = B_OP_reg;
+        RegWrite_out = RegWrite_reg;
+        MemtoReg_out = MemtoReg_reg;  
   
-        PC_reg <= PC_in;
-        r_data1_reg <= r_data1_in;
-        r_data2_reg <= r_data2_in;
-        imm_reg <= imm_in;
-        opcode_reg <= opcode_in;
-        rd_reg <= rd_in;
-        ALUOp_reg <= ALUOp_in;
-        ALUSrcB_reg <= ALUSrcB_in;
-        MemRead_reg <= MemRead_in;
-        MemWrite_reg <= MemWrite_in;
-        B_OP_reg <= B_OP_in;
-        RegWrite_reg <= RegWrite_in;
-        MemtoReg_reg <= MemtoReg_in;
+        PC_reg = PC_in;
+        r_data1_reg = r_data1_in;
+        r_data2_reg = r_data2_in;
+        imm_reg = imm_in;
+        opcode_reg = opcode_in;
+        rd_reg = rd_in;
+        ALUOp_reg = ALUOp_in;
+        ALUSrcB_reg = ALUSrcB_in;
+        MemRead_reg = MemRead_in;
+        MemWrite_reg = MemWrite_in;
+        B_OP_reg = B_OP_in;
+        RegWrite_reg = RegWrite_in;
+        MemtoReg_reg = MemtoReg_in;
     end
 endmodule

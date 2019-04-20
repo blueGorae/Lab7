@@ -72,27 +72,27 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
 
     always @(posedge clk) begin
 
-        target_address_out <= target_address_reg;
-        B_cond_out <= B_cond_reg;
-        ALU_Result_out <= ALU_Result_reg;
-        r_data2_out <= r_data2_reg;
-        rd_out <= rd_reg;
-        MemRead_out <= MemRead_reg;
-        MemWrite_out <= MemWrite_reg;
-        B_OP_out <= B_OP_reg;
-        RegWrite_out <= RegWrite_reg;
-        MemtoReg_out <= MemtoReg_reg;
+        target_address_out = target_address_reg;
+        B_cond_out = B_cond_reg;
+        ALU_Result_out = ALU_Result_reg;
+        r_data2_out = r_data2_reg;
+        rd_out = rd_reg;
+        MemRead_out = MemRead_reg;
+        MemWrite_out = MemWrite_reg;
+        B_OP_out = B_OP_reg;
+        RegWrite_out = RegWrite_reg;
+        MemtoReg_out = MemtoReg_reg;
 
-        target_address_reg <= target_address_in;
-        B_cond_reg <= B_cond_in;
-        ALU_Result_reg <= ALU_Result_in;
-        r_data2_reg <= r_data2_in;
-        rd_reg <= rd_in;
-        MemRead_reg <= MemRead_in;
-        MemWrite_reg <= MemWrite_in;
-        B_OP_reg <= B_OP_in;
-        RegWrite_reg <= RegWrite_in;
-        MemtoReg_reg <= MemtoReg_in;
+        target_address_reg = target_address_in;
+        B_cond_reg = B_cond_in;
+        ALU_Result_reg = ALU_Result_in;
+        r_data2_reg = r_data2_in;
+        rd_reg = rd_in;
+        MemRead_reg = MemRead_in;
+        MemWrite_reg = MemWrite_in;
+        B_OP_reg = B_OP_in;
+        RegWrite_reg = RegWrite_in;
+        MemtoReg_reg = MemtoReg_in;
     end
 
 endmodule // 

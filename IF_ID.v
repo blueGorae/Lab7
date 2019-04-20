@@ -7,7 +7,7 @@ module IF_ID(clk, reset_n, PC_in, Instruction_in, PC_out, Instruction_out);
     output [`WORD_SIZE-1:0] PC_out, Instruction_out;
 
     reg [`WORD_SIZE-1:0] PC_out, Instruction_out;
-    
+
     reg [`WORD_SIZE-1:0] PC_reg;
     reg [`WORD_SIZE-1:0] Instruction_reg;
 
@@ -23,11 +23,11 @@ module IF_ID(clk, reset_n, PC_in, Instruction_in, PC_out, Instruction_out);
     end
 
     always @(posedge clk) begin
-        PC_out <= PC_reg;
-        Instruction_out <= Instruction_reg;
+        PC_out = PC_reg;
+        Instruction_out = Instruction_reg;
 
-        PC_reg <= PC_in;
-        Instruction_reg <= Instruction_in;
+        PC_reg = PC_in;
+        Instruction_reg = Instruction_in;
     end
 
 endmodule
