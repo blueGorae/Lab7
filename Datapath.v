@@ -10,8 +10,9 @@
 `include "ControlUnit.v"
 
 
-module	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
-    reg is_WB;
+module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
+    reg is_WB_reg;
+    wire is_WB;
 
     input reset_n;
     input clk; 
@@ -61,11 +62,11 @@ module	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2,
     wire [2:0]ALUOp_ID_EX_in;
     wire MemtoReg_ID_EX_in;
     wire B_OP_ID_EX_in;
-    wire R_type_ID_EX_in;
-    wire I_type_ID_EX_in;
-    wire J_type_ID_EX_in;
-    wire S_type_ID_EX_in;
-    wire L_type_ID_EX_in;
+    wire R_type;
+    wire I_type;
+    wire J_type;
+    wire S_type;
+    wire L_type;
     wire is_wwd_ID_EX_in;
     wire halted_op_ID_EX_in;
     wire [`WORD_SIZE-1:0] PC_ID_EX_in;
@@ -82,11 +83,6 @@ module	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2,
     wire MemtoReg_ID_EX_out;
     wire RegWrite_ID_EX_out;
     wire B_OP_ID_EX_out;
-    wire R_type_ID_EX_out;
-    wire I_type_ID_EX_out;
-    wire J_type_ID_EX_out;
-    wire S_type_ID_EX_out;
-    wire L_type_ID_EX_out;
     wire is_wwd_ID_EX_out;
     wire halted_op_ID_EX_out;
     wire [`WORD_SIZE-1:0] PC_ID_EX_out;
@@ -178,7 +174,7 @@ module	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2,
 
     ID_EX id_ex(clk, reset_n, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rd_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, B_OP_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rd_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, B_OP_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out);
     assign ALUIn_A = r_data1_ID_EX_out;
-    assign ALUIn_B = ALUSrcB ? imm_ID_EX_out : r_data2_ID_EX_out;
+    assign ALUIn_B = ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out;
 
     Adder targetAddressAdder(clk, reset_n, PC_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, target_address_EX_MEM_in);
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, B_OP_ID_EX_out, ALUOp_ID_EX_out, opcode_ID_EX_out, ALU_Result_EX_MEM_in, B_cond_EX_MEM_in);
