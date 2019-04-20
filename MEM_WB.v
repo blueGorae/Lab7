@@ -52,18 +52,19 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     end
 
     always @(posedge clk) begin
+        if(reset_n)begin
+            MemData_out = MemData_reg;
+            ALU_Result_out = ALU_Result_reg;
+            rd_out = rd_reg;
+            MemtoReg_out = MemtoReg_reg;
+            RegWrite_out = RegWrite_reg;
 
-        MemData_out = MemData_reg;
-        ALU_Result_out = ALU_Result_reg;
-        rd_out = rd_reg;
-        MemtoReg_out = MemtoReg_reg;
-        RegWrite_out = RegWrite_reg;
-
-        MemData_reg = MemData_in;
-        ALU_Result_reg = ALU_Result_in;
-        rd_reg = rd_in;
-        MemtoReg_reg = MemtoReg_in;
-        RegWrite_reg = RegWrite_in;
+            MemData_reg = MemData_in;
+            ALU_Result_reg = ALU_Result_in;
+            rd_reg = rd_in;
+            MemtoReg_reg = MemtoReg_in;
+            RegWrite_reg = RegWrite_in;
+        end
     end
     
 endmodule // 

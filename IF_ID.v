@@ -23,11 +23,13 @@ module IF_ID(clk, reset_n, PC_in, Instruction_in, PC_out, Instruction_out);
     end
 
     always @(posedge clk) begin
-        PC_out = PC_reg;
-        Instruction_out = Instruction_reg;
+        if(reset_n)begin
+            PC_out = PC_reg;
+            Instruction_out = Instruction_reg;
 
-        PC_reg = PC_in;
-        Instruction_reg = Instruction_in;
+            PC_reg = PC_in;
+            Instruction_reg = Instruction_in;
+        end
     end
 
 endmodule
