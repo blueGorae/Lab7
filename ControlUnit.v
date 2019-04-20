@@ -152,6 +152,7 @@ module ControlUnit(clk, reset_n, ControlNOP, instruction, PCSrc, RegWrite, ALUSr
 						S_type <= 1'b0;
 						L_type <= 1'b0;
 						is_wwd <= 0;
+					end
 					else if (func == 6'd25) begin
 						PCSrc <= 2'b10;
 						RegWrite <= 0;
