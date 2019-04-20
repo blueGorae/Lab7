@@ -2,7 +2,7 @@
 
 module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type, is_done);
 
-	inout [`WORD_SIZE-1:0] instruction;
+	input [`WORD_SIZE-1:0] instruction;
 	input reset_n, clk;
 	
 	output [1:0] PCSrc;
@@ -79,7 +79,7 @@ module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite
 		is_done <= 1'b0;
 	end
 
-	always @(posedge clk) begin
+	always @(*) begin
 	    is_wwd <= 0;
         halted_op <= 0;
 		is_done <= 1;
