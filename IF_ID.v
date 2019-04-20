@@ -25,8 +25,8 @@ module IF_ID(clk, reset_n, flush_signal, IF_ID_Write, PC_in, Instruction_in, PC_
 
     always @(posedge clk) begin
         if(reset_n)begin
-            PC_out = IF_ID_Write ? PC_in : `WORD_SIZE'bz;
-            Instruction_out = IF_ID_Write ? Instruction_in : `WORD_SIZE'bz;
+            PC_out = IF_ID_Write ? PC_in : PC_out;
+            Instruction_out = IF_ID_Write ? Instruction_in : Instruction_out;
         end
     end
 
