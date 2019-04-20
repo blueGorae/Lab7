@@ -28,14 +28,6 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     reg is_wwd_out;
     reg is_done_out;
 
-
-    // reg [`WORD_SIZE-1 : 0] MemData_reg;
-    // reg [`WORD_SIZE-1 : 0] ALU_Result_reg;
-    // reg [1:0] rd_reg;
-    // reg MemtoReg_reg;
-    // reg RegWrite_reg;
-    // reg is_wwd_reg;
-
     integer i;
 
     initial begin
@@ -48,15 +40,6 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
 
-        
-        
-
-        // MemData_out = MemData_reg;
-        // ALU_Result_out = ALU_Result_reg;
-        // rd_out = rd_reg;
-        // MemtoReg_out = MemtoReg_reg;
-        // RegWrite_out = RegWrite_reg;
-        // is_wwd_out = is_wwd_reg;
     end
 
     always @(negedge reset_n) begin
@@ -68,14 +51,6 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         RegWrite_out = 1'b0;
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
-
-
-        // MemData_out = MemData_reg;
-        // ALU_Result_out = ALU_Result_reg;
-        // rd_out = rd_reg;
-        // MemtoReg_out = MemtoReg_reg;
-        // RegWrite_out = RegWrite_reg;
-        // is_wwd_out = is_wwd_reg;
 
     end
 
@@ -89,14 +64,6 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
             RegWrite_out = RegWrite_in;
             is_wwd_out = is_wwd_in;
             is_done_out = is_done_in;
-
-            // MemData_reg = MemData_in;
-            // ALU_Result_reg = ALU_Result_in;
-            // rd_reg = rd_in;
-            // MemtoReg_reg = MemtoReg_in;
-            // RegWrite_reg = RegWrite_in;
-            // is_wwd_reg = is_wwd_in;
-
         end
         else if(reset_n) begin
             i = i + 1;

@@ -1,7 +1,8 @@
 `include "opcodes.v"
 
-module PC(clk, reset_n, PC_in, PC_out);
+module PC(clk, reset_n, PCWrite, PC_in, PC_out);
     input clk, reset_n;
+    input PCWrite;
     input [`WORD_SIZE-1 : 0] PC_in;
     output [`WORD_SIZE-1 : 0] PC_out;
 
@@ -17,7 +18,7 @@ module PC(clk, reset_n, PC_in, PC_out);
 
     always @(posedge clk) begin
         if(reset_n) begin 
-            PC_out = PC_in;
+            PC_out = PCWrite ? PC_in : PC_out;
         end
     end
 
