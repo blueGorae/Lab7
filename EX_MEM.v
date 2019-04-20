@@ -124,6 +124,8 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, B_cond_in, ALU_Res
             RegWrite_out = 1'b0;
             MemtoReg_out = 1'b0;
             is_wwd_out = 1'b0;
+            is_done_out = 1'b0;
+
         end
     end 
 endmodule // 

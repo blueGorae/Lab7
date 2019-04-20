@@ -132,6 +132,7 @@ module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, 
             RegWrite_out = 1'b0;
             MemtoReg_out = 2'b0;
             is_wwd_out = 1'b0;
+            is_done_out = 1'b0;
         end
     end 
 
