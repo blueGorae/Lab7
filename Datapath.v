@@ -13,108 +13,6 @@
 module	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
     reg is_WB;
 
-    wire RegWrite_ID_EX_in;
-    wire RegWrite_ID_EX_out;
-    wire RegWrite_EX_MEM_in;
-    wire RegWrite_EX_MEM_out;
-    wire RegWrite_MEM_WB_in;
-    wire RegWrite_MEM_WB_out;
-
-    wire ALUSrcB_ID_EX_in;
-    wire ALUSrcB_ID_EX_out;
-    wire ALUSrcB_EX_MEM_in;
-    wire ALUSrcB_EX_MEM_out;
-    wire ALUSrcB_MEM_WB_in;
-    wire ALUSrcB_MEM_WB_out;
-
-    wire MemWrite_ID_EX_in;
-    wire MemWrite_ID_EX_out;
-    wire MemWrite_EX_MEM_in;
-    wire MemWrite_EX_MEM_out;
-    wire MemWrite_MEM_WB_in;
-    wire MemWrite_MEM_WB_out;
-
-    wire [2:0]ALUOp_ID_EX_in;
-    wire [2:0]ALUOp_ID_EX_out;
-    wire [2:0]ALUOp_EX_MEM_in;
-    wire [2:0]ALUOp_EX_MEM_out;
-    wire [2:0]ALUOp_MEM_WB_in;
-    wire [2:0]ALUOp_MEM_WB_out;
-
-    wire MemtoReg_ID_EX_in;
-    wire MemtoReg_ID_EX_out;
-    wire MemtoReg_EX_MEM_in;
-    wire MemtoReg_EX_MEM_out;
-    wire MemtoReg_MEM_WB_in;
-    wire MemtoReg_MEM_WB_out;
-
-    wire RegWrite_ID_EX_in;
-    wire RegWrite_ID_EX_out;
-    wire RegWrite_EX_MEM_in;
-    wire RegWrite_EX_MEM_out;
-    wire RegWrite_MEM_WB_in;
-    wire RegWrite_MEM_WB_out;
-
-    wire B_OP_ID_EX_in;
-    wire B_OP_ID_EX_out;
-    wire B_OP_EX_MEM_in;
-    wire B_OP_EX_MEM_out;
-    wire B_OP_MEM_WB_in;
-    wire B_OP_MEM_WB_out;
-
-    wire R_type_ID_EX_in;
-    wire R_type_ID_EX_out;
-    wire R_type_EX_MEM_in;
-    wire R_type_EX_MEM_out;
-    wire R_type_MEM_WB_in;
-    wire R_type_MEM_WB_out;
-
-    wire I_type_ID_EX_in;
-    wire I_type_ID_EX_out;
-    wire I_type_EX_MEM_in;
-    wire I_type_EX_MEM_out;
-    wire I_type_MEM_WB_in;
-    wire I_type_MEM_WB_out;
-
-    wire J_type_ID_EX_in;
-    wire J_type_ID_EX_out;
-    wire J_type_EX_MEM_in;
-    wire J_type_EX_MEM_out;
-    wire J_type_MEM_WB_in;
-    wire J_type_MEM_WB_out;
-
-    wire S_type_ID_EX_in;
-    wire S_type_ID_EX_out;
-    wire S_type_EX_MEM_in;
-    wire S_type_EX_MEM_out;
-    wire S_type_MEM_WB_in;
-    wire S_type_MEM_WB_out;
-
-
-    wire L_type_ID_EX_in;
-    wire L_type_ID_EX_out;
-    wire L_type_EX_MEM_in;
-    wire L_type_EX_MEM_out;
-    wire L_type_MEM_WB_in;
-    wire L_type_MEM_WB_out;
-
-
-    wire is_wwd_ID_EX_in;
-    wire is_wwd_ID_EX_out;
-    wire is_wwd_EX_MEM_in;
-    wire is_wwd_EX_MEM_out;
-    wire is_wwd_MEM_WB_in;
-    wire is_wwd_MEM_WB_out;
-
-
-    wire halted_op_ID_EX_in;
-    wire halted_op_ID_EX_out;
-    wire halted_op_EX_MEM_in;
-    wire halted_op_EX_MEM_out;
-    wire halted_op_MEM_WB_in;
-    wire halted_op_MEM_WB_out;
-
-
     input reset_n;
     input clk; 
 
@@ -134,52 +32,111 @@ module	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2,
 	output is_halted;
 
 
-    reg [`WORD_SIZE-1:0] MemData; // Data read from the memory
     reg [`WORD_SIZE-1:0] num_inst_reg;
     wire [1:0] rs;
     wire [1:0] rt;
     wire [1:0] rd;
     wire [5:0] func;
-    wire [3:0] opcode;
- 
-
-    wire [`WORD_SIZE-1:0] target_address;
 
     wire [`WORD_SIZE-1:0] w_data;
 
-    wire [`WORD_SIZE-1:0] ALU_Result; // result of ALU operation
     wire [`WORD_SIZE-1:0] ALUIn_A; // ALU operand A
     wire [`WORD_SIZE-1:0] ALUIn_B; // ALU operand B
 
-    wire B_cond; // Branch condition
 
     reg [`WORD_SIZE-1:0] PC;
-    wire [`WORD_SIZE-1:0] PC_wire;
     wire [`WORD_SIZE-1:0] PC_next;
 
+    //IF_ID_in
     wire [`WORD_SIZE-1:0] PC_IF_ID_in;
-    wire [`WORD_SIZE-1:0] PC_IF_ID_out;
-    wire [`WORD_SIZE-1:0] PC_ID_EX_in;
-    wire [`WORD_SIZE-1:0] PC_ID_EX_out;
-    
     wire [`WORD_SIZE-1:0] instruction_IF_ID_in;
+    //IF_ID_out
+    wire [`WORD_SIZE-1:0] PC_IF_ID_out;
     wire [`WORD_SIZE-1:0] instruction_IF_ID_out;
-    wire [`WORD_SIZE-1:0] instruction_ID_EX_in;
-    wire [`WORD_SIZE-1:0] instruction_ID_EX_out;
-    wire [`WORD_SIZE-1:0] instruction_EX_MEM_in;
-    wire [`WORD_SIZE-1:0] instruction_EX_MEM_out;
-    wire [`WORD_SIZE-1:0] instruction_MEM_WB_in;
-    wire [`WORD_SIZE-1:0] instruction_MEM_WB_out;
 
+    //ID_EX_in
+    wire RegWrite_ID_EX_in;
+    wire ALUSrcB_ID_EX_in;
+    wire MemWrite_ID_EX_in;
+    wire [2:0]ALUOp_ID_EX_in;
+    wire MemtoReg_ID_EX_in;
+    wire B_OP_ID_EX_in;
+    wire R_type_ID_EX_in;
+    wire I_type_ID_EX_in;
+    wire J_type_ID_EX_in;
+    wire S_type_ID_EX_in;
+    wire L_type_ID_EX_in;
+    wire is_wwd_ID_EX_in;
+    wire halted_op_ID_EX_in;
+    wire [`WORD_SIZE-1:0] PC_ID_EX_in;
     wire [`WORD_SIZE-1:0] r_data1_ID_EX_in; // register file from rs
     wire [`WORD_SIZE-1:0] r_data2_ID_EX_in; // register file from rt
-
+    wire [`WORD_SIZE-1:0] imm_ID_EX_in; // register file from rs
+    wire [3:0] opcode_ID_EX_in;
+    wire [1:0] rd_ID_EX_in;
+    //ID_EX_out
+    wire RegWrite_ID_EX_out;
+    wire ALUSrcB_ID_EX_out;
+    wire MemWrite_ID_EX_out;
+    wire [2:0]ALUOp_ID_EX_out;
+    wire MemtoReg_ID_EX_out;
+    wire RegWrite_ID_EX_out;
+    wire B_OP_ID_EX_out;
+    wire R_type_ID_EX_out;
+    wire I_type_ID_EX_out;
+    wire J_type_ID_EX_out;
+    wire S_type_ID_EX_out;
+    wire L_type_ID_EX_out;
+    wire is_wwd_ID_EX_out;
+    wire halted_op_ID_EX_out;
+    wire [`WORD_SIZE-1:0] PC_ID_EX_out;
     wire [`WORD_SIZE-1:0] r_data1_ID_EX_out; // register file from rs
     wire [`WORD_SIZE-1:0] r_data2_ID_EX_out; // register file from rt
-    
-    wire [`WORD_SIZE-1:0] imm_ID_EX_in; // register file from rs
     wire [`WORD_SIZE-1:0] imm_ID_EX_out; // register file from rs
-    
+    wire [3:0] opcode_ID_EX_out;
+    wire [1:0] rd_ID_EX_out;
+
+    //EX_MEM_in
+    wire RegWrite_EX_MEM_in;
+    wire MemWrite_EX_MEM_in;
+    wire MemtoReg_EX_MEM_in;
+    wire B_OP_EX_MEM_in;
+    wire is_wwd_EX_MEM_in;
+    wire halted_op_EX_MEM_in;
+    wire [`WORD_SIZE-1: 0] target_address_EX_MEM_in;
+    wire B_cond_EX_MEM_in;
+    wire [`WORD_SIZE-1:0] ALU_Result_EX_MEM_in;
+    wire [`WORD_SIZE-1:0] r_data2_EX_MEM_in; // register file from rt
+    wire [1:0] rd_EX_MEM_in;
+    //EX_MEM_out
+    wire RegWrite_EX_MEM_out;
+    wire MemWrite_EX_MEM_out;
+    wire MemtoReg_EX_MEM_out;
+    wire B_OP_EX_MEM_out;
+    wire is_wwd_EX_MEM_out;
+    wire halted_op_EX_MEM_out;
+    wire [`WORD_SIZE-1: 0] target_address_EX_MEM_out;
+    wire B_cond_EX_MEM_out;
+    wire [`WORD_SIZE-1:0] ALU_Result_EX_MEM_out;
+    wire [`WORD_SIZE-1:0] r_data2_EX_MEM_out;
+    wire [1:0] rd_EX_MEM_out;
+
+    //MEM_WB_in
+    wire RegWrite_MEM_WB_in;
+    wire MemtoReg_MEM_WB_in;
+    wire is_wwd_MEM_WB_in;
+    wire halted_op_MEM_WB_in;
+    wire [`WORD_SIZE-1:0] MemData_MEM_EX_in;
+    wire [`WORD_SIZE-1:0] ALU_Result_MEM_WB_in;
+    wire [1:0] rd_MEM_WB_in;
+    //MEM_WB_out
+    wire RegWrite_MEM_WB_out;
+    wire MemtoReg_MEM_WB_out;
+    wire is_wwd_MEM_WB_out;
+    wire halted_op_MEM_WB_out;
+    wire [`WORD_SIZE-1:0] MemData_MEM_EX_out;
+    wire [`WORD_SIZE-1:0] ALU_Result_MEM_WB_out;
+    wire [1:0] rd_MEM_WB_out;
 
     initial 
     begin
@@ -203,7 +160,6 @@ module	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2,
     end
 
     assign is_WB = is_WB_reg;
-    assign PC_wire = PC;
     Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, opcode, PC_next);
 
     IF_ID if_id(clk, reset_n, PC_wire, data1, );
