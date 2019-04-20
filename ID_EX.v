@@ -1,20 +1,31 @@
 `include "opcodes.v"
 
-module ID_EX(clk, reset_n, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
+module ID_EX(clk, reset_n, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg, PC, r_data1, r_data2, imm, opcode, rd, ALUOp, ALUSrcB, MemRead, MemWrite, B_OP, RegWrite, MemtoReg);
+    
     input clk, reset_n;
-    inout [`WORD_SIZE-1:0] PC;
-    inout [`WORD_SIZE-1:0] r_data1, r_data2, imm;
-    inout [3:0] opcode;
+    
+    input [`WORD_SIZE-1:0] PC_in;
+    input [`WORD_SIZE-1:0] r_data1_in, r_data2_in, imm_in;
+    input [3:0] opcode_in;
+    input [1:0] rd_in;
+    input [2:0] ALUOp_in;
+    input ALUSrcB_in;
+    input MemRead, MemWrite_in;
+    input B_OP_in;
+    input RegWrite_in;
+    input MemtoReg_in;
 
-    inout [1:0] rd;
-    
-    inout [2:0] ALUOp;
-    inout ALUSrcB;
-    inout MemRead, MemWrite;
-    inout B_OP;
-    inout RegWrite;
-    inout MemtoReg;
-    
+    output [`WORD_SIZE-1:0] PC_out;
+    output [`WORD_SIZE-1:0] r_data1, r_data2, imm;
+    output [3:0] opcode;
+    output [1:0] rd;
+    output [2:0] ALUOp;
+    output ALUSrcB;
+    output MemRead, MemWrite;
+    output B_OP;
+    output RegWrite;
+    output MemtoReg;
+
     reg [`WORD_SIZE-1:0] PC_reg;
     reg [`WORD_SIZE-1:0] r_data1_reg, r_data2_reg, imm_reg;
     reg [3:0] opcode_reg;

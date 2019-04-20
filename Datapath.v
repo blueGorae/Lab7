@@ -97,7 +97,7 @@ module	Datapath (clk, reset_n, readM1, address1, data1, readM2, writeM2, address
     assign PC_wire = PC;
     Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, opcode, PC_next);
 
-    IF_ID if_id(clk, reset_n, PC_wire, data1);
+    IF_ID if_id(clk, reset_n, PC_wire, data1, );
     //assign instruction = data1;
 
     assign rs = data1[11:10];
