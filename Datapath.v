@@ -157,6 +157,11 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     end
 
     assign is_WB = is_WB_reg;
+
+    always @(posedge clk) begin
+        PC <= PC_next;
+    end
+
     assign PC_wire = PC;
     assign instruction_IF_ID_in = data1;
     assign PC_IF_ID_in = PC_wire;
