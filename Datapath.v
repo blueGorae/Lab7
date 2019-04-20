@@ -141,15 +141,19 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     wire [`WORD_SIZE-1:0] PC_wire;
     
+    integer  i;
+
     initial 
     begin
-	    PC <= -1;
+        i <= 0;
+	    PC <= 0;
         num_inst_reg <= 0;     
         is_WB_reg <=0 ;
     end
 
     always @(negedge reset_n) begin
-	    PC <= -1;
+        i <= 0;
+	    PC <= 0;
         num_inst_reg <= 0;     
         is_WB_reg <=0 ;
     end
@@ -165,9 +169,14 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign is_WB = is_WB_reg;
 
     always@(posedge clk) begin
-		if(reset_n)begin
-            PC <= (PCSrc_EX_MEM_out==2) ? r_data1_EX_MEM_out : (((B_cond_EX_MEM_out && B_OP_EX_MEM_out) || (PCSrc_EX_MEM_out == 1)) ? target_address_EX_MEM_out : PC_next) ;
+        if(reset_n && i == 0) begin
+            PC = 0;
+            i = i + 1;
         end
+		else if(reset_n)begin
+            PC = (PCSrc_EX_MEM_out==2) ? r_data1_EX_MEM_out : (((B_cond_EX_MEM_out && B_OP_EX_MEM_out) || (PCSrc_EX_MEM_out == 1)) ? target_address_EX_MEM_out : PC_next) ;
+        end
+        
     end
     
 
