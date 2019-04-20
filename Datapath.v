@@ -121,7 +121,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire MemtoReg_MEM_WB_in;
     wire is_wwd_MEM_WB_in;
     wire halted_op_MEM_WB_in;
-    wire [`WORD_SIZE-1:0] MemData_MEM_EX_in;
+    wire [`WORD_SIZE-1:0] MemData_MEM_WB_in;
     wire [`WORD_SIZE-1:0] ALU_Result_MEM_WB_in;
     wire [1:0] rd_MEM_WB_in;
     //MEM_WB_out
@@ -129,11 +129,11 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire MemtoReg_MEM_WB_out;
     wire is_wwd_MEM_WB_out;
     wire halted_op_MEM_WB_out;
-    wire [`WORD_SIZE-1:0] MemData_MEM_EX_out;
+    wire [`WORD_SIZE-1:0] MemData_MEM_WB_out;
     wire [`WORD_SIZE-1:0] ALU_Result_MEM_WB_out;
     wire [1:0] rd_MEM_WB_out;
 
-    wire PC_wire;
+    wire [`WORD_SIZE-1:0] PC_wire;
     
     initial 
     begin
@@ -159,7 +159,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign is_WB = is_WB_reg;
     assign PC_wire = PC;
     
-    Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, opcode, PC_next);
+    Adder add1(clk, reset_n, PC_wire, `WORD_SIZE'b1, 4'b0000, PC_next);
 
     IF_ID if_id(clk, reset_n, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
     //assign instruction = data1;

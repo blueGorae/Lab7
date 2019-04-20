@@ -21,6 +21,7 @@ module Adder(clk, reset_n, ADDIn_A, ADDIn_B, opcode, ADD_Result);
         case (opcode) 
 			`JMP_OP : ADD_Result <= ($signed(ADDIn_A)  & (16'hf000)) | $signed(ADDIn_B);
 			`JAL_OP : ADD_Result <= ($signed(ADDIn_A)  & (16'hf000)) | $signed(ADDIn_B);
+            4'b0000 : ADD_Result <= $signed(ADDIn_A) + $signed(ADDIn_B);
             default : ADD_Result <= $signed(ADDIn_A) + $signed(ADDIn_B);
         endcase
     end
