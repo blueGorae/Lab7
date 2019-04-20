@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, PCSrc_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, PCSrc_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out);
+module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, PCSrc_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, is_wwd_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, PCSrc_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out, is_wwd_out);
     input clk, reset_n;
 
     input [`WORD_SIZE-1:0] PC_in;
@@ -14,6 +14,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     input B_OP_in;
     input RegWrite_in;
     input MemtoReg_in;
+    input is_wwd_in;
 
     output [`WORD_SIZE-1:0] PC_out;
     output [`WORD_SIZE-1:0] r_data1_out, r_data2_out, imm_out;
@@ -26,6 +27,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     output B_OP_out;
     output RegWrite_out;
     output MemtoReg_out;
+    output is_wwd_out;
 
     reg [`WORD_SIZE-1:0] PC_out;
     reg [`WORD_SIZE-1:0] r_data1_out, r_data2_out, imm_out;
@@ -38,6 +40,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     reg B_OP_out;
     reg RegWrite_out;
     reg MemtoReg_out;
+    reg is_wwd_out;
 
     reg [`WORD_SIZE-1:0] PC_reg;
     reg [`WORD_SIZE-1:0] r_data1_reg, r_data2_reg, imm_reg;
@@ -51,6 +54,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     reg B_OP_reg;
     reg RegWrite_reg;
     reg MemtoReg_reg;
+    reg is_wwd_reg;
 
     integer i;
 
@@ -70,6 +74,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         B_OP_reg = 1'b0;
         RegWrite_reg = 1'b0;
         MemtoReg_reg = 2'b0;
+        is_wwd_reg = 1'b0;
 
         PC_out = PC_reg;
         r_data1_out = r_data1_reg;
@@ -85,6 +90,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         B_OP_out = B_OP_reg;
         RegWrite_out = RegWrite_reg;
         MemtoReg_out = MemtoReg_reg;  
+        is_wwd_out = is_wwd_reg;
     end
 
     always @(negedge reset_n) begin
@@ -103,6 +109,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         B_OP_reg = 1'b0;
         RegWrite_reg = 1'b0;
         MemtoReg_reg = 2'b0;
+        is_wwd_reg = 1'b0;
 
         PC_out = PC_reg;
         r_data1_out = r_data1_reg;
@@ -117,7 +124,8 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         MemWrite_out = MemWrite_reg;
         B_OP_out = B_OP_reg;
         RegWrite_out = RegWrite_reg;
-        MemtoReg_out = MemtoReg_reg;  
+        MemtoReg_out = MemtoReg_reg;
+        is_wwd_out = is_wwd_reg;  
     end
 
     always @(posedge clk) begin
@@ -135,7 +143,8 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
             MemWrite_out = MemWrite_reg;
             B_OP_out = B_OP_reg;
             RegWrite_out = RegWrite_reg;
-            MemtoReg_out = MemtoReg_reg;  
+            MemtoReg_out = MemtoReg_reg; 
+            is_wwd_out = is_wwd_reg; 
     
             PC_reg = PC_in;
             r_data1_reg = r_data1_in;
@@ -151,6 +160,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
             B_OP_reg = B_OP_in;
             RegWrite_reg = RegWrite_in;
             MemtoReg_reg = MemtoReg_in;
+            is_wwd_reg = is_wwd_in; 
         end
         else if(reset_n) begin
             i = i + 1;

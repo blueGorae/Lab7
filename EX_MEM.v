@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data1_in, r_data2_in, rd_in, PCSrc_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, target_address_out, B_cond_out, ALU_Result_out, r_data1_out, r_data2_out, rd_out, PCSrc_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out);
+module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data1_in, r_data2_in, rd_in, PCSrc_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, is_wwd_in, target_address_out, B_cond_out, ALU_Result_out, r_data1_out, r_data2_out, rd_out, PCSrc_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out, is_wwd_out);
     input clk, reset_n;
 
     input [`WORD_SIZE-1 : 0] target_address_in;
@@ -14,6 +14,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     input B_OP_in;
     input RegWrite_in;
     input MemtoReg_in;
+    input is_wwd_in;
 
     output [`WORD_SIZE-1 : 0] target_address_out;
     output B_cond_out;
@@ -26,6 +27,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     output B_OP_out;
     output RegWrite_out;
     output MemtoReg_out;
+    output is_wwd_out;
 
     reg [`WORD_SIZE-1 : 0] target_address_out;
     reg B_cond_out;
@@ -38,6 +40,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     reg B_OP_out;
     reg RegWrite_out;
     reg MemtoReg_out;
+    reg is_wwd_out;
 
     reg [`WORD_SIZE-1 : 0] target_address_reg;
     reg B_cond_reg;
@@ -51,6 +54,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     reg B_OP_reg;
     reg RegWrite_reg;
     reg MemtoReg_reg;
+    reg is_wwd_reg;
 
     integer i;
 
@@ -68,6 +72,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
         B_OP_reg = 1'b0;
         RegWrite_reg = 1'b0;
         MemtoReg_reg = 1'b0;
+        is_wwd_reg = 1'b0;
 
         target_address_out = target_address_reg;
         B_cond_out = B_cond_reg;
@@ -81,6 +86,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
         B_OP_out = B_OP_reg;
         RegWrite_out = RegWrite_reg;
         MemtoReg_out = MemtoReg_reg;
+        is_wwd_out = is_wwd_reg;
     end
 
     always @(negedge reset_n) begin
@@ -97,6 +103,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
         B_OP_reg = 1'b0;
         RegWrite_reg = 1'b0;
         MemtoReg_reg = 1'b0;
+        is_wwd_reg = 1'b0;
 
         target_address_out = target_address_reg;
         B_cond_out = B_cond_reg;
@@ -110,6 +117,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
         B_OP_out = B_OP_reg;
         RegWrite_out = RegWrite_reg;
         MemtoReg_out = MemtoReg_reg;
+        is_wwd_out = is_wwd_reg;
 
     end
 
@@ -127,6 +135,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
             B_OP_out = B_OP_reg;
             RegWrite_out = RegWrite_reg;
             MemtoReg_out = MemtoReg_reg;
+            is_wwd_out = is_wwd_reg;
 
             target_address_reg = target_address_in;
             B_cond_reg = B_cond_in;
@@ -140,6 +149,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
             B_OP_reg = B_OP_in;
             RegWrite_reg = RegWrite_in;
             MemtoReg_reg = MemtoReg_in;
+            is_wwd_reg = is_wwd_in;
         end
         else if(reset_n) begin
             i = i + 1;

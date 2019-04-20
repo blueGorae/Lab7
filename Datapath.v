@@ -200,7 +200,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign PC_ID_EX_in = PC_IF_ID_out;
     assign rd_ID_EX_in = rd;
 
-    ID_EX id_ex(clk, reset_n, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rd_ID_EX_in, PCSrc_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, B_OP_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rd_ID_EX_out, PCSrc_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, B_OP_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out);
+    ID_EX id_ex(clk, reset_n, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rd_ID_EX_in, PCSrc_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, B_OP_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rd_ID_EX_out, PCSrc_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, B_OP_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out, is_wwd_ID_EX_out);
     assign ALUIn_A = r_data1_ID_EX_out;
     assign ALUIn_B = ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out;
 
@@ -216,8 +216,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign B_OP_EX_MEM_in = B_OP_ID_EX_out;
     assign RegWrite_EX_MEM_in = RegWrite_ID_EX_out;
     assign MemtoReg_EX_MEM_in = MemtoReg_ID_EX_out;
+    assign is_wwd_EX_MEM_in = is_wwd_ID_EX_out;
 
-    EX_MEM ex_mem(clk, reset_n, target_address_EX_MEM_in, B_cond_EX_MEM_in, ALU_Result_EX_MEM_in, r_data1_EX_MEM_in, r_data2_EX_MEM_in, rd_EX_MEM_in, PCSrc_EX_MEM_in, MemRead_EX_MEM_in, MemWrite_EX_MEM_in, B_OP_EX_MEM_in, RegWrite_EX_MEM_in, MemtoReg_EX_MEM_in, target_address_EX_MEM_out, B_cond_EX_MEM_out, ALU_Result_EX_MEM_out, r_data1_EX_MEM_out, r_data2_EX_MEM_out, rd_EX_MEM_out,PCSrc_EX_MEM_out ,MemRead_EX_MEM_out, MemWrite_EX_MEM_out, B_OP_EX_MEM_out, RegWrite_EX_MEM_out, MemtoReg_EX_MEM_out);
+    EX_MEM ex_mem(clk, reset_n, target_address_EX_MEM_in, B_cond_EX_MEM_in, ALU_Result_EX_MEM_in, r_data1_EX_MEM_in, r_data2_EX_MEM_in, rd_EX_MEM_in, PCSrc_EX_MEM_in, MemRead_EX_MEM_in, MemWrite_EX_MEM_in, B_OP_EX_MEM_in, RegWrite_EX_MEM_in, MemtoReg_EX_MEM_in, is_wwd_EX_MEM_in, target_address_EX_MEM_out, B_cond_EX_MEM_out, ALU_Result_EX_MEM_out, r_data1_EX_MEM_out, r_data2_EX_MEM_out, rd_EX_MEM_out,PCSrc_EX_MEM_out ,MemRead_EX_MEM_out, MemWrite_EX_MEM_out, B_OP_EX_MEM_out, RegWrite_EX_MEM_out, MemtoReg_EX_MEM_out, is_wwd_EX_MEM_out);
     assign readM1 = 1; // TODO : stall implementation
     assign readM2 = MemRead_EX_MEM_out;
     assign writeM2 = MemWrite_EX_MEM_out;
@@ -229,8 +230,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign rd_MEM_WB_in = rd_EX_MEM_out;
     assign MemtoReg_MEM_WB_in = MemtoReg_EX_MEM_out;
     assign RegWrite_MEM_WB_in = RegWrite_EX_MEM_out;
+    assign is_wwd_MEM_WB_in = is_wwd_EX_MEM_out;
 
-    MEM_WB mem_wb( clk, reset_n, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_WB);
+    MEM_WB mem_wb( clk, reset_n, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_WB);
 
     assign w_data =  MemtoReg_MEM_WB_out ? MemData_MEM_WB_out : ALU_Result_MEM_WB_out;
     assign output_port = r_data1_ID_EX_in;
