@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type);
+module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type, is_done);
 
 	input [`WORD_SIZE-1:0] instruction;
 	input reset_n, clk;
@@ -17,6 +17,7 @@ module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite
 	output R_type, I_type, J_type, S_type, L_type;
 	output is_wwd;
     output halted_op;
+	output is_done;
 
 	reg [1:0] PCSrc;
 	reg RegWrite;
@@ -30,6 +31,7 @@ module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite
 	reg R_type, I_type, J_type, S_type, L_type;
 	reg is_wwd;
     reg halted_op;
+	reg is_done;
 
     wire [3:0]opcode;
 	wire [5:0]func;
@@ -53,6 +55,7 @@ module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite
 	    L_type <= 1'b0;
 	    is_wwd <= 1'b0;
         halted_op <= 1'b0;
+		is_done <= 1'b0;
 	end
 	
 	//when reset was set, initialize each value. 
@@ -73,11 +76,13 @@ module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite
 	    L_type <= 1'b0;
 	    is_wwd <= 1'b0;
         halted_op <= 1'b0;
+		is_done <= 1'b0;
 	end
 
 	always @(*) begin
 	    is_wwd <= 0;
         halted_op <= 0;
+		is_done <= 1;
 		case (func)
 			`INST_FUNC_ADD : ALUOp <= `FUNC_ADD ;
 			`INST_FUNC_SUB : ALUOp <= `FUNC_SUB ;
