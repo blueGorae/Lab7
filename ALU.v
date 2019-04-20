@@ -44,7 +44,7 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_co
 		end
 	end
 	
-	always @(*) begin
+	always @(posedge clk) begin
 		case(ALUOp)
 			`FUNC_ADD: ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
 			`FUNC_SUB: ALU_Result <= $signed(ALUIn_A)  - $signed(ALUIn_B);
