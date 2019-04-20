@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegWrite_in, is_wwd_in, is_done_in, MemData_out, ALU_Result_out, rd_out, MemtoReg_out, RegWrite_out, is_wwd_out, is_done_out);
+module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegWrite_in, is_wwd_in, is_done_in, r_data1_in, MemData_out, ALU_Result_out, rd_out, MemtoReg_out, RegWrite_out, is_wwd_out, is_done_out, r_data1_out);
 
     input clk, reset_n;
 
@@ -11,6 +11,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     input RegWrite_in;
     input is_wwd_in;
     input is_done_in;
+    input [`WORD_SIZE-1 : 0] r_data1_in;
 
     output [`WORD_SIZE-1 : 0] MemData_out;
     output [`WORD_SIZE-1 : 0] ALU_Result_out;
@@ -19,6 +20,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     output RegWrite_out;
     output is_wwd_out;
     output is_done_out;
+    output [`WORD_SIZE-1 : 0] r_data1_out;
 
     reg [`WORD_SIZE-1 : 0] MemData_out;
     reg [`WORD_SIZE-1 : 0] ALU_Result_out;
@@ -27,6 +29,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     reg RegWrite_out;
     reg is_wwd_out;
     reg is_done_out;
+    reg [`WORD_SIZE-1 : 0] r_data1_out;
 
     integer i;
 
@@ -39,6 +42,8 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         RegWrite_out = 1'b0;
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
+        r_data1_out = `WORD_SIZE'bz;
+
 
     end
 
@@ -51,6 +56,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         RegWrite_out = 1'b0;
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
+        r_data1_out = `WORD_SIZE'bz;
 
     end
 
@@ -64,6 +70,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
             RegWrite_out = RegWrite_in;
             is_wwd_out = is_wwd_in;
             is_done_out = is_done_in;
+            r_data1_out = r_data1_in;
         end
         else if(reset_n) begin
             i = i + 1;
