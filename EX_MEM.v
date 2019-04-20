@@ -8,7 +8,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     input [`WORD_SIZE-1 : 0] ALU_Result_in;
     input [`WORD_SIZE-1 : 0] r_data2_in;
     input [1:0] rd_in;
-    input MemRead, MemWrite_in;
+    input MemRead_in, MemWrite_in;
     input B_OP_in;
     input RegWrite_in;
     input MemtoReg_in;
