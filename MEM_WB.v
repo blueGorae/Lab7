@@ -32,8 +32,10 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     reg MemtoReg_reg;
     reg RegWrite_reg;
 
+    integer i;
 
     initial begin
+        i = 0;
         MemData_reg <= `WORD_SIZE'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
@@ -43,6 +45,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     end
 
     always @(negedge reset_n) begin
+        i = 0;
         MemData_reg <= `WORD_SIZE'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
         rd_reg <= 2'bz;
@@ -52,7 +55,8 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     end
 
     always @(posedge clk) begin
-        if(reset_n)begin
+
+        if(reset_n && i >= 3)begin
             MemData_out = MemData_reg;
             ALU_Result_out = ALU_Result_reg;
             rd_out = rd_reg;
@@ -64,6 +68,9 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
             rd_reg = rd_in;
             MemtoReg_reg = MemtoReg_in;
             RegWrite_reg = RegWrite_in;
+        end
+        else if(reset_n) begin
+            i = i + 1;
         end
     end
     

@@ -17,7 +17,7 @@ module Adder(clk, reset_n, ADDIn_A, ADDIn_B, opcode, ADD_Result);
         ADD_Result <= `WORD_SIZE'b0;
     end
 
-    always @(posedge clk) begin
+    always @(*) begin
         case (opcode) 
 			`JMP_OP : ADD_Result <= ($signed(ADDIn_A)  & (16'hf000)) | $signed(ADDIn_B);
 			`JAL_OP : ADD_Result <= ($signed(ADDIn_A)  & (16'hf000)) | $signed(ADDIn_B);

@@ -48,7 +48,10 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     reg RegWrite_reg;
     reg MemtoReg_reg;
 
+    integer i;
+
     initial begin
+        i = 0;
         PC_reg <= `WORD_SIZE'bz;
         r_data1_reg <= `WORD_SIZE'bz;
         r_data2_reg <= `WORD_SIZE'bz;
@@ -65,6 +68,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     end
 
     always @(negedge reset_n) begin
+        i = 0;
         PC_reg <= `WORD_SIZE'bz;
         r_data1_reg <= `WORD_SIZE'bz;
         r_data2_reg <= `WORD_SIZE'bz;
@@ -81,7 +85,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     end
 
     always @(posedge clk) begin
-        if(reset_n)begin
+        if(reset_n &&  i >= 1)begin
             PC_out = PC_reg;
             r_data1_out = r_data1_reg;
             r_data2_out = r_data2_reg;
@@ -109,6 +113,9 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
             B_OP_reg = B_OP_in;
             RegWrite_reg = RegWrite_in;
             MemtoReg_reg = MemtoReg_in;
+        end
+        else if(reset_n) begin
+            i = i + 1;
         end
     end
 endmodule

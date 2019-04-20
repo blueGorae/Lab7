@@ -44,7 +44,10 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     reg RegWrite_reg;
     reg MemtoReg_reg;
 
+    integer i;
+
     initial begin
+        i = 0;
         target_address_reg <= `WORD_SIZE'bz;
         B_cond_reg <= 1'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
@@ -58,6 +61,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     end
 
     always @(negedge reset_n) begin
+        i = 0;
         target_address_reg <= `WORD_SIZE'bz;
         B_cond_reg <= 1'bz;
         ALU_Result_reg <= `WORD_SIZE'bz;
@@ -71,7 +75,7 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
     end
 
     always @(posedge clk) begin
-        if(reset_n)begin
+        if(reset_n && i >=2)begin
             target_address_out = target_address_reg;
             B_cond_out = B_cond_reg;
             ALU_Result_out = ALU_Result_reg;
@@ -93,6 +97,9 @@ module EX_MEM( clk, reset_n, target_address_in, B_cond_in, ALU_Result_in, r_data
             B_OP_reg = B_OP_in;
             RegWrite_reg = RegWrite_in;
             MemtoReg_reg = MemtoReg_in;
+        end
+        else if(reset_n) begin
+            i = i + 1;
         end
     end
 

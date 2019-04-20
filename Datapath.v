@@ -137,13 +137,13 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     
     initial 
     begin
-	    PC <= 0;
+	    PC <= -1;
         num_inst_reg <= 0;     
         is_WB_reg <=0 ;
     end
 
     always @(negedge reset_n) begin
-	    PC <= 0;
+	    PC <= -1;
         num_inst_reg <= 0;     
         is_WB_reg <=0 ;
     end

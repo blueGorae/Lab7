@@ -31,7 +31,7 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_co
 	// (HINT: Use 'always @(...) begin ... end')
 
 
-	always @(posedge clk) begin
+	always @(*) begin
 		if(B_OP)begin
 			B_cond = 0;
 			case (opcode) 
