@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, PCSrc_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
+module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
     input clk, reset_n;
 
     input [`WORD_SIZE-1:0] PC_in;
