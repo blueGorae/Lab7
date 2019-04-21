@@ -81,8 +81,9 @@ module ControlUnit(clk, reset_n, ControlNOP, instruction, PCSrc, RegWrite, ALUSr
 	end
 
 	always @(*) begin
-		is_done <= 1;
+		
 		if(!ControlNOP) begin 
+			is_done <= 1;
 			case (func)
 				`INST_FUNC_ADD : ALUOp <= `FUNC_ADD ;
 				`INST_FUNC_SUB : ALUOp <= `FUNC_SUB ;
@@ -394,22 +395,23 @@ module ControlUnit(clk, reset_n, ControlNOP, instruction, PCSrc, RegWrite, ALUSr
 		end
 		
 		else begin
+
 			PCSrc <= 2'b0;
-			RegWrite <= 1'b0;
-			ALUSrcB <= 1'b0;
-			MemWrite <= 1'b0;
-			ALUOp <= 3'b0;
-			MemtoReg <= 1'b0;
-			MemRead <= 1'b0;
-			readM1 <= 1'b1;
-			B_OP <= 1'b0;
-			R_type <= 1'b0;
-			I_type <= 1'b0;
-			J_type <= 1'b0;
-			S_type <= 1'b0;
-			L_type <= 1'b0;
-			is_wwd <= 1'b0;
-			halted_op <= 1'b0;
+			RegWrite <= 1;
+			ALUOp <= `FUNC_ADD;
+			ALUSrcB <= 1;
+			MemWrite <= 0;
+			MemtoReg <= 1;
+			MemRead <= 1;
+			readM1 <= 1;
+			B_OP <= 0;
+			R_type <= 0;
+			I_type <= 1;
+			J_type <= 0;
+			S_type <= 0;
+			L_type <= 1;
+			is_wwd <= 0;
+			halted_op <= 0;
 			is_done <= 1'b0;
 		end
 		

@@ -12,7 +12,7 @@ ENTRY:		LHI	$0, 0
 		LHI	$3, 0
 		WWD	$3	; TEST #1-4 : LHI (= 0x0000)
 
-		ADI	$0, $1, 1 // $0 = 1
+		ADI	$0, $1, 1 ; $0 = 1
 		WWD	$0	; TEST #2-1 : ADI (= 0x0001)
 		ADI	$0, $0, 1 //$0 = 2
 		WWD	$0	; TEST #2-2 : ADI (= 0x0002)
