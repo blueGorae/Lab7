@@ -117,7 +117,7 @@ module ControlUnit(clk, reset_n, ControlNOP, instruction, PCSrc, RegWrite, ALUSr
 						halted_op <= 0;
 					end
 					
-					else if(func == 6'd28) begin
+					else if(func == `WWD) begin //WWD
 						is_wwd <= 1;
 						PCSrc <= 2'b0;
 						RegWrite <= 1'b0;
@@ -135,7 +135,7 @@ module ControlUnit(clk, reset_n, ControlNOP, instruction, PCSrc, RegWrite, ALUSr
 						L_type <= 1'b0;
 						halted_op <= 1'b0;
 					end
-					else if(func == 6'd29) begin
+					else if(func == `HALT) begin //halt
 						halted_op <= 1;
 						PCSrc <= 2'b0;
 						RegWrite <= 1'b0;
@@ -153,7 +153,7 @@ module ControlUnit(clk, reset_n, ControlNOP, instruction, PCSrc, RegWrite, ALUSr
 						L_type <= 1'b0;
 						is_wwd <= 0;
 					end
-					else if (func == 6'd25) begin
+					else if (func == 6'd25) begin //JPR
 						PCSrc <= 2'b10;
 						RegWrite <= 0;
 						ALUOp <= 3'bz;
@@ -171,7 +171,7 @@ module ControlUnit(clk, reset_n, ControlNOP, instruction, PCSrc, RegWrite, ALUSr
 						is_wwd <= 0;
 						halted_op <= 0;
 					end
-					else if(func == 6'd26) begin 
+					else if(func == 6'd26) begin //JRL
 						PCSrc <= 2'b10;
 						RegWrite <= 1;
 						ALUOp <= 3'bz;
