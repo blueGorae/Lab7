@@ -209,8 +209,6 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign ALUIn_A = (forwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((forwardA == 1) ? w_data : r_data1_ID_EX_out);
     assign ALUIn_B = (forwardB == 2'b10) ? ALU_Result_EX_MEM_out : ((forwardB == 1) ? w_data : (ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out));
 
-    assign ALUIn_B = ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out;
-
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp_ID_EX_out, opcode_ID_EX_out, ALU_Result_EX_MEM_in);
 
     assign r_data1_EX_MEM_in = r_data1_ID_EX_out;
@@ -247,7 +245,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     MEM_WB mem_wb(clk, reset_n, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, is_done_MEM_WB_in, r_data1_MEM_WB_in, halted_op_MEM_WB_in, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_done_MEM_WB_out, r_data1_MEM_WB_out , halted_op_MEM_WB_out);
 
     assign w_data =  MemtoReg_MEM_WB_out ? MemData_MEM_WB_out : ALU_Result_MEM_WB_out;
-    assign output_port = is_wwd_MEM_WB_out ? r_data1_MEM_WB_out : `WORD_SIZE'bz;
+    assign output_port = is_wwd_MEM_WB_out ? ALU_Result_EX_MEM_out : `WORD_SIZE'bz;
     assign num_inst = num_inst_reg;
     
 
