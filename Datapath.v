@@ -59,7 +59,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire B_cond;
     wire B_OP;
     wire [`WORD_SIZE-1:0] target_address;
-    
+
     //IF_ID_in
     wire [`WORD_SIZE-1:0] PC_IF_ID_in;
     wire [`WORD_SIZE-1:0] instruction_IF_ID_in;
@@ -191,7 +191,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     register registers(clk, reset_n, rs, rt, rd, w_data, RegWrite_MEM_WB_out, r_data1_ID_EX_in, r_data2_ID_EX_in);
     HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, rd_ID_EX_out, instruction_IF_ID_out, PCWrite, IF_ID_Write, ControlNOP);
     ControlUnit controlUnit(clk, reset_n, ControlNOP, instruction_IF_ID_out, PCSrc_ID_EX_in, RegWrite_ID_EX_in, ALUSrcB_ID_EX_in, MemWrite_ID_EX_in, ALUOp_ID_EX_in, MemtoReg_ID_EX_in, MemRead_ID_EX_in, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type, is_done_ID_EX_in);
-    Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, opcode, B_cond);
+    Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode, B_cond);
 
     assign PC_ID_EX_in = PC_IF_ID_out;
     assign rd_ID_EX_in = rd;
