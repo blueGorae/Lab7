@@ -35,7 +35,7 @@ module ForwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX
             if((rd_EX_MEM_out != rs_ID_EX_out) && (rd_MEM_WB_out == rs_ID_EX_out)) begin
                 forwardA = 2'b01;
             end
-            else if ((rd_EX_MEM_out != rt_ID_EX_out) && (rd_MEM_WB_out == rt_ID_EX_out) begin
+            else if ((rd_EX_MEM_out != rt_ID_EX_out) && (rd_MEM_WB_out == rt_ID_EX_out)) begin
                 forwardB = 2'b01;
             end
         end
@@ -43,7 +43,7 @@ module ForwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX
             if((rd_EX_MEM_out != rs_ID_EX_out) && (rd_MEM_WB_out == rs_ID_EX_out)) begin
                 forwardA = 2'b10;
             end
-            else if ((rd_EX_MEM_out != rt_ID_EX_out) && (rd_MEM_WB_out == rt_ID_EX_out) begin
+            else if ((rd_EX_MEM_out != rt_ID_EX_out) && (rd_MEM_WB_out == rt_ID_EX_out)) begin
                 forwardB = 2'b10;
             end
         end
