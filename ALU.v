@@ -26,22 +26,29 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp, opcode, ALU_Result);
 	// (HINT: Use 'always @(...) begin ... end')
 
 
-	always @(posedge clk) begin
-		case(ALUOp)
-			`FUNC_ADD: ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
-			`FUNC_SUB: ALU_Result <= $signed(ALUIn_A)  - $signed(ALUIn_B);
-			`FUNC_AND: ALU_Result <= $signed(ALUIn_A)  & $signed(ALUIn_B);
-			`FUNC_ORR: ALU_Result <= $signed(ALUIn_A)  | $signed(ALUIn_B);
- 			`FUNC_NOT: ALU_Result <= ~$signed(ALUIn_A) ;
-			`FUNC_TCP: ALU_Result <= ~$signed(ALUIn_A)  + 1;
-			`FUNC_SHL: ALU_Result <= $signed(ALUIn_A)  << 1;
-			`FUNC_SHR: ALU_Result <= $signed(ALUIn_A) >>> 1;
-			default : ALU_Result <= `WORD_SIZE'bz;
-		endcase
-
-		case (opcode) 
-			`LHI_OP : ALU_Result <= (ALUIn_B) << 8;
-			default : ALU_Result <= `WORD_SIZE'bz;
-		endcase
+	always @(*) begin
+		if(opcode == `ALU_OP) begin 
+			case(ALUOp)
+				`FUNC_ADD: ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
+				`FUNC_SUB: ALU_Result <= $signed(ALUIn_A)  - $signed(ALUIn_B);
+				`FUNC_AND: ALU_Result <= $signed(ALUIn_A)  & $signed(ALUIn_B);
+				`FUNC_ORR: ALU_Result <= $signed(ALUIn_A)  | $signed(ALUIn_B);
+				`FUNC_NOT: ALU_Result <= ~$signed(ALUIn_A) ;
+				`FUNC_TCP: ALU_Result <= ~$signed(ALUIn_A)  + 1;
+				`FUNC_SHL: ALU_Result <= $signed(ALUIn_A)  << 1;
+				`FUNC_SHR: ALU_Result <= $signed(ALUIn_A) >>> 1;
+				default : ALU_Result <= `WORD_SIZE'bz;
+			endcase
+		end
+		else begin
+			case (opcode) 
+				`LHI_OP : ALU_Result <= (ALUIn_B) << 8;
+				`ADI_OP : ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
+				`ORI_OP : ALU_Result <= $signed(ALUIn_A)  | $signed(ALUIn_B);
+				`LWD_OP : ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
+				`SWD_OP : ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
+				default : ALU_Result <= `WORD_SIZE'bz;
+			endcase
+		end
 	end	
 endmodule

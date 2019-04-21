@@ -79,7 +79,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
             halted_op_out = halted_op_in;
         end
         else if(reset_n) begin
-            i = i + 1;s
+            i = i + 1;
         end
     end
     
