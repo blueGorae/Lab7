@@ -1,49 +1,31 @@
 `include "opcodes.v"
 
-module ALU(clk, reset_n, ALUIn_A, ALUIn_B, B_OP, ALUOp, opcode, ALU_Result, B_cond);
+module ALU(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp, opcode, ALU_Result);
 
 	input [`WORD_SIZE-1:0] ALUIn_A;
 	input [`WORD_SIZE-1:0] ALUIn_B;
-	input B_OP;
 	input [2:0] ALUOp;
 	input [3:0] opcode;
 	input reset_n;
 	input clk;
 	
 	output [`WORD_SIZE-1:0] ALU_Result;
-	output	B_cond;
 	
 	reg [`WORD_SIZE-1:0] ALU_Result;
-	reg B_cond;
 	// You can declare any variables as needed.
 	
 	initial begin
 		ALU_Result <= `WORD_SIZE'bz;
-		B_cond <= 0;
 	end
 
 	always @(negedge reset_n) begin
 		ALU_Result <= `WORD_SIZE'bz;
-		B_cond <= 0;
 	end
 
 	// TODO: You should implement the functionality of ALU!
 	// (HINT: Use 'always @(...) begin ... end')
 
 
-	always @(*) begin
-		if(B_OP)begin
-			B_cond = 0;
-			case (opcode) 
-					`BNE_OP : B_cond <= ($signed(ALUIn_A) != $signed(ALUIn_B));
-					`BEQ_OP	: B_cond <= ($signed(ALUIn_A)  == $signed(ALUIn_B));
-					`BGZ_OP	: B_cond <= ($signed(ALUIn_A)  > 0);
-					`BLZ_OP : B_cond <= ($signed(ALUIn_A)  < 0);
-					default : B_cond <= 0;
-			endcase
-		end
-	end
-	
 	always @(posedge clk) begin
 		case(ALUOp)
 			`FUNC_ADD: ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
