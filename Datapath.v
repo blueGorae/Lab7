@@ -12,6 +12,7 @@
 `include "HazardDetectionUnit.v"
 `include "PC.v"
 `include "Comparator.v"
+`include "ForwardUnit.v"
 
 module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
 
@@ -50,6 +51,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire [`WORD_SIZE-1:0] PC_next;
 
     wire flush_signal;
+    wire [1:0] forwardA;
+    wire [1:0] forwardB;
 
     //For HazardDetection
     wire PCWrite;
@@ -200,8 +203,12 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign is_wwd_ID_EX_in = is_wwd;
 
     ID_EX id_ex(clk, reset_n, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rs_ID_EX_in, rt_ID_EX_in, rd_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, is_wwd_ID_EX_in, is_done_ID_EX_in, halted_op_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rs_ID_EX_in, rt_ID_EX_in, rd_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out, is_wwd_ID_EX_out, is_done_ID_EX_out, halted_op_ID_EX_out);
-    
-    assign ALUIn_A = r_data1_ID_EX_out;
+
+    ForwardUnit forwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX_MEM_out, rd_MEM_WB_out, rs_ID_EX_out, rt_ID_EX_out, forwardA, forwardB);
+
+    assign ALUIn_A = (forwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((forwardA == 1) ? w_data : r_data1_ID_EX_out);
+    assign ALUIn_B = (forwardB == 2'b10) ? ALU_Result_EX_MEM_out : ((forwardB == 1) ? w_data : (ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out));
+
     assign ALUIn_B = ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out;
 
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp_ID_EX_out, opcode_ID_EX_out, ALU_Result_EX_MEM_in);
