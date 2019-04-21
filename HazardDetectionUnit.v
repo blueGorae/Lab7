@@ -35,7 +35,7 @@ module HazardDetectionUnit(clk, reset_n, MemRead, LWD_rd, new_instruction, PCWri
         new_rt = 2'bz;
     end
 
-    always @(posedge clk) begin
+    always @(*) begin
         new_rs = new_instruction[11:10];
         new_rt = new_instruction[9:8];
 
