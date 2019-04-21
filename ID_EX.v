@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, PCSrc_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, PCSrc_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
+module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, PCSrc_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, PCSrc_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
     input clk, reset_n;
     input flush_signal;
 
@@ -12,7 +12,6 @@ module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, 
     input [2:0] ALUOp_in;
     input ALUSrcB_in;
     input MemRead_in, MemWrite_in;
-    input B_OP_in;
     input RegWrite_in;
     input MemtoReg_in;
     input is_wwd_in;
@@ -26,7 +25,6 @@ module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, 
     output [2:0] ALUOp_out;
     output ALUSrcB_out;
     output MemRead_out, MemWrite_out;
-    output B_OP_out;
     output RegWrite_out;
     output MemtoReg_out;
     output is_wwd_out;
@@ -40,7 +38,6 @@ module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, 
     reg [2:0] ALUOp_out;
     reg ALUSrcB_out;
     reg MemRead_out, MemWrite_out;
-    reg B_OP_out;
     reg RegWrite_out;
     reg MemtoReg_out;
     reg is_wwd_out;
@@ -61,7 +58,6 @@ module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, 
         ALUSrcB_out = 2'b0;
         MemRead_out = 1'b0;
         MemWrite_out = 1'b0;
-        B_OP_out = 1'b0;
         RegWrite_out = 1'b0;
         MemtoReg_out = 2'b0;
         is_wwd_out = 1'b0;
@@ -82,7 +78,6 @@ module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, 
         ALUSrcB_out = 2'b0;
         MemRead_out = 1'b0;
         MemWrite_out = 1'b0;
-        B_OP_out = 1'b0;
         RegWrite_out = 1'b0;
         MemtoReg_out = 2'b0;
         is_wwd_out = 1'b0;
@@ -103,7 +98,6 @@ module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, 
             ALUSrcB_out = ALUSrcB_in;
             MemRead_out = MemRead_in;
             MemWrite_out = MemWrite_in;
-            B_OP_out = B_OP_in;
             RegWrite_out = RegWrite_in;
             MemtoReg_out = MemtoReg_in; 
             is_wwd_out = is_wwd_in; 
@@ -128,7 +122,6 @@ module ID_EX(clk, reset_n, flush_signal, PC_in, r_data1_in, r_data2_in, imm_in, 
             ALUSrcB_out = 2'b0;
             MemRead_out = 1'b0;
             MemWrite_out = 1'b0;
-            B_OP_out = 1'b0;
             RegWrite_out = 1'b0;
             MemtoReg_out = 2'b0;
             is_wwd_out = 1'b0;

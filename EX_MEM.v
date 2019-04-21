@@ -1,42 +1,36 @@
 `include "opcodes.v"
 
-module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_data1_in, r_data2_in, rd_in, PCSrc_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, target_address_out, ALU_Result_out, r_data1_out, r_data2_out, rd_out, PCSrc_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
+module EX_MEM( clk, reset_n, flush_signal, ALU_Result_in, r_data1_in, r_data2_in, rd_in, PCSrc_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, ALU_Result_out, r_data1_out, r_data2_out, rd_out, PCSrc_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
     input clk, reset_n;
     input flush_signal;
-    input [`WORD_SIZE-1 : 0] target_address_in;
     input [`WORD_SIZE-1 : 0] ALU_Result_in;
     input [`WORD_SIZE-1 : 0] r_data1_in;
     input [`WORD_SIZE-1 : 0] r_data2_in;
     input [1:0] rd_in;
     input [1:0] PCSrc_in;
     input MemRead_in, MemWrite_in;
-    input B_OP_in;
     input RegWrite_in;
     input MemtoReg_in;
     input is_wwd_in;
     input is_done_in;
 
-    output [`WORD_SIZE-1 : 0] target_address_out;
     output [`WORD_SIZE-1 : 0] ALU_Result_out;
     output [`WORD_SIZE-1 : 0] r_data1_out;
     output [`WORD_SIZE-1 : 0] r_data2_out;
     output [1:0] rd_out;
     output [1:0] PCSrc_out;
     output MemRead_out, MemWrite_out;
-    output B_OP_out;
     output RegWrite_out;
     output MemtoReg_out;
     output is_wwd_out;
     output is_done_out;
 
-    reg [`WORD_SIZE-1 : 0] target_address_out;
     reg [`WORD_SIZE-1 : 0] ALU_Result_out;
     reg [`WORD_SIZE-1 : 0] r_data1_out;
     reg [`WORD_SIZE-1 : 0] r_data2_out;
     reg [1:0] rd_out;
     reg [1:0] PCSrc_out;
     reg MemRead_out, MemWrite_out;
-    reg B_OP_out;
     reg RegWrite_out;
     reg MemtoReg_out;
     reg is_wwd_out;
@@ -46,7 +40,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_d
 
     initial begin
         i = 0;
-        target_address_out = `WORD_SIZE'bz;
         ALU_Result_out = `WORD_SIZE'bz;
         r_data1_out = `WORD_SIZE'bz;
         r_data2_out = `WORD_SIZE'bz;
@@ -54,7 +47,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_d
         PCSrc_out = 2'b0;
         MemRead_out = 1'b0;
         MemWrite_out = 1'b0;
-        B_OP_out = 1'b0;
         RegWrite_out = 1'b0;
         MemtoReg_out = 1'b0;
         is_wwd_out = 1'b0;
@@ -64,7 +56,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_d
 
     always @(negedge reset_n) begin
         i = 0;
-        target_address_out = `WORD_SIZE'bz;
         ALU_Result_out = `WORD_SIZE'bz;
         r_data1_out = `WORD_SIZE'bz;
         r_data2_out = `WORD_SIZE'bz;
@@ -72,7 +63,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_d
         PCSrc_out = 2'b0;
         MemRead_out = 1'b0;
         MemWrite_out = 1'b0;
-        B_OP_out = 1'b0;
         RegWrite_out = 1'b0;
         MemtoReg_out = 1'b0;
         is_wwd_out = 1'b0;
@@ -83,7 +73,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_d
 
     always @(posedge clk) begin
         if(reset_n && i >=2)begin
-            target_address_out = target_address_in;
             ALU_Result_out = ALU_Result_in;
             r_data1_out = r_data1_in;
             r_data2_out = r_data2_in;
@@ -91,7 +80,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_d
             PCSrc_out = PCSrc_in;
             MemRead_out = MemRead_in;
             MemWrite_out = MemWrite_in;
-            B_OP_out = B_OP_in;
             RegWrite_out = RegWrite_in;
             MemtoReg_out = MemtoReg_in;
             is_wwd_out = is_wwd_in;
@@ -105,7 +93,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_d
 
     always @(*) begin
         if(flush_signal) begin
-            target_address_out = `WORD_SIZE'bz;
             ALU_Result_out = `WORD_SIZE'bz;
             r_data1_out = `WORD_SIZE'bz;
             r_data2_out = `WORD_SIZE'bz;
@@ -113,7 +100,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_d
             PCSrc_out = 2'b0;
             MemRead_out = 1'b0;
             MemWrite_out = 1'b0;
-            B_OP_out = 1'b0;
             RegWrite_out = 1'b0;
             MemtoReg_out = 1'b0;
             is_wwd_out = 1'b0;
