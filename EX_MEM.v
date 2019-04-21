@@ -1,10 +1,9 @@
 `include "opcodes.v"
 
-module EX_MEM( clk, reset_n, flush_signal, target_address_in, B_cond_in, ALU_Result_in, r_data1_in, r_data2_in, rd_in, PCSrc_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, target_address_out, B_cond_out, ALU_Result_out, r_data1_out, r_data2_out, rd_out, PCSrc_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
+module EX_MEM( clk, reset_n, flush_signal, target_address_in, ALU_Result_in, r_data1_in, r_data2_in, rd_in, PCSrc_in, MemRead_in, MemWrite_in, B_OP_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, target_address_out, ALU_Result_out, r_data1_out, r_data2_out, rd_out, PCSrc_out, MemRead_out, MemWrite_out, B_OP_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
     input clk, reset_n;
     input flush_signal;
     input [`WORD_SIZE-1 : 0] target_address_in;
-    input B_cond_in;
     input [`WORD_SIZE-1 : 0] ALU_Result_in;
     input [`WORD_SIZE-1 : 0] r_data1_in;
     input [`WORD_SIZE-1 : 0] r_data2_in;
@@ -18,7 +17,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, B_cond_in, ALU_Res
     input is_done_in;
 
     output [`WORD_SIZE-1 : 0] target_address_out;
-    output B_cond_out;
     output [`WORD_SIZE-1 : 0] ALU_Result_out;
     output [`WORD_SIZE-1 : 0] r_data1_out;
     output [`WORD_SIZE-1 : 0] r_data2_out;
@@ -32,7 +30,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, B_cond_in, ALU_Res
     output is_done_out;
 
     reg [`WORD_SIZE-1 : 0] target_address_out;
-    reg B_cond_out;
     reg [`WORD_SIZE-1 : 0] ALU_Result_out;
     reg [`WORD_SIZE-1 : 0] r_data1_out;
     reg [`WORD_SIZE-1 : 0] r_data2_out;
@@ -50,7 +47,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, B_cond_in, ALU_Res
     initial begin
         i = 0;
         target_address_out = `WORD_SIZE'bz;
-        B_cond_out = 1'bz;
         ALU_Result_out = `WORD_SIZE'bz;
         r_data1_out = `WORD_SIZE'bz;
         r_data2_out = `WORD_SIZE'bz;
@@ -69,7 +65,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, B_cond_in, ALU_Res
     always @(negedge reset_n) begin
         i = 0;
         target_address_out = `WORD_SIZE'bz;
-        B_cond_out = 1'bz;
         ALU_Result_out = `WORD_SIZE'bz;
         r_data1_out = `WORD_SIZE'bz;
         r_data2_out = `WORD_SIZE'bz;
@@ -89,7 +84,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, B_cond_in, ALU_Res
     always @(posedge clk) begin
         if(reset_n && i >=2)begin
             target_address_out = target_address_in;
-            B_cond_out = B_cond_in;
             ALU_Result_out = ALU_Result_in;
             r_data1_out = r_data1_in;
             r_data2_out = r_data2_in;
@@ -112,7 +106,6 @@ module EX_MEM( clk, reset_n, flush_signal, target_address_in, B_cond_in, ALU_Res
     always @(*) begin
         if(flush_signal) begin
             target_address_out = `WORD_SIZE'bz;
-            B_cond_out = 1'bz;
             ALU_Result_out = `WORD_SIZE'bz;
             r_data1_out = `WORD_SIZE'bz;
             r_data2_out = `WORD_SIZE'bz;
