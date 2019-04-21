@@ -227,7 +227,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign is_wwd_MEM_WB_in = is_wwd_EX_MEM_out;
     assign is_done_MEM_WB_in = is_done_EX_MEM_out;
 
-    FlushUnit flushUnit(clk, reset_n, B_cond , flush_signal);
+    FlushUnit flushUnit(clk, reset_n, PCSrc, B_OP, B_cond , flush_signal);
 
     MEM_WB mem_wb(clk, reset_n, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, is_done_MEM_WB_in, r_data1_MEM_WB_in, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_done_MEM_WB_out, r_data1_MEM_WB_out );
 

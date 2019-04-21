@@ -1,8 +1,7 @@
 `include "opcodes.v"
 
-module EX_MEM( clk, reset_n, flush_signal, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, ALU_Result_out, r_data1_out, r_data2_out, rd_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
+module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, ALU_Result_out, r_data1_out, r_data2_out, rd_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
     input clk, reset_n;
-    input flush_signal;
     input [`WORD_SIZE-1 : 0] ALU_Result_in;
     input [`WORD_SIZE-1 : 0] r_data1_in;
     input [`WORD_SIZE-1 : 0] r_data2_in;
