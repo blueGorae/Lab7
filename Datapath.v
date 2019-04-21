@@ -182,21 +182,20 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign rs = instruction_IF_ID_out[11:10];
     assign rt = instruction_IF_ID_out[9:8];
     assign rd = J_type ? 2 : ( R_type ? instruction_IF_ID_out[7:6] : (( I_type || S_type ) ? instruction_IF_ID_out[9:8]: 2'bz)) ; 
-    assign opcode = instruction_IF_ID_out[`WORD_SIZE-1:12];
+    assign opcode_ID_EX_in = instruction_IF_ID_out[`WORD_SIZE-1:12];    
     assign func = instruction_IF_ID_out[5:0];
 
-    Adder targetAddressAdder(clk, reset_n, PC_IF_ID_out, imm_ID_EX_in, opcode, target_address);
+    Adder targetAddressAdder(clk, reset_n, PC_IF_ID_out, imm_ID_EX_in, opcode_ID_EX_in, target_address);
 
     immGenerator immG(clk, reset_n, instruction_IF_ID_out, imm_ID_EX_in);
     register registers(clk, reset_n, rs, rt, rd, w_data, RegWrite_MEM_WB_out, r_data1_ID_EX_in, r_data2_ID_EX_in);
     HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, rd_ID_EX_out, instruction_IF_ID_out, PCWrite, IF_ID_Write, ControlNOP);
     ControlUnit controlUnit(clk, reset_n, ControlNOP, instruction_IF_ID_out, PCSrc_ID_EX_in, RegWrite_ID_EX_in, ALUSrcB_ID_EX_in, MemWrite_ID_EX_in, ALUOp_ID_EX_in, MemtoReg_ID_EX_in, MemRead_ID_EX_in, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type, is_done_ID_EX_in);
-    Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode, B_cond);
+    Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode_ID_EX_in, B_cond);
 
     assign PC_ID_EX_in = PC_IF_ID_out;
     assign rd_ID_EX_in = rd;
     assign is_wwd_ID_EX_in = is_wwd;
-    assign opcode_ID_EX_in = opcode;
     
     ID_EX id_ex(clk, reset_n, flush_signal, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rd_ID_EX_in, PCSrc_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, is_wwd_ID_EX_in, is_done_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rd_ID_EX_out, PCSrc_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out, is_wwd_ID_EX_out, is_done_ID_EX_out);
     assign ALUIn_A = r_data1_ID_EX_out;
