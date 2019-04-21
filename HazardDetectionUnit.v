@@ -44,6 +44,11 @@ module HazardDetectionUnit(clk, reset_n, MemRead, LWD_rd, new_instruction, PCWri
             IF_ID_Write = 0;
             ControlNOP = 1;
         end
+        else begin 
+            PCWrite = 1'b1;
+            IF_ID_Write = 1'b1;
+            ControlNOP = 1'b0;
+        end
     end
 endmodule
 
