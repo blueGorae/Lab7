@@ -211,7 +211,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp_ID_EX_out, opcode_ID_EX_out, ALU_Result_EX_MEM_in);
 
-    assign r_data1_EX_MEM_in = r_data1_ID_EX_out;
+    assign r_data1_EX_MEM_in = ALUIn_A;
     assign r_data2_EX_MEM_in = r_data2_ID_EX_out;
     assign rd_EX_MEM_in = rd_ID_EX_out;
     assign MemRead_EX_MEM_in =  MemRead_ID_EX_out;
