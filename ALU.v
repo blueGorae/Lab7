@@ -26,7 +26,7 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp, opcode, ALU_Result);
 	// (HINT: Use 'always @(...) begin ... end')
 
 
-	always @(posedge clk) begin
+	always @(*) begin
 		case(ALUOp)
 			`FUNC_ADD: ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
 			`FUNC_SUB: ALU_Result <= $signed(ALUIn_A)  - $signed(ALUIn_B);

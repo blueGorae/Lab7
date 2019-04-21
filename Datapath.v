@@ -121,7 +121,6 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire MemtoReg_EX_MEM_out;
     wire is_wwd_EX_MEM_out;
     wire halted_op_EX_MEM_out;
-    wire [`WORD_SIZE-1: 0] target_address_EX_MEM_out;
     wire [`WORD_SIZE-1:0] ALU_Result_EX_MEM_out;
     wire [`WORD_SIZE-1:0] r_data1_EX_MEM_out; // register file from rs
     wire [`WORD_SIZE-1:0] r_data2_EX_MEM_out;
