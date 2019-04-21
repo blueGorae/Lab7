@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegWrite_in, is_wwd_in, is_done_in, r_data1_in, MemData_out, ALU_Result_out, rd_out, MemtoReg_out, RegWrite_out, is_wwd_out, is_done_out, r_data1_out);
+module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegWrite_in, is_wwd_in, is_done_in, r_data1_in, halted_op_in, MemData_out, ALU_Result_out, rd_out, MemtoReg_out, RegWrite_out, is_wwd_out, is_done_out, r_data1_out, halted_op_out);
 
     input clk, reset_n;
 
@@ -12,6 +12,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     input is_wwd_in;
     input is_done_in;
     input [`WORD_SIZE-1 : 0] r_data1_in;
+    input halted_op_in;
 
     output [`WORD_SIZE-1 : 0] MemData_out;
     output [`WORD_SIZE-1 : 0] ALU_Result_out;
@@ -21,6 +22,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     output is_wwd_out;
     output is_done_out;
     output [`WORD_SIZE-1 : 0] r_data1_out;
+    output halted_op_out;
 
     reg [`WORD_SIZE-1 : 0] MemData_out;
     reg [`WORD_SIZE-1 : 0] ALU_Result_out;
@@ -30,6 +32,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     reg is_wwd_out;
     reg is_done_out;
     reg [`WORD_SIZE-1 : 0] r_data1_out;
+    reg halted_op_out;
 
     integer i;
 
@@ -43,6 +46,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
         r_data1_out = `WORD_SIZE'bz;
+        halted_op_out = 1'b0;
 
 
     end
@@ -57,6 +61,7 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
         r_data1_out = `WORD_SIZE'bz;
+        halted_op_out = 1'b0;
 
     end
 
@@ -71,9 +76,10 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
             is_wwd_out = is_wwd_in;
             is_done_out = is_done_in;
             r_data1_out = r_data1_in;
+            halted_op_out = halted_op_in;
         end
         else if(reset_n) begin
-            i = i + 1;
+            i = i + 1;s
         end
     end
     

@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
+module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
     input clk, reset_n;
 
     input [`WORD_SIZE-1:0] PC_in;
@@ -14,6 +14,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     input MemtoReg_in;
     input is_wwd_in;
     input is_done_in;
+    input halted_op_in;
 
     output [`WORD_SIZE-1:0] PC_out;
     output [`WORD_SIZE-1:0] r_data1_out, r_data2_out, imm_out;
@@ -26,6 +27,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     output MemtoReg_out;
     output is_wwd_out;
     output is_done_out;
+    output halted_op_out;
 
     reg [`WORD_SIZE-1:0] PC_out;
     reg [`WORD_SIZE-1:0] r_data1_out, r_data2_out, imm_out;
@@ -38,6 +40,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
     reg MemtoReg_out;
     reg is_wwd_out;
     reg is_done_out;
+    reg halted_op_out;
 
     integer i;
 
@@ -57,6 +60,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         MemtoReg_out = 2'b0;
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
+        halted_op_out = 1'b0;
 
     end
 
@@ -76,6 +80,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
         MemtoReg_out = 2'b0;
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
+        halted_op_out = 1'b0;
 
     end
 
@@ -95,6 +100,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rd_
             MemtoReg_out = MemtoReg_in; 
             is_wwd_out = is_wwd_in; 
             is_done_out = is_done_in;
+            halted_op_out = halted_op_in;
     
         end
         else if(reset_n) begin

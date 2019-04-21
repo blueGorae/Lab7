@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, ALU_Result_out, r_data1_out, r_data2_out, rd_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out);
+module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, ALU_Result_out, r_data1_out, r_data2_out, rd_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
     input clk, reset_n;
     input [`WORD_SIZE-1 : 0] ALU_Result_in;
     input [`WORD_SIZE-1 : 0] r_data1_in;
@@ -11,6 +11,7 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
     input MemtoReg_in;
     input is_wwd_in;
     input is_done_in;
+    input halted_op_in;
 
     output [`WORD_SIZE-1 : 0] ALU_Result_out;
     output [`WORD_SIZE-1 : 0] r_data1_out;
@@ -21,6 +22,7 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
     output MemtoReg_out;
     output is_wwd_out;
     output is_done_out;
+    output halted_op_out;
 
     reg [`WORD_SIZE-1 : 0] ALU_Result_out;
     reg [`WORD_SIZE-1 : 0] r_data1_out;
@@ -31,6 +33,7 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
     reg MemtoReg_out;
     reg is_wwd_out;
     reg is_done_out;
+    reg halted_op_out;
 
     integer i;
 
@@ -46,6 +49,7 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
         MemtoReg_out = 1'b0;
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
+        halted_op_out = 1'b0;
 
     end
 
@@ -61,6 +65,7 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
         MemtoReg_out = 1'b0;
         is_wwd_out = 1'b0;
         is_done_out = 1'b0;
+        halted_op_out = 1'b0;
 
 
     end
@@ -77,6 +82,7 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
             MemtoReg_out = MemtoReg_in;
             is_wwd_out = is_wwd_in;
             is_done_out = is_done_in;
+            halted_op_out = halted_op_in;
 
         end
         else if(reset_n) begin
