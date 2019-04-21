@@ -27,7 +27,7 @@ module ForwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX
         forwardB <= 2'b0;
     end
 
-    always @(posedge clk) begin
+    always @(*) begin
         forwardA = 2'b0;
         forwardB = 2'b0;
 
