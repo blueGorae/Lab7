@@ -192,8 +192,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     immGenerator immG(clk, reset_n, instruction_IF_ID_out, imm_ID_EX_in);
     register registers(clk, reset_n, rs, rt, rd_MEM_WB_out, w_data, RegWrite_MEM_WB_out, r_data1_ID_EX_in, r_data2_ID_EX_in);
-    HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_in, rd_ID_EX_in, instruction_IF_ID_in, PCWrite, IF_ID_Write, ControlNOP);
-    ControlUnit controlUnit(clk, reset_n, ControlNOP, instruction_IF_ID_out, PCSrc, RegWrite_ID_EX_in, ALUSrcB_ID_EX_in, MemWrite_ID_EX_in, ALUOp_ID_EX_in, MemtoReg_ID_EX_in, MemRead_ID_EX_in, readM1, B_OP, is_wwd, halted_op_ID_EX_in, R_type, I_type, J_type, S_type, L_type, is_done_ID_EX_in);
+    HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, rd_ID_EX_out, instruction_IF_ID_in, PCWrite, IF_ID_Write, ControlNOP);
+    ControlUnit controlUnit(clk, reset_n, instruction_IF_ID_out, PCSrc, RegWrite_ID_EX_in, ALUSrcB_ID_EX_in, MemWrite_ID_EX_in, ALUOp_ID_EX_in, MemtoReg_ID_EX_in, MemRead_ID_EX_in, readM1, B_OP, is_wwd, halted_op_ID_EX_in, R_type, I_type, J_type, S_type, L_type, is_done_ID_EX_in);
     Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode_ID_EX_in, B_cond);
 
     assign PC_ID_EX_in = PC_IF_ID_out;
@@ -202,7 +202,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign rt_ID_EX_in = rt;
     assign is_wwd_ID_EX_in = is_wwd;
 
-    ID_EX id_ex(clk, reset_n, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rs_ID_EX_in, rt_ID_EX_in, rd_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, is_wwd_ID_EX_in, is_done_ID_EX_in, halted_op_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rs_ID_EX_out, rt_ID_EX_out, rd_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out, is_wwd_ID_EX_out, is_done_ID_EX_out, halted_op_ID_EX_out);
+    ID_EX id_ex(clk, reset_n, ControlNOP, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rs_ID_EX_in, rt_ID_EX_in, rd_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, is_wwd_ID_EX_in, is_done_ID_EX_in, halted_op_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rs_ID_EX_out, rt_ID_EX_out, rd_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out, is_wwd_ID_EX_out, is_done_ID_EX_out, halted_op_ID_EX_out);
 
     ForwardUnit forwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX_MEM_out, rd_MEM_WB_out, rs_ID_EX_out, rt_ID_EX_out, forwardA, forwardB);
 
@@ -224,7 +224,6 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     EX_MEM ex_mem(clk, reset_n, ALU_Result_EX_MEM_in, r_data1_EX_MEM_in, r_data2_EX_MEM_in, rd_EX_MEM_in
     , MemRead_EX_MEM_in, MemWrite_EX_MEM_in, RegWrite_EX_MEM_in, MemtoReg_EX_MEM_in, is_wwd_EX_MEM_in, is_done_EX_MEM_in, halted_op_EX_MEM_in, ALU_Result_EX_MEM_out, r_data1_EX_MEM_out, r_data2_EX_MEM_out, rd_EX_MEM_out, MemRead_EX_MEM_out, MemWrite_EX_MEM_out, RegWrite_EX_MEM_out, MemtoReg_EX_MEM_out, is_wwd_EX_MEM_out, is_done_EX_MEM_out, halted_op_EX_MEM_out);
-    assign readM1 = 1; // TODO : stall implementation
     assign readM2 = MemRead_EX_MEM_out;
     assign writeM2 = MemWrite_EX_MEM_out;
     assign address1 = PC_out;
