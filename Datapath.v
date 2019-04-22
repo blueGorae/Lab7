@@ -82,6 +82,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire RegWrite_ID_EX_in;
     wire ALUSrcB_ID_EX_in;
     wire MemWrite_ID_EX_in;
+    wire MemRead_ID_EX_in;
     wire [2:0]ALUOp_ID_EX_in;
     wire MemtoReg_ID_EX_in;
     wire R_type;
@@ -106,6 +107,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire RegWrite_ID_EX_out;
     wire ALUSrcB_ID_EX_out;
     wire MemWrite_ID_EX_out;
+    wire MemRead_ID_EX_out;
     wire [2:0]ALUOp_ID_EX_out;
     wire MemtoReg_ID_EX_out;
     wire is_wwd_ID_EX_out;
@@ -123,6 +125,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     //EX_MEM_in
     wire RegWrite_EX_MEM_in;
     wire MemWrite_EX_MEM_in;
+    wire MemRead_EX_MEM_in;
     wire MemtoReg_EX_MEM_in;
     wire is_wwd_EX_MEM_in;
     wire halted_op_EX_MEM_in;
@@ -134,6 +137,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     //EX_MEM_out
     wire RegWrite_EX_MEM_out;
     wire MemWrite_EX_MEM_out;
+    wire MemRead_EX_MEM_out;
     wire MemtoReg_EX_MEM_out;
     wire is_wwd_EX_MEM_out;
     wire halted_op_EX_MEM_out;
