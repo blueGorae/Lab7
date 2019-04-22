@@ -25,7 +25,13 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     output [`WORD_SIZE-1:0] address1;	
 
     //Memory Data
-    inout [`WORD_SIZE-1:0] data2; 
+    inout [`WORD_SIZE-1:0] data2;
+    wire data2_in;
+    assign data2_in = data2;
+
+    wire data2_out;
+    assign data2 = data2_out;
+
     output readM2;
     output writeM2;								
     output [`WORD_SIZE-1:0] address2; //address that we refer
@@ -228,7 +234,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign writeM2 = MemWrite_EX_MEM_out;
     assign address1 = PC_out;
     assign address2 = (MemRead_EX_MEM_out || MemWrite_EX_MEM_out) ? ALU_Result_EX_MEM_out : `WORD_SIZE'b0;
-    assign MemData_MEM_WB_in = data2;
+    assign MemData_MEM_WB_in = data2_in;
+    assign data2_out = r_data2_EX_MEM_out;
 
     assign ALU_Result_MEM_WB_in = ALU_Result_EX_MEM_out;
     assign r_data1_MEM_WB_in = r_data1_EX_MEM_out;
