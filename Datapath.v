@@ -173,14 +173,14 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     end
 
     assign PC_in = (PCSrc==2) ? r_data1_ID_EX_in : (((B_cond && B_OP) || (PCSrc == 1)) ? target_address : PC_next);
-    PC pc(clk, reset_n, PCWrite, PC_in, PC_out);
+    PC pc(clk, reset_n, PCWrite && !flush_signal, PC_in, PC_out);
 
 
     assign instruction_IF_ID_in = data1;
     assign PC_IF_ID_in = PC_out;
     Adder add1(clk, reset_n, PC_out, `WORD_SIZE'b1, 4'b0000, PC_next);
 
-    IF_ID if_id(clk, reset_n, flush_signal, IF_ID_Write, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
+    IF_ID if_id(clk, reset_n, flush_signal, IF_ID_Write && !flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
 
     assign rs = instruction_IF_ID_out[11:10];
     assign rt = instruction_IF_ID_out[9:8];
@@ -193,7 +193,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     immGenerator immG(clk, reset_n, instruction_IF_ID_out, imm_ID_EX_in);
     register registers(clk, reset_n, rs, rt, rd_MEM_WB_out, w_data, RegWrite_MEM_WB_out, r_data1_ID_EX_in, r_data2_ID_EX_in);
     HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, rd_ID_EX_out, instruction_IF_ID_in, PCWrite, IF_ID_Write, ControlNOP);
-    ControlUnit controlUnit(clk, reset_n, instruction_IF_ID_out, PCSrc, RegWrite_ID_EX_in, ALUSrcB_ID_EX_in, MemWrite_ID_EX_in, ALUOp_ID_EX_in, MemtoReg_ID_EX_in, MemRead_ID_EX_in, readM1, B_OP, is_wwd, halted_op_ID_EX_in, R_type, I_type, J_type, S_type, L_type, is_done_ID_EX_in);
+    ControlUnit controlUnit(clk, reset_n, flush_signal, instruction_IF_ID_out, PCSrc, RegWrite_ID_EX_in, ALUSrcB_ID_EX_in, MemWrite_ID_EX_in, ALUOp_ID_EX_in, MemtoReg_ID_EX_in, MemRead_ID_EX_in, readM1, B_OP, is_wwd, halted_op_ID_EX_in, R_type, I_type, J_type, S_type, L_type, is_done_ID_EX_in);
     Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode_ID_EX_in, B_cond);
 
     assign PC_ID_EX_in = PC_IF_ID_out;

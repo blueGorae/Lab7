@@ -30,11 +30,11 @@ module IF_ID(clk, reset_n, flush_signal, IF_ID_Write, PC_in, Instruction_in, PC_
         end
     end
 
-    always @(*) begin
-        if(flush_signal) begin
-            PC_out = `WORD_SIZE'bz;
-            Instruction_out = `WORD_SIZE'bz;
-        end
-    end 
+    // always @(*) begin
+    //     if(flush_signal) begin
+    //         PC_out = `WORD_SIZE'bz;
+    //         Instruction_out = `WORD_SIZE'bz;
+    //     end
+    // end 
 
 endmodule

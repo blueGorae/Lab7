@@ -18,6 +18,7 @@ module FlushUnit(clk, reset_n, PCSrc, B_OP, B_cond, flush_signal);
         flush_signal <= 0;
     end
 
+
     always @(posedge clk) begin
         flush_signal = 0;
         if(PCSrc == 2) begin
