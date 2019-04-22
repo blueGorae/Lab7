@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module ForwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX_MEM_out, rd_MEM_WB_out, rs_ID_EX_out, rt_ID_EX_out, forwardA, forwardB);
+module EXForwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX_MEM_out, rd_MEM_WB_out, rs_ID_EX_out, rt_ID_EX_out, forwardA, forwardB);
     input clk, reset_n;
 
     input [1:0] rd_EX_MEM_out;
