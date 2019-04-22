@@ -26,10 +26,10 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     //Memory Data
     inout [`WORD_SIZE-1:0] data2;
-    wire data2_in;
+    wire [`WORD_SIZE-1:0] data2_in;
     assign data2_in = data2;
 
-    wire data2_out;
+    wire [`WORD_SIZE-1:0] data2_out;
     assign data2 = data2_out;
 
     output readM2;
