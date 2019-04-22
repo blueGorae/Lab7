@@ -27,10 +27,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     //Memory Data
     inout [`WORD_SIZE-1:0] data2;
     wire [`WORD_SIZE-1:0] data2_in;
-    assign data2_in = data2;
 
     wire [`WORD_SIZE-1:0] data2_out;
-    assign data2 = data2_out;
 
     output readM2;
     output writeM2;								
@@ -228,14 +226,17 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign is_done_EX_MEM_in =  is_done_ID_EX_out;
     assign halted_op_EX_MEM_in = halted_op_ID_EX_out;
 
+
     EX_MEM ex_mem(clk, reset_n, ALU_Result_EX_MEM_in, r_data1_EX_MEM_in, r_data2_EX_MEM_in, rd_EX_MEM_in
     , MemRead_EX_MEM_in, MemWrite_EX_MEM_in, RegWrite_EX_MEM_in, MemtoReg_EX_MEM_in, is_wwd_EX_MEM_in, is_done_EX_MEM_in, halted_op_EX_MEM_in, ALU_Result_EX_MEM_out, r_data1_EX_MEM_out, r_data2_EX_MEM_out, rd_EX_MEM_out, MemRead_EX_MEM_out, MemWrite_EX_MEM_out, RegWrite_EX_MEM_out, MemtoReg_EX_MEM_out, is_wwd_EX_MEM_out, is_done_EX_MEM_out, halted_op_EX_MEM_out);
+    assign data2_in = MemRead_EX_MEM_out ? data2 : `WORD_SIZE'bz;
+    assign data2 =  MemWrite_EX_MEM_out ? data2_out : `WORD_SIZE'bz;
     assign readM2 = MemRead_EX_MEM_out;
     assign writeM2 = MemWrite_EX_MEM_out;
     assign address1 = PC_out;
     assign address2 = (MemRead_EX_MEM_out || MemWrite_EX_MEM_out) ? ALU_Result_EX_MEM_out : `WORD_SIZE'b0;
-    assign MemData_MEM_WB_in = data2_in;
-    assign data2_out = r_data2_EX_MEM_out;
+    assign MemData_MEM_WB_in = MemRead_EX_MEM_out ? data2_in : `WORD_SIZE'bz;
+    assign data2_out = MemWrite_EX_MEM_out ? r_data2_EX_MEM_out : `WORD_SIZE'bz;
 
     assign ALU_Result_MEM_WB_in = ALU_Result_EX_MEM_out;
     assign r_data1_MEM_WB_in = r_data1_EX_MEM_out;
