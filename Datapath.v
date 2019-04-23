@@ -204,7 +204,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign PC_IF_ID_in = PC_out;
     Adder add1(clk, reset_n, PC_out, `WORD_SIZE'b1, 4'b0000, PC_next);
 
-    IF_ID if_id(clk, reset_n, IF_ID_Write, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
+    IF_ID if_id(clk, reset_n, IF_ID_Write, flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
 
     assign rs = instruction_IF_ID_out[11:10];
     assign rt = instruction_IF_ID_out[9:8];
@@ -232,15 +232,15 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     
     Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode_ID_EX_in, B_cond);
 
-    assign RegWrite_ID_EX_in = !(ControlNOP || flush_signal) ? RegWrite : 0;
-    assign ALUSrcB_ID_EX_in = !(ControlNOP || flush_signal) ? ALUSrcB : 0;
-    assign MemWrite_ID_EX_in = !(ControlNOP || flush_signal) ? MemWrite : 0;
-    assign MemRead_ID_EX_in = !(ControlNOP || flush_signal) ? MemRead : 0;
-    assign ALUOp_ID_EX_in = !(ControlNOP || flush_signal) ? ALUOp : 0;
-    assign MemtoReg_ID_EX_in = !(ControlNOP || flush_signal) ? MemtoReg : 0;
-    assign is_wwd_ID_EX_in = !(ControlNOP || flush_signal) ? is_wwd : 0;
-    assign halted_op_ID_EX_in = !(ControlNOP || flush_signal) ? halted_op : 0;
-    assign is_done_ID_EX_in = !(ControlNOP || flush_signal) ? is_done : 0;
+    assign RegWrite_ID_EX_in = !(ControlNOP ) ? RegWrite : 0;
+    assign ALUSrcB_ID_EX_in = !(ControlNOP ) ? ALUSrcB : 0;
+    assign MemWrite_ID_EX_in = !(ControlNOP ) ? MemWrite : 0;
+    assign MemRead_ID_EX_in = !(ControlNOP ) ? MemRead : 0;
+    assign ALUOp_ID_EX_in = !(ControlNOP ) ? ALUOp : 0;
+    assign MemtoReg_ID_EX_in = !(ControlNOP ) ? MemtoReg : 0;
+    assign is_wwd_ID_EX_in = !(ControlNOP ) ? is_wwd : 0;
+    assign halted_op_ID_EX_in = !(ControlNOP ) ? halted_op : 0;
+    assign is_done_ID_EX_in = !(ControlNOP ) ? is_done : 0;
 
     assign PC_ID_EX_in = PC_IF_ID_out;
     assign rd_ID_EX_in = rd;
