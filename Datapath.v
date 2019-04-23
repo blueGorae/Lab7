@@ -227,7 +227,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     // HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, rd_ID_EX_out, instruction_IF_ID_out, PCWrite, IF_ID_Write, ControlNOP);
     // ControlUnit controlUnit(clk, reset_n, instruction_IF_ID_out, PCSrc, RegWrite_ID_EX_in, ALUSrcB_ID_EX_in, MemWrite_ID_EX_in, ALUOp_ID_EX_in, MemtoReg_ID_EX_in, MemRead_ID_EX_in, readM1, B_OP, is_wwd, halted_op_ID_EX_in, R_type, I_type, J_type, S_type, L_type, is_done_ID_EX_in);
     
-    assign r_data1_ID_EX_in = (opcode_ID_EX_in == `JAL_OP) ? PC_IF_ID_out :(IDforwardA == 2'b11) ? ALU_Result_EX_MEM_in : ((IDforwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((IDforwardA == 1) ? w_data : r_data1));
+    assign r_data1_ID_EX_in = (opcode_ID_EX_in == `JAL_OP || (opcode_ID_EX_in == `JRL_OP && func == `INST_FUNC_JRL)) ? PC_IF_ID_out :(IDforwardA == 2'b11) ? ALU_Result_EX_MEM_in : ((IDforwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((IDforwardA == 1) ? w_data : r_data1));
     assign r_data2_ID_EX_in = (IDforwardB == 2'b11) ? ALU_Result_EX_MEM_in : ((IDforwardB == 2'b10) ? ALU_Result_EX_MEM_out : ((IDforwardB == 1) ? w_data : r_data2));
     
     Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode_ID_EX_in, B_cond);
