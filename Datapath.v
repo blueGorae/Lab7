@@ -275,6 +275,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign w_data =  MemtoReg_MEM_WB_out ? MemData_MEM_WB_out : ALU_Result_MEM_WB_out;
     assign output_port = is_wwd_MEM_WB_out ? r_data1_MEM_WB_out : `WORD_SIZE'bz;
     assign num_inst = num_inst_reg;
+    assign is_halted = halted_op_MEM_WB_in;
     
 
 endmodule
