@@ -2,7 +2,7 @@
 
 module FlushUnit(clk, reset_n, is_NOP, PCSrc, B_OP, B_cond, flush_signal);
     input clk, reset_n;
-
+    input is_NOP;
     input [1:0] PCSrc;
     input B_OP;
     input B_cond;

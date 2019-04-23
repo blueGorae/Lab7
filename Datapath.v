@@ -191,7 +191,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     end
 
     //this is depends on previous clock control bits. careful
-    always @(negedge clk) begin
+    always @(posedge clk) begin
         if(is_done_MEM_WB_out) begin
             num_inst_reg <= num_inst_reg + 1;
         end
