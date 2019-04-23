@@ -16,7 +16,7 @@ module PC(clk, reset_n, PCWrite, PC_in, PC_out);
         PC_out <= `WORD_SIZE'b0;
     end
 
-    always @(negedge clk) begin
+    always @(posedge clk) begin
         if(reset_n) begin 
             PC_out <= PCWrite ? PC_in : PC_out;
         end

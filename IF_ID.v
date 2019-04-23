@@ -29,22 +29,10 @@ module IF_ID(clk, reset_n, IF_ID_Write, is_NOP, flush_signal, PC_in, Instruction
 
     always @(posedge clk) begin
         if(reset_n)begin
-            if(flush_signal) begin
-                PC_out <= `WORD_SIZE'bz;
-                Instruction_out <= `WORD_SIZE'bz;
-                is_NOP <= 1'b1;
-            end
-            else begin
                 PC_out <= IF_ID_Write ? PC_in : PC_out;
                 Instruction_out <= IF_ID_Write ? Instruction_in : Instruction_out;
-                is_NOP <= 1'b0;
-            end
-            //$display("%h", Instruction_in);
+                is_NOP <= flush_signal ? 1'b1 : 1'b0;
         end
-        // else begin
-        //     PC_out <= `WORD_SIZE'bz;
-        //     Instruction_out <= `WORD_SIZE'bz;
-        // end
     end
 
 

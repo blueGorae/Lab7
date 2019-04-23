@@ -191,7 +191,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     end
 
     //this is depends on previous clock control bits. careful
-    always @(posedge clk) begin
+    always @(*) begin
         if(is_done_MEM_WB_out) begin
             num_inst_reg <= num_inst_reg + 1;
         end
@@ -232,15 +232,15 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     
     Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode_ID_EX_in, B_cond);
 
-    assign RegWrite_ID_EX_in = !(ControlNOP ) ? RegWrite : 0;
-    assign ALUSrcB_ID_EX_in = !(ControlNOP ) ? ALUSrcB : 0;
-    assign MemWrite_ID_EX_in = !(ControlNOP ) ? MemWrite : 0;
-    assign MemRead_ID_EX_in = !(ControlNOP ) ? MemRead : 0;
-    assign ALUOp_ID_EX_in = !(ControlNOP ) ? ALUOp : 0;
-    assign MemtoReg_ID_EX_in = !(ControlNOP ) ? MemtoReg : 0;
-    assign is_wwd_ID_EX_in = !(ControlNOP ) ? is_wwd : 0;
-    assign halted_op_ID_EX_in = !(ControlNOP ) ? halted_op : 0;
-    assign is_done_ID_EX_in = !(ControlNOP ) ? is_done : 0;
+    assign RegWrite_ID_EX_in = !(ControlNOP || is_NOP) ? RegWrite : 0;
+    assign ALUSrcB_ID_EX_in = !(ControlNOP || is_NOP) ? ALUSrcB : 0;
+    assign MemWrite_ID_EX_in = !(ControlNOP || is_NOP) ? MemWrite : 0;
+    assign MemRead_ID_EX_in = !(ControlNOP || is_NOP) ? MemRead : 0;
+    assign ALUOp_ID_EX_in = !(ControlNOP || is_NOP) ? ALUOp : 0;
+    assign MemtoReg_ID_EX_in = !(ControlNOP || is_NOP) ? MemtoReg : 0;
+    assign is_wwd_ID_EX_in = !(ControlNOP || is_NOP) ? is_wwd : 0;
+    assign halted_op_ID_EX_in = !(ControlNOP || is_NOP) ? halted_op : 0;
+    assign is_done_ID_EX_in = !(ControlNOP || is_NOP) ? is_done : 0;
 
     assign PC_ID_EX_in = PC_IF_ID_out;
     assign rd_ID_EX_in = rd;
