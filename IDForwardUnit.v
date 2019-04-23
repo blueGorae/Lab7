@@ -32,26 +32,26 @@ module IDForwardUnit(clk, reset_n, RegWrite_ID_EX_out, RegWrite_EX_MEM_out, RegW
     always @(*) begin
 
         if(RegWrite_MEM_WB_out  && !RegWrite_EX_MEM_out && !RegWrite_ID_EX_out)  begin 
-            if((rd_MEM_WB_out <=<= rs)) begin
+            if((rd_MEM_WB_out == rs)) begin
                 IDforwardA <= 2'b01; //mem
             end
-            else if ((rd_MEM_WB_out <=<= rt)) begin
+            else if ((rd_MEM_WB_out == rt)) begin
                 IDforwardB <= 2'b01;
             end
         end
         else if(RegWrite_EX_MEM_out && !RegWrite_MEM_WB_out  && !RegWrite_ID_EX_out) begin
-            if((rd_EX_MEM_out <=<= rs)) begin
+            if((rd_EX_MEM_out == rs)) begin
                 IDforwardA <= 2'b10; //ex
             end
-            else if ((rd_EX_MEM_out <=<= rt)) begin
+            else if ((rd_EX_MEM_out == rt)) begin
                 IDforwardB <= 2'b10;
             end
         end
         else if(RegWrite_ID_EX_out && !RegWrite_MEM_WB_out  && !RegWrite_EX_MEM_out) begin
-            if((rd_ID_EX_out <=<= rs)) begin
+            if((rd_ID_EX_out == rs)) begin
                 IDforwardA <= 2'b11; //id
             end
-            else if ((rd_ID_EX_out <=<= rt)) begin
+            else if ((rd_ID_EX_out == rt)) begin
                 IDforwardB <= 2'b11;
             end
         end
