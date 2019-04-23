@@ -21,20 +21,23 @@ module FlushUnit(clk, reset_n, is_NOP, PCSrc, B_OP, B_cond, flush_signal);
 
     //assign flush_signal = (PCSrc==2) ? 1 : ((B_cond && B_OP) || (PCSrc == 1) ? 1  : (PCSrc == 0) ? 0 : 0) );
     always @(*) begin
-
-        if(PCSrc == 2) begin
-            flush_signal <= 1;
-        end
-        else if((B_cond && B_OP) || (PCSrc == 1)) begin
-            flush_signal <= 1;
-        end
-        else if( PCSrc == 0) begin
-            flush_signal <= 0;
+        if(!is_NOP) begin
+            if(PCSrc == 2) begin
+                flush_signal <= 1;
+            end
+            else if((B_cond && B_OP) || (PCSrc == 1)) begin
+                flush_signal <= 1;
+            end
+            else if( PCSrc == 0) begin
+                flush_signal <= 0;
+            end
+            else begin
+                flush_signal <=0;
+            end
         end
         else begin
             flush_signal <=0;
         end
-
         //$display("%h", flush_signal);
     end
 endmodule

@@ -78,6 +78,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire [`WORD_SIZE-1:0] PC_IF_ID_out;
     wire [`WORD_SIZE-1:0] instruction_IF_ID_out;
 
+    wire is_NOP;
 
     wire RegWrite;
     wire ALUSrcB;
@@ -199,16 +200,15 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign PC_in = (PCSrc==2) ? r_data1_ID_EX_in : (((B_cond && B_OP) || (PCSrc == 1)) ? target_address : PC_next);
     PC pc(clk, reset_n, PCWrite, PC_in, PC_out);
 
-
     assign instruction_IF_ID_in = data1;
     assign PC_IF_ID_in = PC_out;
     Adder add1(clk, reset_n, PC_out, `WORD_SIZE'b1, 4'b0000, PC_next);
 
-    IF_ID if_id(clk, reset_n, IF_ID_Write, flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
+    IF_ID if_id(clk, reset_n, IF_ID_Write, is_NOP, flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
 
     assign rs = instruction_IF_ID_out[11:10];
     assign rt = instruction_IF_ID_out[9:8];
-    assign rd = J_type ? 2 : ( R_type ? instruction_IF_ID_out[7:6] : (( I_type || S_type ) ? instruction_IF_ID_out[9:8]: 2'bz)) ; 
+    assign rd = J_type ? 2 : (R_type ? instruction_IF_ID_out[7:6] : (( I_type || S_type ) ? instruction_IF_ID_out[9:8]: 2'bz)) ; 
     assign opcode_ID_EX_in = instruction_IF_ID_out[`WORD_SIZE-1:12];    
     assign func = instruction_IF_ID_out[5:0];
 
@@ -216,7 +216,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     IDForwardUnit IDforwardUnit(clk, reset_n, RegWrite_ID_EX_out, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_ID_EX_out, rd_EX_MEM_out, rd_MEM_WB_out, rs, rt, IDforwardA, IDforwardB);
 
-    FlushUnit flushUnit(clk, reset_n, PCSrc, B_OP, B_cond , flush_signal);
+    FlushUnit flushUnit(clk, reset_n, is_NOP, PCSrc, B_OP, B_cond , flush_signal);
 
     immGenerator immG(clk, reset_n, instruction_IF_ID_out, imm_ID_EX_in);
     register registers(clk, reset_n, rs, rt, rd_MEM_WB_out, w_data, RegWrite_MEM_WB_out, r_data1, r_data2);
