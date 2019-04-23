@@ -12,6 +12,7 @@ module FlushUnit(clk, reset_n, PCSrc, B_OP, B_cond, flush_signal);
 
     initial begin
         flush_signal <= 0;
+        
     end
 
     always @ (negedge reset_n) begin
