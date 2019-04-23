@@ -81,18 +81,18 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
         else if(reset_n) begin
             i <= i + 1;
         end
-        else begin 
-            i <= 0;
-            MemData_out <= `WORD_SIZE'bz;
-            ALU_Result_out <= `WORD_SIZE'bz;
-            rd_out <= 2'bz;
-            MemtoReg_out <= 1'b0;
-            RegWrite_out <= 1'b0;
-            is_wwd_out <= 1'b0;
-            is_done_out <= 1'b0;
-            r_data1_out <= `WORD_SIZE'bz;
-            halted_op_out <= 1'b0;
-        end
+        // else begin 
+        //     i <= 0;
+        //     MemData_out <= `WORD_SIZE'bz;
+        //     ALU_Result_out <= `WORD_SIZE'bz;
+        //     rd_out <= 2'bz;
+        //     MemtoReg_out <= 1'b0;
+        //     RegWrite_out <= 1'b0;
+        //     is_wwd_out <= 1'b0;
+        //     is_done_out <= 1'b0;
+        //     r_data1_out <= `WORD_SIZE'bz;
+        //     halted_op_out <= 1'b0;
+        // end
     end
     
 endmodule // 

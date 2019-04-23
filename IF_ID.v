@@ -27,11 +27,12 @@ module IF_ID(clk, reset_n, flush_signal, IF_ID_Write, PC_in, Instruction_in, PC_
         if(reset_n)begin
             PC_out <= IF_ID_Write ? PC_in : PC_out;
             Instruction_out <= IF_ID_Write ? Instruction_in : Instruction_out;
+            $display("%h", Instruction_in);
         end
-        else begin
-            PC_out <= `WORD_SIZE'bz;
-            Instruction_out <= `WORD_SIZE'bz;
-        end
+        // else begin
+        //     PC_out <= `WORD_SIZE'bz;
+        //     Instruction_out <= `WORD_SIZE'bz;
+        // end
     end
 
 

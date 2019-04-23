@@ -87,20 +87,20 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
         else if(reset_n) begin
             i <= i + 1;
         end
-        else begin
-            i <= 0;
-            ALU_Result_out <= `WORD_SIZE'bz;
-            r_data1_out <= `WORD_SIZE'bz;
-            r_data2_out <= `WORD_SIZE'bz;
-            rd_out <= 2'bz;
-            MemRead_out <= 1'b0;
-            MemWrite_out <= 1'b0;
-            RegWrite_out <= 1'b0;
-            MemtoReg_out <= 1'b0;
-            is_wwd_out <= 1'b0;
-            is_done_out <= 1'b0;
-            halted_op_out <= 1'b0;
-        end
+        // else begin
+        //     i <= 0;
+        //     ALU_Result_out <= `WORD_SIZE'bz;
+        //     r_data1_out <= `WORD_SIZE'bz;
+        //     r_data2_out <= `WORD_SIZE'bz;
+        //     rd_out <= 2'bz;
+        //     MemRead_out <= 1'b0;
+        //     MemWrite_out <= 1'b0;
+        //     RegWrite_out <= 1'b0;
+        //     MemtoReg_out <= 1'b0;
+        //     is_wwd_out <= 1'b0;
+        //     is_done_out <= 1'b0;
+        //     halted_op_out <= 1'b0;
+        // end
     end
 
 endmodule // 

@@ -20,9 +20,9 @@ module PC(clk, reset_n, PCWrite, PC_in, PC_out);
         if(reset_n) begin 
             PC_out <= PCWrite ? PC_in : PC_out;
         end
-        else begin
-            PC_out <= `WORD_SIZE'b0;
-        end
+        // else begin
+        //     PC_out <= `WORD_SIZE'b0;
+        // end
     end
 
 endmodule
