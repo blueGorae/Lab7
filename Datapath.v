@@ -201,7 +201,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     PC pc(clk, reset_n, PCWrite, PC_in, PC_out);
 
     assign instruction_IF_ID_in = data1;
-    assign PC_IF_ID_in = PC_out;
+    assign PC_IF_ID_in = PC_next;
     Adder add1(clk, reset_n, PC_out, `WORD_SIZE'b1, 4'b0000, PC_next);
 
     IF_ID if_id(clk, reset_n, IF_ID_Write, is_NOP, flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
