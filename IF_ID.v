@@ -1,6 +1,6 @@
 `include "opcodes.v"
 
-module IF_ID(clk, reset_n, IF_ID_Write, flush_signal, PC_in, Instruction_in, PC_out, Instruction_out);
+module IF_ID(clk, reset_n, IF_ID_Write, is_NOP, flush_signal, PC_in, Instruction_in, PC_out, Instruction_out);
     input clk, reset_n;
     input IF_ID_Write;
     input flush_signal;
@@ -8,6 +8,8 @@ module IF_ID(clk, reset_n, IF_ID_Write, flush_signal, PC_in, Instruction_in, PC_
     input [`WORD_SIZE-1:0] PC_in, Instruction_in;
 
     output [`WORD_SIZE-1:0] PC_out, Instruction_out;
+    output is_NOP;
+    reg is_NOP;
 
     reg [`WORD_SIZE-1:0] PC_out, Instruction_out;
 
@@ -15,12 +17,14 @@ module IF_ID(clk, reset_n, IF_ID_Write, flush_signal, PC_in, Instruction_in, PC_
     initial begin
         PC_out <= `WORD_SIZE'bz;
         Instruction_out <= `WORD_SIZE'bz;
+        is_NOP <= 1'b0;
 
     end
 
     always @(negedge reset_n) begin
         PC_out <= `WORD_SIZE'bz;
         Instruction_out <= `WORD_SIZE'bz;
+        is_NOP <= 1'b0;
     end
 
     always @(posedge clk) begin
@@ -28,10 +32,12 @@ module IF_ID(clk, reset_n, IF_ID_Write, flush_signal, PC_in, Instruction_in, PC_
             if(flush_signal) begin
                 PC_out <= `WORD_SIZE'bz;
                 Instruction_out <= `WORD_SIZE'bz;
+                is_NOP <= 1'b1;
             end
             else begin
                 PC_out <= IF_ID_Write ? PC_in : PC_out;
                 Instruction_out <= IF_ID_Write ? Instruction_in : Instruction_out;
+                is_NOP <= 1'b0;
             end
             //$display("%h", Instruction_in);
         end
