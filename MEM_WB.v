@@ -37,49 +37,61 @@ module MEM_WB( clk, reset_n, MemData_in, ALU_Result_in, rd_in, MemtoReg_in, RegW
     integer i;
 
     initial begin
-        i = 0;
-        MemData_out = `WORD_SIZE'bz;
-        ALU_Result_out = `WORD_SIZE'bz;
-        rd_out = 2'bz;
-        MemtoReg_out = 1'b0;
-        RegWrite_out = 1'b0;
-        is_wwd_out = 1'b0;
-        is_done_out = 1'b0;
-        r_data1_out = `WORD_SIZE'bz;
-        halted_op_out = 1'b0;
+        i <= 0;
+        MemData_out <= `WORD_SIZE'bz;
+        ALU_Result_out <= `WORD_SIZE'bz;
+        rd_out <= 2'bz;
+        MemtoReg_out <= 1'b0;
+        RegWrite_out <= 1'b0;
+        is_wwd_out <= 1'b0;
+        is_done_out <= 1'b0;
+        r_data1_out <= `WORD_SIZE'bz;
+        halted_op_out <= 1'b0;
 
 
     end
 
     always @(negedge reset_n) begin
-        i = 0;
-        MemData_out = `WORD_SIZE'bz;
-        ALU_Result_out = `WORD_SIZE'bz;
-        rd_out = 2'bz;
-        MemtoReg_out = 1'b0;
-        RegWrite_out = 1'b0;
-        is_wwd_out = 1'b0;
-        is_done_out = 1'b0;
-        r_data1_out = `WORD_SIZE'bz;
-        halted_op_out = 1'b0;
+        i <= 0;
+        MemData_out <= `WORD_SIZE'bz;
+        ALU_Result_out <= `WORD_SIZE'bz;
+        rd_out <= 2'bz;
+        MemtoReg_out <= 1'b0;
+        RegWrite_out <= 1'b0;
+        is_wwd_out <= 1'b0;
+        is_done_out <= 1'b0;
+        r_data1_out <= `WORD_SIZE'bz;
+        halted_op_out <= 1'b0;
 
     end
 
     always @(posedge clk) begin
 
         if(reset_n && i >= 3)begin
-            MemData_out = MemData_in;
-            ALU_Result_out = ALU_Result_in;
-            rd_out = rd_in;
-            MemtoReg_out = MemtoReg_in;
-            RegWrite_out = RegWrite_in;
-            is_wwd_out = is_wwd_in;
-            is_done_out = is_done_in;
-            r_data1_out = r_data1_in;
-            halted_op_out = halted_op_in;
+            MemData_out <= MemData_in;
+            ALU_Result_out <= ALU_Result_in;
+            rd_out <= rd_in;
+            MemtoReg_out <= MemtoReg_in;
+            RegWrite_out <= RegWrite_in;
+            is_wwd_out <= is_wwd_in;
+            is_done_out <= is_done_in;
+            r_data1_out <= r_data1_in;
+            halted_op_out <= halted_op_in;
         end
         else if(reset_n) begin
-            i = i + 1;
+            i <= i + 1;
+        end
+        else begin 
+            i <= 0;
+            MemData_out <= `WORD_SIZE'bz;
+            ALU_Result_out <= `WORD_SIZE'bz;
+            rd_out <= 2'bz;
+            MemtoReg_out <= 1'b0;
+            RegWrite_out <= 1'b0;
+            is_wwd_out <= 1'b0;
+            is_done_out <= 1'b0;
+            r_data1_out <= `WORD_SIZE'bz;
+            halted_op_out <= 1'b0;
         end
     end
     
