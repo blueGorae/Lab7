@@ -101,11 +101,6 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire MemRead_ID_EX_in;
     wire [2:0]ALUOp_ID_EX_in;
     wire MemtoReg_ID_EX_in;
-    wire R_type;
-    wire I_type;
-    wire J_type;
-    wire S_type;
-    wire L_type;
     wire is_wwd_ID_EX_in;
     wire halted_op_ID_EX_in;
     wire [`WORD_SIZE-1:0] PC_ID_EX_in;
@@ -202,14 +197,14 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     end
 
     assign PC_in = (PCSrc==2) ? r_data1_ID_EX_in : (((B_cond && B_OP) || (PCSrc == 1)) ? target_address : PC_next);
-    PC pc(clk, reset_n, PCWrite && !flush_signal, PC_in, PC_out);
+    PC pc(clk, reset_n, PCWrite, PC_in, PC_out);
 
 
     assign instruction_IF_ID_in = data1;
     assign PC_IF_ID_in = PC_out;
     Adder add1(clk, reset_n, PC_out, `WORD_SIZE'b1, 4'b0000, PC_next);
 
-    IF_ID if_id(clk, reset_n, flush_signal, IF_ID_Write && !flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
+    IF_ID if_id(clk, reset_n, IF_ID_Write, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
 
     assign rs = instruction_IF_ID_out[11:10];
     assign rt = instruction_IF_ID_out[9:8];
@@ -226,7 +221,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     immGenerator immG(clk, reset_n, instruction_IF_ID_out, imm_ID_EX_in);
     register registers(clk, reset_n, rs, rt, rd_MEM_WB_out, w_data, RegWrite_MEM_WB_out, r_data1, r_data2);
     HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, rd_ID_EX_out, instruction_IF_ID_out, PCWrite, IF_ID_Write, ControlNOP);
-    ControlUnit controlUnit(clk, reset_n, flush_signal, instruction_IF_ID_out, PCSrc, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type, is_done);
+    ControlUnit controlUnit(clk, reset_n, instruction_IF_ID_out, PCSrc, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type, is_done);
     
     // yoonsu's part
     // HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, rd_ID_EX_out, instruction_IF_ID_out, PCWrite, IF_ID_Write, ControlNOP);
@@ -237,15 +232,15 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     
     Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode_ID_EX_in, B_cond);
 
-    assign RegWrite_ID_EX_in = (ControlNOP || flush_signal) ? RegWrite : 0;
-    assign ALUSrcB_ID_EX_in = (ControlNOP || flush_signal) ? ALUSrcB : 0;
-    assign MemWrite_ID_EX_in = (ControlNOP || flush_signal) ? MemWrite : 0;
-    assign MemRead_ID_EX_in = (ControlNOP || flush_signal) ? MemRead : 0;
-    assign [2:0]ALUOp_ID_EX_in = (ControlNOP || flush_signal) ? ALUOp : 0;
-    assign MemtoReg_ID_EX_in = (ControlNOP || flush_signal) ? MemtoReg : 0;
-    assign is_wwd_ID_EX_in = (ControlNOP || flush_signal) ? is_wwd : 0;
-    assign halted_op_ID_EX_in = (ControlNOP || flush_signal) ? halted_op : 0;
-    assign is_done_ID_EX_in = (ControlNOP || flush_signal) ? is_done : 0;
+    assign RegWrite_ID_EX_in = !(ControlNOP || flush_signal) ? RegWrite : 0;
+    assign ALUSrcB_ID_EX_in = !(ControlNOP || flush_signal) ? ALUSrcB : 0;
+    assign MemWrite_ID_EX_in = !(ControlNOP || flush_signal) ? MemWrite : 0;
+    assign MemRead_ID_EX_in = !(ControlNOP || flush_signal) ? MemRead : 0;
+    assign ALUOp_ID_EX_in = !(ControlNOP || flush_signal) ? ALUOp : 0;
+    assign MemtoReg_ID_EX_in = !(ControlNOP || flush_signal) ? MemtoReg : 0;
+    assign is_wwd_ID_EX_in = !(ControlNOP || flush_signal) ? is_wwd : 0;
+    assign halted_op_ID_EX_in = !(ControlNOP || flush_signal) ? halted_op : 0;
+    assign is_done_ID_EX_in = !(ControlNOP || flush_signal) ? is_done : 0;
 
     assign PC_ID_EX_in = PC_IF_ID_out;
     assign rd_ID_EX_in = rd;
@@ -254,7 +249,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign is_wwd_ID_EX_in = is_wwd;
 
 
-    ID_EX id_ex(clk, reset_n, ControlNOP || flush_signal , PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rs_ID_EX_in, rt_ID_EX_in, rd_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, is_wwd_ID_EX_in, is_done_ID_EX_in, halted_op_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rs_ID_EX_out, rt_ID_EX_out, rd_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out, is_wwd_ID_EX_out, is_done_ID_EX_out, halted_op_ID_EX_out);
+    ID_EX id_ex(clk, reset_n, PC_ID_EX_in, r_data1_ID_EX_in, r_data2_ID_EX_in, imm_ID_EX_in, opcode_ID_EX_in, rs_ID_EX_in, rt_ID_EX_in, rd_ID_EX_in, ALUOp_ID_EX_in, ALUSrcB_ID_EX_in, MemRead_ID_EX_in, MemWrite_ID_EX_in, RegWrite_ID_EX_in, MemtoReg_ID_EX_in, is_wwd_ID_EX_in, is_done_ID_EX_in, halted_op_ID_EX_in, PC_ID_EX_out, r_data1_ID_EX_out, r_data2_ID_EX_out, imm_ID_EX_out, opcode_ID_EX_out, rs_ID_EX_out, rt_ID_EX_out, rd_ID_EX_out, ALUOp_ID_EX_out, ALUSrcB_ID_EX_out, MemRead_ID_EX_out, MemWrite_ID_EX_out, RegWrite_ID_EX_out, MemtoReg_ID_EX_out, is_wwd_ID_EX_out, is_done_ID_EX_out, halted_op_ID_EX_out);
 
     EXForwardUnit EXforwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX_MEM_out, rd_MEM_WB_out, rs_ID_EX_out, rt_ID_EX_out, EXforwardA, EXforwardB);
 
