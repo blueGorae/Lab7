@@ -1,8 +1,7 @@
 `include "opcodes.v"
 
-module IF_ID(clk, reset_n, flush_signal, IF_ID_Write, PC_in, Instruction_in, PC_out, Instruction_out);
+module IF_ID(clk, reset_n, IF_ID_Write, PC_in, Instruction_in, PC_out, Instruction_out);
     input clk, reset_n;
-    input flush_signal;
     input IF_ID_Write;
     
     input [`WORD_SIZE-1:0] PC_in, Instruction_in;
