@@ -1,8 +1,7 @@
 `include "opcodes.v"
 
-module ID_EX(clk, reset_n, controlNOP, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_in, rt_in, rd_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rs_out, rt_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
+module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_in, rt_in, rd_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rs_out, rt_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
     input clk, reset_n;
-    input controlNOP;
 
     input [`WORD_SIZE-1:0] PC_in;
     input [`WORD_SIZE-1:0] r_data1_in, r_data2_in, imm_in;
@@ -106,28 +105,6 @@ module ID_EX(clk, reset_n, controlNOP, PC_in, r_data1_in, r_data2_in, imm_in, op
             rt_out <= rt_in;
             rd_out <= rd_in;
     
-            if(!controlNOP) begin
-                ALUOp_out <= ALUOp_in;
-                ALUSrcB_out <= ALUSrcB_in;
-                MemRead_out <= MemRead_in;
-                MemWrite_out <= MemWrite_in;
-                RegWrite_out <= RegWrite_in;
-                MemtoReg_out <= MemtoReg_in; 
-                is_wwd_out <= is_wwd_in; 
-                is_done_out <= is_done_in;
-                halted_op_out <= halted_op_in;
-            end
-            else begin
-                ALUOp_out <= 3'b0;
-                ALUSrcB_out <= 1'b0;
-                MemRead_out <= 1'b0;
-                MemWrite_out <= 1'b0;
-                RegWrite_out <= 1'b0;
-                MemtoReg_out <= 1'b0; 
-                is_wwd_out <= 1'b0; 
-                is_done_out <= 1'b0;
-                halted_op_out <= 1'b0;
-            end
         end
         else if(reset_n) begin
             i <= i + 1;
