@@ -37,7 +37,7 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp, opcode, ALU_Result);
 				`FUNC_TCP: ALU_Result <= ~$signed(ALUIn_A)  + 1;
 				`FUNC_SHL: ALU_Result <= $signed(ALUIn_A)  << 1;
 				`FUNC_SHR: ALU_Result <= $signed(ALUIn_A) >>> 1;
-				default : ALU_Result <= $signed(ALUIn_A);
+				default : ALU_Result <= (ALUIn_A);
 			endcase
 		end
 		else begin
@@ -47,7 +47,7 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp, opcode, ALU_Result);
 				`ORI_OP : ALU_Result <= $signed(ALUIn_A)  | $signed(ALUIn_B);
 				`LWD_OP : ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
 				`SWD_OP : ALU_Result <= $signed(ALUIn_A)  + $signed(ALUIn_B);
-				default : ALU_Result <= $signed(ALUIn_A);
+				default : ALU_Result <= (ALUIn_A);
 			endcase
 		end
 	end	

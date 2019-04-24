@@ -1,8 +1,9 @@
 `include "opcodes.v"
 
-module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_in, rt_in, rd_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rs_out, rt_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
+module ID_EX(clk, reset_n, func_in, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_in, rt_in, rd_in, ALUOp_in, ALUSrcB_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, func_out, PC_out, r_data1_out, r_data2_out, imm_out, opcode_out, rs_out, rt_out, rd_out, ALUOp_out, ALUSrcB_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
     input clk, reset_n;
 
+    input [5:0] func_in;
     input [`WORD_SIZE-1:0] PC_in;
     input [`WORD_SIZE-1:0] r_data1_in, r_data2_in, imm_in;
     input [3:0] opcode_in;
@@ -18,6 +19,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_
     input is_done_in;
     input halted_op_in;
 
+    output [5:0] func_out;
     output [`WORD_SIZE-1:0] PC_out;
     output [`WORD_SIZE-1:0] r_data1_out, r_data2_out, imm_out;
     output [3:0] opcode_out;
@@ -33,6 +35,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_
     output is_done_out;
     output halted_op_out;
 
+    reg [5:0] func_out;
     reg [`WORD_SIZE-1:0] PC_out;
     reg [`WORD_SIZE-1:0] r_data1_out, r_data2_out, imm_out;
     reg [3:0] opcode_out;
@@ -52,6 +55,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_
 
     initial begin
         i <= 0;
+        func_out <= `WORD_SIZE'bz;
         PC_out <= `WORD_SIZE'bz;
         r_data1_out <= `WORD_SIZE'bz;
         r_data2_out <= `WORD_SIZE'bz;
@@ -74,6 +78,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_
 
     always @(negedge reset_n) begin
         i <= 0;
+        func_out <= `WORD_SIZE'bz;
         PC_out <= `WORD_SIZE'bz;
         r_data1_out <= `WORD_SIZE'bz;
         r_data2_out <= `WORD_SIZE'bz;
@@ -100,6 +105,7 @@ module ID_EX(clk, reset_n, PC_in, r_data1_in, r_data2_in, imm_in, opcode_in, rs_
             r_data1_out <= r_data1_in;
             r_data2_out <= r_data2_in;
             imm_out <= imm_in;
+            func_out <= func_in;
             opcode_out <= opcode_in;
             rs_out <= rs_in;
             rt_out <= rt_in;
