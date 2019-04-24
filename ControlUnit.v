@@ -292,7 +292,7 @@ module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite
 				PCSrc <= 2'b0;
 				RegWrite <= 0;
 				ALUOp <= 3'bz;
-				ALUSrcB <= 1;
+				ALUSrcB <= 0;
 				MemWrite <= 0;
 				MemtoReg <= 0;
 				MemRead <= 0;
@@ -311,7 +311,7 @@ module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite
 				PCSrc <= 2'b0;
 				RegWrite <= 0;
 				ALUOp <= 3'bz;
-				ALUSrcB <= 1;
+				ALUSrcB <= 0;
 				MemWrite <= 0;
 				MemtoReg <= 0;
 				MemRead <= 0;

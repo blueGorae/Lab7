@@ -35,6 +35,7 @@ module register(clk, reset_n, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 	always @(negedge clk) begin
 		if(RegWrite) begin
 			r[rd] <= w_data ;
+			$display("%h %h %h %h", r[0], r[1], r[2], r[3]);
 		end
 
 	end
