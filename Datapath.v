@@ -237,8 +237,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     HazardDetectionUnit hazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, rd_ID_EX_out, MemRead_EX_MEM_out, rd_EX_MEM_out, instruction_IF_ID_out, PCWrite, IF_ID_Write, ControlNOP);
     ControlUnit controlUnit(clk, reset_n, instruction_IF_ID_out, PCSrc, RegWrite, ALUSrcB, MemWrite, ALUOp, MemtoReg, MemRead, readM1, B_OP, is_wwd, halted_op, R_type, I_type, J_type, S_type, L_type, is_done);
         
-    assign r_data1_ID_EX_in = (opcode_ID_EX_in == `JAL_OP || (opcode_ID_EX_in == `JRL_OP && func_ID_EX_in == `INST_FUNC_JRL)) ? PC_IF_ID_out :(IDforwardA == 2'b11) ? ALU_Result_EX_MEM_in : ((IDforwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((IDforwardA == 1) ? w_data : r_data1));
-    assign r_data2_ID_EX_in = (opcode_ID_EX_in == `JAL_OP || (opcode_ID_EX_in == `JRL_OP && func_ID_EX_in == `INST_FUNC_JRL)) ? PC_IF_ID_out :(IDforwardB == 2'b11) ? ALU_Result_EX_MEM_in : ((IDforwardB == 2'b10) ? ALU_Result_EX_MEM_out : ((IDforwardB == 1) ? w_data : r_data2));
+    assign r_data1_ID_EX_in = (IDforwardA == 2'b11) ? ALU_Result_EX_MEM_in : ((IDforwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((IDforwardA == 1) ? w_data : r_data1));
+    assign r_data2_ID_EX_in = (IDforwardB == 2'b11) ? ALU_Result_EX_MEM_in : ((IDforwardB == 2'b10) ? ALU_Result_EX_MEM_out : ((IDforwardB == 1) ? w_data : r_data2));
     
     Comparator comparator(clk, reset_n, r_data1_ID_EX_in, r_data2_ID_EX_in, B_OP, opcode_ID_EX_in, B_cond);
 
@@ -263,8 +263,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     EXForwardUnit EXforwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX_MEM_out, rd_MEM_WB_out, rs_ID_EX_out, rt_ID_EX_out, EXforwardA, EXforwardB);
 
-    assign ALUIn_A = (opcode_ID_EX_out == `JAL_OP) || (opcode_ID_EX_out == `JRL_OP && func_ID_EX_out == `INST_FUNC_JRL)? r_data1_ID_EX_out : (EXforwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((EXforwardA == 1) ? w_data : r_data1_ID_EX_out);
-    assign ALUIn_B = (opcode_ID_EX_out == `JAL_OP) || (opcode_ID_EX_out == `JRL_OP && func_ID_EX_out == `INST_FUNC_JRL)? r_data2_ID_EX_out :(EXforwardB == 2'b10) ? ALU_Result_EX_MEM_out : ((EXforwardB == 1) ? w_data : (ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out));
+    assign ALUIn_A = (EXforwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((EXforwardA == 1) ? w_data : r_data1_ID_EX_out);
+    assign ALUIn_B = (EXforwardB == 2'b10) ? ALU_Result_EX_MEM_out : ((EXforwardB == 1) ? w_data : (ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out));
 
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp_ID_EX_out, opcode_ID_EX_out, ALU_Result_EX_MEM_in);
 
