@@ -1,7 +1,10 @@
 `include "opcodes.v"
 
-module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, ALU_Result_out, r_data1_out, r_data2_out, rd_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
+module EX_MEM( clk, reset_n, PC_in, func_in, opcode_in, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, PC_out, func_out, opcode_out, ALU_Result_out, r_data1_out, r_data2_out, rd_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
     input clk, reset_n;
+    input [`WORD_SIZE-1 : 0] PC_in;
+    input [5:0] func_in;
+    input [3:0] opcode_in;
     input [`WORD_SIZE-1 : 0] ALU_Result_in;
     input [`WORD_SIZE-1 : 0] r_data1_in;
     input [`WORD_SIZE-1 : 0] r_data2_in;
@@ -13,6 +16,9 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
     input is_done_in;
     input halted_op_in;
 
+    output [`WORD_SIZE-1 : 0] PC_out;
+    output [5:0] func_out;
+    output [3:0] opcode_out;
     output [`WORD_SIZE-1 : 0] ALU_Result_out;
     output [`WORD_SIZE-1 : 0] r_data1_out;
     output [`WORD_SIZE-1 : 0] r_data2_out;
@@ -24,6 +30,9 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
     output is_done_out;
     output halted_op_out;
 
+    reg [`WORD_SIZE-1 : 0] PC_out;
+    reg [5:0] func_out;
+    reg [3:0] opcode_out;
     reg [`WORD_SIZE-1 : 0] ALU_Result_out;
     reg [`WORD_SIZE-1 : 0] r_data1_out;
     reg [`WORD_SIZE-1 : 0] r_data2_out;
@@ -39,6 +48,10 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
 
     initial begin
         i <= 0;
+        PC_out <= `WORD_SIZE'bz;
+        func_out <= 6'bz;
+        opcode_out <= 4'bz;
+
         ALU_Result_out <= `WORD_SIZE'bz;
         r_data1_out <= `WORD_SIZE'bz;
         r_data2_out <= `WORD_SIZE'bz;
@@ -55,6 +68,9 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
 
     always @(negedge reset_n) begin
         i <= 0;
+        PC_out <= `WORD_SIZE'bz;
+        func_out <= 6'bz;
+        opcode_out <= 4'bz;
         ALU_Result_out <= `WORD_SIZE'bz;
         r_data1_out <= `WORD_SIZE'bz;
         r_data2_out <= `WORD_SIZE'bz;
@@ -71,6 +87,9 @@ module EX_MEM( clk, reset_n, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRe
 
     always @(posedge clk) begin
         if(reset_n && i >=2)begin
+            PC_out <= PC_in;
+            func_out <= func_in;
+            opcode_out <= opcode_in;
             ALU_Result_out <= ALU_Result_in;
             r_data1_out <= r_data1_in;
             r_data2_out <= r_data2_in;
