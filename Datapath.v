@@ -137,6 +137,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire is_done_ID_EX_out;
 
     //EX_MEM_in
+    wire [`WORD_SIZE-1:0] PC_EX_MEM_in;
+    wire [3:0] opcode_EX_MEM_in;
+    wire [5:0] func_EX_MEM_in;
     wire RegWrite_EX_MEM_in;
     wire MemWrite_EX_MEM_in;
     wire MemRead_EX_MEM_in;
@@ -149,6 +152,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire [1:0] rd_EX_MEM_in;
     wire is_done_EX_MEM_in;
     //EX_MEM_out
+    wire [`WORD_SIZE-1:0] PC_EX_MEM_out;
+    wire [3:0] opcode_EX_MEM_out;
+    wire [5:0] func_EX_MEM_out;
     wire RegWrite_EX_MEM_out;
     wire MemWrite_EX_MEM_out;
     wire MemRead_EX_MEM_out;
@@ -163,6 +169,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
 
     //MEM_WB_in
+    wire [`WORD_SIZE-1:0] PC_MEM_WB_in;
+    wire [3:0] opcode_MEM_WB_in;
+    wire [5:0] func_MEM_WB_in;
     wire RegWrite_MEM_WB_in;
     wire MemtoReg_MEM_WB_in;
     wire is_wwd_MEM_WB_in;
@@ -173,6 +182,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire [1:0] rd_MEM_WB_in;
     wire is_done_MEM_WB_in;
     //MEM_WB_out
+    wire [`WORD_SIZE-1:0] PC_MEM_WB_out;
+    wire [3:0] opcode_MEM_WB_out;
+    wire [5:0] func_MEM_WB_out;
     wire RegWrite_MEM_WB_out;
     wire MemtoReg_MEM_WB_out;
     wire is_wwd_MEM_WB_out;
@@ -260,6 +272,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp_ID_EX_out, opcode_ID_EX_out, ALU_Result_EX_MEM_in);
 
+    assign PC_EX_MEM_in = PC_ID_EX_out;
+    assign func_EX_MEM_in = func_ID_EX_in;
+    assign opcode_EX_MEM_in = opcode_ID_EX_in;
     assign r_data1_EX_MEM_in = ALUIn_A;
     assign r_data2_EX_MEM_in = r_data2_ID_EX_out;
     assign rd_EX_MEM_in = rd_ID_EX_out;
@@ -272,8 +287,13 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign halted_op_EX_MEM_in = halted_op_ID_EX_out;
 
 
-    EX_MEM ex_mem(clk, reset_n, ALU_Result_EX_MEM_in, r_data1_EX_MEM_in, r_data2_EX_MEM_in, rd_EX_MEM_in
-    , MemRead_EX_MEM_in, MemWrite_EX_MEM_in, RegWrite_EX_MEM_in, MemtoReg_EX_MEM_in, is_wwd_EX_MEM_in, is_done_EX_MEM_in, halted_op_EX_MEM_in, ALU_Result_EX_MEM_out, r_data1_EX_MEM_out, r_data2_EX_MEM_out, rd_EX_MEM_out, MemRead_EX_MEM_out, MemWrite_EX_MEM_out, RegWrite_EX_MEM_out, MemtoReg_EX_MEM_out, is_wwd_EX_MEM_out, is_done_EX_MEM_out, halted_op_EX_MEM_out);
+    EX_MEM ex_mem(clk, reset_n, PC_EX_MEM_in, func_EX_MEM_in, opcode_EX_MEM_in, ALU_Result_EX_MEM_in, r_data1_EX_MEM_in, r_data2_EX_MEM_in, rd_EX_MEM_in
+    , MemRead_EX_MEM_in, MemWrite_EX_MEM_in, RegWrite_EX_MEM_in, MemtoReg_EX_MEM_in, is_wwd_EX_MEM_in, is_done_EX_MEM_in, halted_op_EX_MEM_in, PC_EX_MEM_out, func_EX_MEM_out, opcode_EX_MEM_out, ALU_Result_EX_MEM_out, r_data1_EX_MEM_out, r_data2_EX_MEM_out, rd_EX_MEM_out, MemRead_EX_MEM_out, MemWrite_EX_MEM_out, RegWrite_EX_MEM_out, MemtoReg_EX_MEM_out, is_wwd_EX_MEM_out, is_done_EX_MEM_out, halted_op_EX_MEM_out);
+    
+    assign PC_MEM_WB_in = PC_EX_MEM_out;
+    assign func_MEM_WB_in = func_EX_MEM_out;
+    assign opcode_MEM_WB_in = func_EX_MEM_out;
+
     assign data2_in = MemRead_EX_MEM_out ? data2 : `WORD_SIZE'bz;
     assign data2 =  MemWrite_EX_MEM_out ? data2_out : `WORD_SIZE'bz;
     assign readM2 = MemRead_EX_MEM_out;
@@ -292,9 +312,9 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign is_done_MEM_WB_in = is_done_EX_MEM_out;
     assign halted_op_MEM_WB_in = halted_op_EX_MEM_out;
 
-    MEM_WB mem_wb(clk, reset_n, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, is_done_MEM_WB_in, r_data1_MEM_WB_in, halted_op_MEM_WB_in, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_done_MEM_WB_out, r_data1_MEM_WB_out , halted_op_MEM_WB_out);
+    MEM_WB mem_wb(clk, reset_n, PC_MEM_WB_in, func_MEM_WB_in, opcode_MEM_WB_in, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, is_done_MEM_WB_in, r_data1_MEM_WB_in, halted_op_MEM_WB_in, PC_MEM_WB_out, func_MEM_WB_out, opcode_MEM_WB_out, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_done_MEM_WB_out, r_data1_MEM_WB_out , halted_op_MEM_WB_out);
 
-    assign w_data =  MemtoReg_MEM_WB_out ? MemData_MEM_WB_out : ALU_Result_MEM_WB_out;
+    assign w_data = (opcode_MEM_WB_out == `JAL_OP || (opcode_MEM_WB_out == `JRL_OP && func_MEM_WB_out == `INST_FUNC_JRL)) ? PC_MEM_WB_out : (MemtoReg_MEM_WB_out ? MemData_MEM_WB_out : ALU_Result_MEM_WB_out);
     assign output_port = is_wwd_MEM_WB_out ? r_data1_MEM_WB_out : `WORD_SIZE'bz;
     assign num_inst = num_inst_reg;
     assign is_halted = halted_op_MEM_WB_out;
