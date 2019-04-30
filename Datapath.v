@@ -219,12 +219,11 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     Adder add1(clk, reset_n, PC_out, `WORD_SIZE'b1, 4'b0000, PC_next);
 
     IF_ID if_id(clk, reset_n, IF_ID_Write, is_NOP, flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
-
-    assign rs = instruction_IF_ID_out[11:10];
-    assign rt = instruction_IF_ID_out[9:8];
-    assign rd = J_type ? 2 : (R_type ? instruction_IF_ID_out[7:6] : (( I_type &&  !S_type ) ? instruction_IF_ID_out[9:8]: 2'bz)) ; 
     assign opcode_ID_EX_in = instruction_IF_ID_out[`WORD_SIZE-1:12];    
     assign func_ID_EX_in = instruction_IF_ID_out[5:0];
+    assign rs = instruction_IF_ID_out[11:10];
+    assign rt = instruction_IF_ID_out[9:8];
+    assign rd = (opcode_ID_EX_in == `JAL_OP || (opcode_ID_EX_in == `JRL_OP && func_ID_EX_in == `INST_FUNC_JRL)) ? 2 : (R_type ? instruction_IF_ID_out[7:6] : (( I_type &&  !S_type ) ? instruction_IF_ID_out[9:8]: 2'bz)) ; 
 
     Adder targetAddressAdder(clk, reset_n, PC_IF_ID_out, imm_ID_EX_in, opcode_ID_EX_in, target_address);
 
