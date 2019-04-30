@@ -263,7 +263,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     EXForwardUnit EXforwardUnit(clk, reset_n, RegWrite_EX_MEM_out, RegWrite_MEM_WB_out, rd_EX_MEM_out, rd_MEM_WB_out, rs_ID_EX_out, rt_ID_EX_out, EXforwardA, EXforwardB);
 
-    assign ALUIn_A = (EXforwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((EXforwardA == 1) ? w_data : r_data1_ID_EX_out);
+    assign ALUIn_A = (opcode_ID_EX_out == `JAL_OP || (opcode_ID_EX_out == `JRL_OP && func_ID_EX_out == `INST_FUNC_JRL)) ? PC_ID_EX_out : (EXforwardA == 2'b10) ? ALU_Result_EX_MEM_out : ((EXforwardA == 1) ? w_data : r_data1_ID_EX_out);
     assign ALUIn_B = (EXforwardB == 2'b10) ? ALU_Result_EX_MEM_out : ((EXforwardB == 1) ? w_data : (ALUSrcB_ID_EX_out ? imm_ID_EX_out : r_data2_ID_EX_out));
 
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp_ID_EX_out, opcode_ID_EX_out, ALU_Result_EX_MEM_in);

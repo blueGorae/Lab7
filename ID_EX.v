@@ -55,7 +55,7 @@ module ID_EX(clk, reset_n, func_in, PC_in, r_data1_in, r_data2_in, imm_in, opcod
 
     initial begin
         i <= 0;
-        func_out <= `WORD_SIZE'bz;
+        func_out <= 6'bz;
         PC_out <= `WORD_SIZE'bz;
         r_data1_out <= `WORD_SIZE'bz;
         r_data2_out <= `WORD_SIZE'bz;
@@ -78,7 +78,7 @@ module ID_EX(clk, reset_n, func_in, PC_in, r_data1_in, r_data2_in, imm_in, opcod
 
     always @(negedge reset_n) begin
         i <= 0;
-        func_out <= `WORD_SIZE'bz;
+        func_out <= 6'bz;
         PC_out <= `WORD_SIZE'bz;
         r_data1_out <= `WORD_SIZE'bz;
         r_data2_out <= `WORD_SIZE'bz;
