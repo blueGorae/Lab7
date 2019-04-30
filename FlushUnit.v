@@ -19,7 +19,6 @@ module FlushUnit(clk, reset_n, is_NOP, PCSrc, B_OP, B_cond, flush_signal);
         flush_signal <= 0;
     end
 
-    //assign flush_signal = (PCSrc==2) ? 1 : ((B_cond && B_OP) || (PCSrc == 1) ? 1  : (PCSrc == 0) ? 0 : 0) );
     always @(*) begin
         if(!is_NOP) begin
             if(PCSrc == 2) begin
@@ -38,7 +37,6 @@ module FlushUnit(clk, reset_n, is_NOP, PCSrc, B_OP, B_cond, flush_signal);
         else begin
             flush_signal <=0;
         end
-        //$display("%h", flush_signal);
     end
 endmodule
 

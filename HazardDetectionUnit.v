@@ -1,10 +1,12 @@
 `include "opcodes.v"
 
-module HazardDetectionUnit(clk, reset_n, MemRead, LWD_rd, new_instruction, PCWrite, IF_ID_Write, ControlNOP);
+module HazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, LWD_rd_ID_EX_out, MemRead_EX_MEM_out, LWD_rd_EX_MEM_out, new_instruction, PCWrite, IF_ID_Write, ControlNOP);
     input clk, reset_n;
 
-    input MemRead;
-    input [1:0] LWD_rd;
+    input MemRead_ID_EX_out;
+    input [1:0] LWD_rd_ID_EX_out;
+    input MemRead_EX_MEM_out;
+    input [1:0] LWD_rd_EX_MEM_out;
     input [`WORD_SIZE-1:0] new_instruction;
     
     output PCWrite;
@@ -30,15 +32,20 @@ module HazardDetectionUnit(clk, reset_n, MemRead, LWD_rd, new_instruction, PCWri
 
     always @(*) begin
 
-        if(MemRead && ((LWD_rd == new_instruction[11:10]) || (LWD_rd == new_instruction[9:8]))) begin
-            PCWrite <= 0;
-            IF_ID_Write <= 0;
-            ControlNOP <= 1;
+        PCWrite = 1'b1;
+        IF_ID_Write = 1'b1;
+        ControlNOP = 1'b0;
+
+        if(MemRead_EX_MEM_out && ((LWD_rd_EX_MEM_out == new_instruction[11:10]) || (LWD_rd_EX_MEM_out== new_instruction[9:8]))) begin
+            PCWrite = 0;
+            IF_ID_Write = 0;
+            ControlNOP = 1;
         end
-        else begin 
-            PCWrite <= 1'b1;
-            IF_ID_Write <= 1'b1;
-            ControlNOP <= 1'b0;
+
+        if(MemRead_ID_EX_out && ((LWD_rd_ID_EX_out == new_instruction[11:10]) || (LWD_rd_ID_EX_out== new_instruction[9:8]))) begin
+            PCWrite = 0;
+            IF_ID_Write = 0;
+            ControlNOP = 1;
         end
     end
 endmodule
