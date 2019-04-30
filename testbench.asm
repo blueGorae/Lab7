@@ -169,6 +169,7 @@ BLZ5:		WWD	$1	; TEST #18-3 : BLZ (= 0x0001)
 		JMP	PREFIB1
 PREFIB2:	ADI	$1, $2, 0
 		JRL	$1
+
 		WWD	$0	; TEST #20 : JAL & JRL & JPR (= 0x0022)
 
 		HLT		; FINISHED
@@ -179,7 +180,7 @@ SIMPLE1:	JPR	$2
 
 PREFIB1:	JAL	PREFIB2
 
-FIB:		ADI	$1, $0, -1
+FIB:		ADI	$1, $0, -1 //b2
 		BGZ	$1, FIBRECUR
 		LHI	$0, 0
 		ORI	$0, $0, 1

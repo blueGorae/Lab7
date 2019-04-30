@@ -269,8 +269,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     ALU alu(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp_ID_EX_out, opcode_ID_EX_out, ALU_Result_EX_MEM_in);
 
     assign PC_EX_MEM_in = PC_ID_EX_out;
-    assign func_EX_MEM_in = func_ID_EX_in;
-    assign opcode_EX_MEM_in = opcode_ID_EX_in;
+    assign func_EX_MEM_in = func_ID_EX_out;
+    assign opcode_EX_MEM_in = opcode_ID_EX_out;
     assign r_data1_EX_MEM_in = ALUIn_A;
     assign r_data2_EX_MEM_in = r_data2_ID_EX_out;
     assign rd_EX_MEM_in = rd_ID_EX_out;
