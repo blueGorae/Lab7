@@ -69,7 +69,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     //For stall
     wire ID_EX_Write;
     wire EX_MEM_Write;
-    reg MEM_stall_clk;
+    reg [1 : 0] MEM_stall_clk;
 
     wire B_cond;
     wire B_OP;
@@ -203,13 +203,14 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     initial 
     begin
         num_inst_reg <= 0;
-        MEM_stall_clk <=2;
+        MEM_stall_clk <=2'b10;
     end
 
     always @(negedge reset_n) begin
         num_inst_reg <= 0;     
-        MEM_stall_clk <=2;
+        MEM_stall_clk <=2'b10;
     end
+
 
     always @(negedge clk) begin
         if(is_done_MEM_WB_out) begin
@@ -219,13 +220,13 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
 
     assign PC_in = (PCSrc==2) ? r_data1_ID_EX_in : (((B_cond && B_OP) || (PCSrc == 1)) ? target_address : PC_next);
-    PC pc(clk, reset_n, PCWrite, PC_in, PC_out);
+    PC pc(clk, reset_n, PCWrite && (MEM_stall_clk == 2'b10), PC_in, PC_out);
 
     assign instruction_IF_ID_in = data1;
     assign PC_IF_ID_in = PC_next;
     Adder add1(clk, reset_n, PC_out, `WORD_SIZE'b1, 4'b0000, PC_next);
 
-    IF_ID if_id(clk, reset_n, IF_ID_Write && (MEM_stall_clk == 2), is_NOP, flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
+    IF_ID if_id(clk, reset_n, IF_ID_Write && (MEM_stall_clk == 2'b10), is_NOP, flush_signal, PC_IF_ID_in, instruction_IF_ID_in, PC_IF_ID_out, instruction_IF_ID_out);
     assign opcode_ID_EX_in = instruction_IF_ID_out[`WORD_SIZE-1:12];    
     assign func_ID_EX_in = instruction_IF_ID_out[5:0];
     assign rs = instruction_IF_ID_out[11:10];
@@ -315,16 +316,18 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     
     //stall for Mem Access
     always @(posedge clk) begin
-        if ((readM1 || readM2 || writeM2) && (MEM_stall_clk != 0)) begin
-            MEM_stall_clk =  MEM_stall_clk - 1;
-        end
-        else begin
-            MEM_stall_clk = 2;
+        if(reset_n) begin
+            if ((readM1 || readM2 || writeM2) && (MEM_stall_clk != 2'b0)) begin
+                MEM_stall_clk =  MEM_stall_clk - 1;
+            end
+            else begin
+                MEM_stall_clk = 2'b10;
+            end
         end
     end
 
-    assign ID_EX_Write = MEM_stall_clk == 2 ? 1 : 0;
-    assign EX_MEM_Write = MEM_stall_clk == 2 ? 1 : 0;
+    assign ID_EX_Write = MEM_stall_clk == 2'b10 ? 2'b01 : 2'b0;
+    assign EX_MEM_Write = MEM_stall_clk == 2'b10 ? 2'b01 : 2'b0;
     
     MEM_WB mem_wb(clk, reset_n, PC_MEM_WB_in, func_MEM_WB_in, opcode_MEM_WB_in, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, is_done_MEM_WB_in, r_data1_MEM_WB_in, halted_op_MEM_WB_in, PC_MEM_WB_out, func_MEM_WB_out, opcode_MEM_WB_out, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_done_MEM_WB_out, r_data1_MEM_WB_out , halted_op_MEM_WB_out);
 
