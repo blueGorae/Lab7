@@ -210,6 +210,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
         end
     end
 
+
     assign PC_in = (PCSrc==2) ? r_data1_ID_EX_in : (((B_cond && B_OP) || (PCSrc == 1)) ? target_address : PC_next);
     PC pc(clk, reset_n, PCWrite, PC_in, PC_out);
 
