@@ -402,25 +402,6 @@ module ControlUnit(clk, reset_n, instruction, PCSrc, RegWrite, ALUSrcB, MemWrite
 				halted_op <= 0;
 				is_done <= 1'b1;			
 			end 
-			// default: begin
-			// 	PCSrc <= 2'b0;
-			// 	RegWrite <= 1'b0;
-			// 	ALUSrcB <= 1'b0;
-			// 	MemWrite <= 1'b0;
-			// 	ALUOp <= 3'b0;
-			// 	MemtoReg <= 1'b0;
-			// 	MemRead <= 1'b0;
-			// 	readM1 <= 1'b1;
-			// 	B_OP <= 1'b0;
-			// 	R_type <= 1'b0;
-			// 	I_type <= 1'b0;
-			// 	J_type <= 1'b0;
-			// 	S_type <= 1'b0;
-			// 	L_type <= 1'b0;
-			// 	is_wwd <= 1'b0;
-			// 	halted_op <= 1'b0;
-			// 	is_done <= 1'b0;
-			// end
 		endcase	
 	end
 

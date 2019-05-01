@@ -12,7 +12,6 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp, opcode, ALU_Result);
 	output [`WORD_SIZE-1:0] ALU_Result;
 	
 	reg [`WORD_SIZE-1:0] ALU_Result;
-	// You can declare any variables as needed.
 	
 	initial begin
 		ALU_Result <= `WORD_SIZE'bz;
@@ -22,8 +21,6 @@ module ALU(clk, reset_n, ALUIn_A, ALUIn_B, ALUOp, opcode, ALU_Result);
 		ALU_Result <= `WORD_SIZE'bz;
 	end
 
-	// TODO: You should implement the functionality of ALU!
-	// (HINT: Use 'always @(...) begin ... end')
 
 
 	always @(*) begin

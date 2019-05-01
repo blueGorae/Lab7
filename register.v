@@ -31,12 +31,10 @@ module register(clk, reset_n, rs, rt, rd, w_data, RegWrite, r_data1, r_data2);
 			r[i] = 0;
 	end
 
-	// When ID is Done, WB is executed
 	always @(negedge clk) begin
 		if(RegWrite) begin
 			r[rd] <= w_data ;
 		end
-
 	end
 
 	assign r_data1 = r[rs];

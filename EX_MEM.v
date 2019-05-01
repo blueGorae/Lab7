@@ -108,4 +108,4 @@ module EX_MEM( clk, reset_n, PC_in, func_in, opcode_in, ALU_Result_in, r_data1_i
         end
     end
 
-endmodule // 
+endmodule 

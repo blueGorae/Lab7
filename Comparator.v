@@ -8,7 +8,7 @@ module Comparator(clk, reset_n, In_A, In_B, B_OP, opcode, B_cond);
     output B_cond;
     reg B_cond;
     
-    initial begin
+  initial begin
 		B_cond <= 0;
 	end
 
@@ -16,8 +16,6 @@ module Comparator(clk, reset_n, In_A, In_B, B_OP, opcode, B_cond);
 		B_cond <= 0;
 	end
 
-	// TODO: You should implement the functionality of ALU!
-	// (HINT: Use 'always @(...) begin ... end')
 
 	always @(*) begin
 		if(B_OP)begin
