@@ -100,7 +100,7 @@ module EX_MEM( clk, reset_n, EX_MEM_Write, PC_in, func_in, opcode_in, ALU_Result
             RegWrite_out <= EX_MEM_Write ? RegWrite_in : RegWrite_out;
             MemtoReg_out <= EX_MEM_Write ? MemtoReg_in : MemtoReg_out;
             is_wwd_out <= EX_MEM_Write ? is_wwd_in : is_wwd_out;
-            is_done_out <= EX_MEM_Write ? is_done_in : is_done_out;
+            is_done_out <= EX_MEM_Write ? is_done_in : 0;
             halted_op_out <= EX_MEM_Write ? halted_op_in : halted_op_out;
 
         end
