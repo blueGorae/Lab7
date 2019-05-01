@@ -203,12 +203,12 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     initial 
     begin
         num_inst_reg <= 0;
-        MEM_stall_clk <=0;
+        MEM_stall_clk <=2;
     end
 
     always @(negedge reset_n) begin
         num_inst_reg <= 0;     
-        MEM_stall_clk <=0;
+        MEM_stall_clk <=2;
     end
 
     always @(negedge clk) begin
