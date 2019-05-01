@@ -1,7 +1,8 @@
 `include "opcodes.v"
 
-module EX_MEM( clk, reset_n, PC_in, func_in, opcode_in, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, PC_out, func_out, opcode_out, ALU_Result_out, r_data1_out, r_data2_out, rd_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
+module EX_MEM( clk, reset_n, EX_MEM_Write, PC_in, func_in, opcode_in, ALU_Result_in, r_data1_in, r_data2_in, rd_in, MemRead_in, MemWrite_in, RegWrite_in, MemtoReg_in, is_wwd_in, is_done_in, halted_op_in, PC_out, func_out, opcode_out, ALU_Result_out, r_data1_out, r_data2_out, rd_out, MemRead_out, MemWrite_out, RegWrite_out, MemtoReg_out, is_wwd_out, is_done_out, halted_op_out);
     input clk, reset_n;
+    input EX_MEM_Write;
     input [`WORD_SIZE-1 : 0] PC_in;
     input [5:0] func_in;
     input [3:0] opcode_in;
@@ -87,20 +88,20 @@ module EX_MEM( clk, reset_n, PC_in, func_in, opcode_in, ALU_Result_in, r_data1_i
 
     always @(posedge clk) begin
         if(reset_n && i >=2)begin
-            PC_out <= PC_in;
-            func_out <= func_in;
-            opcode_out <= opcode_in;
-            ALU_Result_out <= ALU_Result_in;
-            r_data1_out <= r_data1_in;
-            r_data2_out <= r_data2_in;
-            rd_out <= rd_in;
-            MemRead_out <= MemRead_in;
-            MemWrite_out <= MemWrite_in;
-            RegWrite_out <= RegWrite_in;
-            MemtoReg_out <= MemtoReg_in;
-            is_wwd_out <= is_wwd_in;
-            is_done_out <= is_done_in;
-            halted_op_out <= halted_op_in;
+            PC_out <= EX_MEM_Write ? PC_in : PC_out;
+            func_out <= EX_MEM_Write ? func_in : func_out;
+            opcode_out <= EX_MEM_Write ? opcode_in : opcode_out;
+            ALU_Result_out <= EX_MEM_Write ? ALU_Result_in : ALU_Result_out;
+            r_data1_out <= EX_MEM_Write ? r_data1_in : r_data1_out;
+            r_data2_out <= EX_MEM_Write ? r_data2_in : r_data2_out;
+            rd_out <= EX_MEM_Write ? rd_in : rd_out;
+            MemRead_out <= EX_MEM_Write ? MemRead_in : MemRead_out;
+            MemWrite_out <= EX_MEM_Write ? MemWrite_in : MemWrite_out;
+            RegWrite_out <= EX_MEM_Write ? RegWrite_in : RegWrite_out;
+            MemtoReg_out <= EX_MEM_Write ? MemtoReg_in : MemtoReg_out;
+            is_wwd_out <= EX_MEM_Write ? is_wwd_in : is_wwd_out;
+            is_done_out <= EX_MEM_Write ? is_done_in : is_done_out;
+            halted_op_out <= EX_MEM_Write ? halted_op_in : halted_op_out;
 
         end
         else if(reset_n) begin
