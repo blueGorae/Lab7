@@ -35,12 +35,12 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
     //reg [`WORD_SIZE-1:0] cache_line [0 : 3] // 4words
    // reg [`WORD_SIZE + `TAG_SIZE -1 :0] cache_line;//4 words
    // reg [`WORD_SIZE-1 : 0] blocks [0:3];
-    reg [`WORD_SIZE + `TAG_SIZE -1 :0] cache [0 : 3] [0 : 3]
+    reg [`WORD_SIZE + `TAG_SIZE -1 :0] Icache [0 : 3] [0 : 3]
    // reg [(`WORD_SIZE * 4 + `TAG_SIZE) -1:0] cache [0 : 3]
     reg [`WORD_SIZE-1 : 0] outputData;
 
 
-    
+
     //implementation
     integer i;
     integer j;
@@ -55,7 +55,7 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
     initial begin
         for(i = 0; i < 4; i = i + 1)
             for (j = 0; j < 4; j = j + 1)
-                cache[i][j] = {`TAG_SIZE'bz , `WORD_SIZE'bz};
+                Icache[i][j] = {`TAG_SIZE'bz , `WORD_SIZE'bz};
         end
         is_hit = 0;
         is_miss = 1;
@@ -67,7 +67,7 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
     always @(negedge reset_n) begin
         for(i = 0; i < 4; i = i + 1)
             for (j = 0; j < 4; j = j + 1)
-                cache[i][j] = {`TAG_SIZE'bz , `WORD_SIZE'bz};
+                Icache[i][j] = {`TAG_SIZE'bz , `WORD_SIZE'bz};
         end
         is_hit = 0;
         is_miss = 1;
@@ -78,7 +78,7 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
 
     always @ (posedge clk) begin
         if(reset_n) begin
-            is_hit = (tag == cache[set_index][block_offset][(`TAG_SIZE'bz + `WORD_SIZE'bz)-1 :`WORD_SIZE]);
+            is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE'bz + `WORD_SIZE'bz)-1 :`WORD_SIZE]);
             is_miss = !is_hit;
             data1_to_cpu = `WORD_SIZE'bz;
             readM1_to_mem = 0;
@@ -91,13 +91,13 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
                     //outputData = data1_from_mem;
                     if(data1_from_mem) begin
                         for(j = 0; j < 4; j = j+1)
-                            cache[set_index][j] = {tag, data1_from_mem[j]};
+                            Icache[set_index][j] = {tag, data1_from_mem[j]};
                     end
                     
                 end
 
                 if(is_hit) begin
-                    outputData = cache[set_index][block_offset][`WORD_SIZE-1 : 0];
+                    outputData = Icache[set_index][block_offset][`WORD_SIZE-1 : 0];
 
                 end
             end
