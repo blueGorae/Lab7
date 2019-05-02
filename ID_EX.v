@@ -101,30 +101,25 @@ module ID_EX(clk, reset_n, ID_EX_Write, func_in, PC_in, r_data1_in, r_data2_in, 
     end
 
     always @(posedge clk) begin
-        if(reset_n &&  i >= 1)begin
-            PC_out <= ID_EX_Write ? PC_in : PC_out;
-            r_data1_out <= ID_EX_Write ? r_data1_in : r_data1_out;
-            r_data2_out <= ID_EX_Write ? r_data2_in : r_data2_out;
-            imm_out <= ID_EX_Write ? imm_in : imm_out;
-            func_out <= ID_EX_Write ? func_in : func_out;
-            opcode_out <= ID_EX_Write ? opcode_in : opcode_out;
-            rs_out <= ID_EX_Write ? rs_in : rs_out;
-            rt_out <= ID_EX_Write ? rt_in : rt_out;
-            rd_out <= ID_EX_Write ? rd_in : rd_out;
+        PC_out <= ID_EX_Write ? PC_in : PC_out;
+        r_data1_out <= ID_EX_Write ? r_data1_in : r_data1_out;
+        r_data2_out <= ID_EX_Write ? r_data2_in : r_data2_out;
+        imm_out <= ID_EX_Write ? imm_in : imm_out;
+        func_out <= ID_EX_Write ? func_in : func_out;
+        opcode_out <= ID_EX_Write ? opcode_in : opcode_out;
+        rs_out <= ID_EX_Write ? rs_in : rs_out;
+        rt_out <= ID_EX_Write ? rt_in : rt_out;
+        rd_out <= ID_EX_Write ? rd_in : rd_out;
 
-            ALUOp_out <= ID_EX_Write ? ALUOp_in : ALUOp_out;
-            ALUSrcB_out <= ID_EX_Write ? ALUSrcB_in : ALUSrcB_out;
-            MemRead_out <= ID_EX_Write ? MemRead_in : MemRead_out;
-            MemWrite_out <= ID_EX_Write ? MemWrite_in : MemWrite_out;
-            RegWrite_out <= ID_EX_Write ? RegWrite_in : RegWrite_out;
-            MemtoReg_out <= ID_EX_Write ? MemtoReg_in : MemtoReg_out;
-            is_wwd_out <= ID_EX_Write ? is_wwd_in : is_wwd_out;
-            is_done_out <= ID_EX_Write ? is_done_in : is_done_out;
-            halted_op_out <= ID_EX_Write ? halted_op_in : halted_op_out;
-        end
-        else if(reset_n) begin
-            i <= i + 1;
-        end
+        ALUOp_out <= ID_EX_Write ? ALUOp_in : ALUOp_out;
+        ALUSrcB_out <= ID_EX_Write ? ALUSrcB_in : ALUSrcB_out; 
+        MemRead_out <= ID_EX_Write ? MemRead_in : MemRead_out;
+        MemWrite_out <= ID_EX_Write ? MemWrite_in : MemWrite_out;
+        RegWrite_out <= ID_EX_Write ? RegWrite_in : RegWrite_out;
+        MemtoReg_out <= ID_EX_Write ? MemtoReg_in : MemtoReg_out;
+        is_wwd_out <= ID_EX_Write ? is_wwd_in : is_wwd_out;
+        is_done_out <= ID_EX_Write ? is_done_in : is_done_out;
+        halted_op_out <= ID_EX_Write ? halted_op_in : halted_op_out;
     end
 
 endmodule
