@@ -62,6 +62,7 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
         data1_to_cpu = `WORD_SIZE'bz;
         readM1_to_mem = 0;
         address1_to_mem = `WORD_SIZE'bz;
+        
     end
 
     always @(negedge reset_n) begin
