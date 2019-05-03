@@ -70,7 +70,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire ID_EX_Write;
     wire EX_MEM_Write;
     wire MEM_WB_Write;
-    reg MEM_stall_clk;
+    reg [`WORD_SIZE-1 : 0] MEM_stall_clk;
 
     wire B_cond;
     wire B_OP;
@@ -326,7 +326,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     //stall for Mem Access
     always @(posedge clk) begin
         if(reset_n) begin
-            if ((readM1 || readM2 || writeM2) && (MEM_stall_clk == 2'b0)) begin
+            if ((readM1 || readM2 || writeM2) && (MEM_stall_clk == 0)) begin
                 MEM_stall_clk = 1;
             end
             else begin
