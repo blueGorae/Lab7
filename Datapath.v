@@ -342,8 +342,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     MEM_WB mem_wb(clk, reset_n, MEM_WB_Write, PC_MEM_WB_in, func_MEM_WB_in, opcode_MEM_WB_in, MemData_MEM_WB_in, ALU_Result_MEM_WB_in, rd_MEM_WB_in, MemtoReg_MEM_WB_in, RegWrite_MEM_WB_in, is_wwd_MEM_WB_in, is_done_MEM_WB_in, r_data1_MEM_WB_in, halted_op_MEM_WB_in, PC_MEM_WB_out, func_MEM_WB_out, opcode_MEM_WB_out, MemData_MEM_WB_out, ALU_Result_MEM_WB_out, rd_MEM_WB_out, MemtoReg_MEM_WB_out, RegWrite_MEM_WB_out, is_wwd_MEM_WB_out, is_done_MEM_WB_out, r_data1_MEM_WB_out , halted_op_MEM_WB_out);
 
     assign w_data = (opcode_MEM_WB_out == `JAL_OP || (opcode_MEM_WB_out == `JRL_OP && func_MEM_WB_out == `INST_FUNC_JRL)) ? PC_MEM_WB_out : (MemtoReg_MEM_WB_out ? MemData_MEM_WB_out : ALU_Result_MEM_WB_out);
-    assign output_port = r_data1_MEM_WB_out;//is_wwd_MEM_WB_out ? r_data1_MEM_WB_out : `WORD_SIZE'bz;
-    assign num_inst = num_inst_reg;
+    assign output_port = is_wwd_MEM_WB_out ? r_data1_MEM_WB_out : `WORD_SIZE'bz;
+    assign num_inst = is_wwd_MEM_WB_out ? num_inst_reg : `WORD_SIZE'bz;
     assign is_halted = halted_op_MEM_WB_out;
     
 
