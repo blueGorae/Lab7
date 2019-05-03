@@ -34,11 +34,24 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	output is_halted;
 	wire is_halted;
 
+	wire readM1_to_mem;
+	wire [`WORD_SIZE-1:0] address1_to_mem;
+	wire [`WORD_SIZE-1:0] data1_to_cpu;
+	wire is_hit;
+	wire is_miss;
+
+	wire readM2_to_mem;
+	wire writeM2_to_mem;
+	wire [`WORD_SIZE-1:0] data2_to_mem;
+	wire [`WORD_SIZE-1:0] address2_to_mem;
+	wire [`WORD_SIZE-1:0] data2_from_mem [0 : 3];
+	wire [`WORD_SIZE-1:0] data2_to_cpu;
 
 
 	// TODO : Implement your pipelined CPU!
 	
-
+	Icache icache(clk, reset_n, readM1, address1, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_cpu, is_hit, is_miss);
+	Dcache dcache(clk, reset_n, readM2, writeM2, data2, address2, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_cpu, is_hit, is_miss);
 	Datapath datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
 
 
