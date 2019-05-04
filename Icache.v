@@ -27,6 +27,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     wire [11 : 0] tag;
     wire [1 : 0] set_index;
     wire [1 : 0] block_offset;
+
     //reg [`WORD_SIZE-1 : 0] virtual_address;
 
     output is_hit;
@@ -37,7 +38,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
 
     //cache design
 
-    reg [`WORD_SIZE + `TAG_SIZE -1 :0] Icache [0 : 3] [0 : 3];
+    reg [`WORD_SIZE + `TAG_SIZE :0] Icache [0 : 3] [0 : 3];
     reg [`WORD_SIZE-1 : 0] outputData;
 
 
@@ -52,12 +53,14 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     assign block_offset = address1_from_datapath[1 : 0];
     assign set_index = address1_from_datapath[3 : 2];
     assign tag = address1_from_datapath[`WORD_SIZE-1 : 4];
+    //assign is_valid = address1_from_datapath[`WORD_SIZE-1];
+
    
 
     initial begin
         for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
             for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
-                Icache[i][j] = {`TAG_SIZE'bz , `WORD_SIZE'bz};
+                Icache[i][j] = {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
             end
         end
         is_hit <= 0;
@@ -71,7 +74,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     always @(negedge reset_n) begin
         for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
             for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
-                Icache[i][j] <= {`TAG_SIZE'bz , `WORD_SIZE'bz};
+                Icache[i][j] <= {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
             end
         end
         is_hit <= 0;
@@ -88,7 +91,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         if(reset_n) begin
 
             if(readM1_from_datapath) begin
-                is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
+                is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-2 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
                 is_miss = !is_hit;
 
                 if(is_miss && num_remain_clk == 0) begin
@@ -99,11 +102,13 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
                 end
                 else if(is_miss && num_remain_data != 0 ) begin
                     Icache[set_index][4-num_remain_data][`WORD_SIZE-1 : 0] = data1_from_mem;
+                    Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE] = 1;
 				    num_remain_data = num_remain_data-1;
                     num_remain_clk = num_remain_clk-1;
                 end
                 else if(is_miss) begin
                     num_remain_clk = num_remain_clk-1;
+
                     outputData = Icache[set_index][block_offset][`WORD_SIZE-1 : 0];
                 end
 
