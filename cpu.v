@@ -58,7 +58,7 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	// TODO : Implement your pipelined CPU!
 
 	assign readM1 = readM1_to_mem;
-	assign data1_from_mem = data1_from_mem_reg;
+	//assign data1_from_mem = data1_from_mem_reg;
 
 
 	initial begin
@@ -71,6 +71,8 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 		num_remain_clk <= 0;
 	end
 
+	assign data1_from_mem = data1;
+
 	always @(posedge clk) begin
 		if(reset_n)begin
 			if(is_miss && num_remain_clk == 0) begin
@@ -80,7 +82,6 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 			end
 			else if (is_miss && num_remain_data != 0 ) begin
 				address1 =  address1 + 1;
-				data1_from_mem_reg = data1;
 				num_remain_data = num_remain_data-1;
 				num_remain_clk = num_remain_clk-1;
 			end
