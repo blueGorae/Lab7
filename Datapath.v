@@ -15,15 +15,15 @@
 `include "EXForwardUnit.v"
 `include "IDForwardUnit.v"
 
-module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted, is_hit, is_miss);
+module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted, is_hit, is_miss, mem_access_done);
 
     input reset_n;
     input clk; 
 
     input is_hit;
-    wire is_hit;
     input is_miss;
-    wire is_miss;
+    input mem_access_done;
+
 
     //instruction
     input [`WORD_SIZE-1:0] data1; 
@@ -75,7 +75,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire ID_EX_Write;
     wire EX_MEM_Write;
     wire MEM_WB_Write;
-    reg [`WORD_SIZE-1 : 0] MEM_stall_clk;
+    wire [`WORD_SIZE-1 : 0] MEM_stall_clk;
 
     wire B_cond;
     wire B_OP;
@@ -211,13 +211,13 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     initial 
     begin
         num_inst_reg <= 0;
-        MEM_stall_clk <= 0;
+        //MEM_stall_clk <= 0;
         is_num_inst_updated <=0;
     end
 
     always @(negedge reset_n) begin
         num_inst_reg <= 0;     
-        MEM_stall_clk <= 0;
+        //MEM_stall_clk <= 0;
         is_num_inst_updated <=0;
     end
 
@@ -328,20 +328,22 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign halted_op_MEM_WB_in = halted_op_EX_MEM_out;
 
     
+    assign MEM_stall_clk = mem_access_done ? 0 : 1;
+
     //stall for Mem Access
-    always @(posedge clk) begin
-        if(reset_n) begin
-            if ( is_hit && (MEM_stall_clk == 0)) begin
-                MEM_stall_clk = 0;
-            end
-            else if ( is_miss && (MEM_stall_clk == 0)) begin
-                MEM_stall_clk = 5;
-            end
-            else begin
-                MEM_stall_clk =  MEM_stall_clk - 1;
-            end
-        end
-    end
+    // always @(posedge clk) begin
+    //     if(reset_n) begin
+    //         if ( is_hit && (MEM_stall_clk == 0)) begin
+    //             MEM_stall_clk = 0;
+    //         end
+    //         else if ( is_miss && (MEM_stall_clk == 0)) begin
+    //             MEM_stall_clk = 5;
+    //         end
+    //         else if( is_miss && (MEM_stall_clk > 0)) begin
+    //             MEM_stall_clk =  MEM_stall_clk - 1;
+    //         end
+    //     end
+    // end
 
     assign ID_EX_Write = MEM_stall_clk == 0 ? 1 : 0;
     assign EX_MEM_Write = MEM_stall_clk == 0 ? 1 : 0;
