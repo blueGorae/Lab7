@@ -6,13 +6,13 @@
 `define TAG_SIZE 12
 
 
-module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_cpu, is_hit, is_miss);
+module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_datapath, is_hit, is_miss);
     input clk, reset_n;
-    input readM1_from_cpu;
-    input [`WORD_SIZE-1 :0] address1_from_cpu;
+    input readM1_from_datapath;
+    input [`WORD_SIZE-1 :0] address1_from_datapath;
 
     //hit or miss
-    output [`WORD_SIZE-1 :0] data1_to_cpu;
+    output [`WORD_SIZE-1 :0] data1_to_datapath;
 
     //miss
     output readM1_to_mem;
@@ -46,9 +46,9 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
     integer j;
 
     always @ (*) begin
-        block_offset  <= address1_from_cpu[1 : 0];
-        set_index <= address1_from_cpu[3 : 2];
-        tag <= address1_from_cpu[`WORD_SIZE-1 : 4];
+        block_offset  <= address1_from_datapath[1 : 0];
+        set_index <= address1_from_datapath[3 : 2];
+        tag <= address1_from_datapath[`WORD_SIZE-1 : 4];
     end
    
 
@@ -59,7 +59,7 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
         end
         is_hit = 0;
         is_miss = 1;
-        data1_to_cpu = `WORD_SIZE'bz;
+        data1_to_datapath = `WORD_SIZE'bz;
         readM1_to_mem = 0;
         address1_to_mem = `WORD_SIZE'bz;
         
@@ -72,7 +72,7 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
         end
         is_hit = 0;
         is_miss = 1;
-        data1_to_cpu = `WORD_SIZE'bz;
+        data1_to_datapath = `WORD_SIZE'bz;
         readM1_to_mem = 0;
         address1_to_mem = `WORD_SIZE'bz;
     end
@@ -81,14 +81,14 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
         if(reset_n) begin
             is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE'bz + `WORD_SIZE'bz)-1 :`WORD_SIZE]);
             is_miss = !is_hit;
-            data1_to_cpu = `WORD_SIZE'bz;
+            data1_to_datapath = `WORD_SIZE'bz;
             readM1_to_mem = 0;
             address1_to_mem = `WORD_SIZE'bz;
 
-            if(readM1_from_cpu) begin
+            if(readM1_from_datapath) begin
                 if(is_miss) begin
                     readM1_to_mem = 1;
-                    address1_to_mem = address1_from_cpu;
+                    address1_to_mem = address1_from_datapath;
                     //outputData = data1_from_mem;
                     if(data1_from_mem) begin
                         for(j = 0; j < 4; j = j+1)
@@ -105,7 +105,7 @@ module Icache(clk, reset_n, readM1_from_cpu, address1_from_cpu, readM1_to_mem, a
         end
     end
 
-    assign data1_to_cpu = outputData;
+    assign data1_to_datapath = outputData;
 
 
 endmodule

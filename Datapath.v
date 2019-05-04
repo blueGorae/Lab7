@@ -15,10 +15,15 @@
 `include "EXForwardUnit.v"
 `include "IDForwardUnit.v"
 
-module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
+module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted, is_hit, is_miss);
 
     input reset_n;
     input clk; 
+
+    input is_hit;
+    wire is_hit;
+    input is_miss;
+    wire is_miss;
 
     //instruction
     input [`WORD_SIZE-1:0] data1; 
