@@ -331,8 +331,11 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     //stall for Mem Access
     always @(posedge clk) begin
         if(reset_n) begin
-            if ((readM1 || readM2 || writeM2) && (MEM_stall_clk == 0)) begin
-                MEM_stall_clk = 1;
+            if ( is_hit && (MEM_stall_clk == 0)) begin
+                MEM_stall_clk = 0;
+            end
+            else if ( is_miss && (MEM_stall_clk == 0)) begin
+                MEM_stall_clk = 5;
             end
             else begin
                 MEM_stall_clk =  MEM_stall_clk - 1;
