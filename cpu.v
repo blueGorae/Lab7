@@ -1,9 +1,9 @@
 `include "Datapath.v"
 `include "ControlUnit.v"
 `include "opcodes.v"
+`include "Icache.v"
+`include "Dcache.v"
 
-`timescale 1ns/1ns
-//`define WORD_SIZE 16    // data and address word size
 
 module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
 

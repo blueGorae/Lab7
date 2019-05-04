@@ -17,10 +17,10 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
 
     //miss
     output readM1_to_mem;
-    wire readM1_to_mem;
+    reg readM1_to_mem;
 
     output  [`WORD_SIZE-1 :0] address1_to_mem;
-    wire [`WORD_SIZE-1 :0] address1_to_mem;
+    reg [`WORD_SIZE-1 :0] address1_to_mem;
 
     input [`WORD_SIZE-1 :0] data1_from_mem; // fetching 4 words at once
 
@@ -37,7 +37,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
 
     //cache design
 
-    reg [`WORD_SIZE + `TAG_SIZE -1 :0] Icache [0 : 3] [0 : 3]
+    reg [`WORD_SIZE + `TAG_SIZE -1 :0] Icache [0 : 3] [0 : 3];
     reg [`WORD_SIZE-1 : 0] outputData;
 
 
@@ -55,32 +55,31 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
    
 
     initial begin
-        for(i = 0; i < `NUM_INDICIES; i = i + 1)
-            for (j = 0; j < `NUM_BLOCKS; j = j + 1)
+        for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
+            for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
                 Icache[i][j] = {`TAG_SIZE'bz , `WORD_SIZE'bz};
+            end
         end
         is_hit <= 0;
         is_miss <= 0;
-        data1_to_datapath <= `WORD_SIZE'bz;
         num_remain_clk <= 0;
-        num_remain_data <= 0;
-        readM1_to_mem <= 0;
-        address1_to_mem <= `WORD_SIZE'bz;
-        
+        num_remain_data <= 0;    
+        readM1_to_mem <=0;
+        address1_to_mem <= `WORD_SIZE'bz;    
     end
 
     always @(negedge reset_n) begin
-        for(i = 0; i < `NUM_INDICIES; i = i + 1)
-            for (j = 0; j < `NUM_BLOCKS; j = j + 1)
+        for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
+            for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
                 Icache[i][j] <= {`TAG_SIZE'bz , `WORD_SIZE'bz};
+            end
         end
         is_hit <= 0;
         is_miss <= 0;
-        data1_to_datapath <= `WORD_SIZE'bz;
         num_remain_clk <= 0;
         num_remain_data <= 0;
-        readM1_to_mem <= 0;
-        address1_to_mem <= `WORD_SIZE'bz;
+        readM1_to_mem <=0;
+        address1_to_mem <= `WORD_SIZE'bz;    
     end
 
 
@@ -89,7 +88,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         if(reset_n) begin
 
             if(readM1_from_datapath) begin
-                is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE'bz + `WORD_SIZE'bz)-1 :`WORD_SIZE]);
+                is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
                 is_miss = !is_hit;
 
                 if(is_miss && num_remain_clk == 0) begin
