@@ -71,36 +71,22 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         mem_access_done <= 0;
     end
 
-    // always @(negedge reset_n) begin
-    //     for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
-    //         for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
-    //             Icache[i][j] <= {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
-    //         end
-    //     end
-    //     is_hit <= 0;
-    //     is_miss <= 0;
-    //     num_remain_clk <= 0;
-    //     num_remain_data <= 0;
-    //     //readM1_to_mem <=0;
-    //     //address1_to_mem <= `WORD_SIZE'bz;    
-    //     mem_access_done <= 0;
-    // end
-
-    always @(negedge reset_n or address1_from_datapath) begin
-        if (!reset_n) begin
-            for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
-                for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
-                    Icache[i][j] <= {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
-                end
+    always @(negedge reset_n) begin
+        for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
+            for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
+                Icache[i][j] <= {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
             end
-            is_hit <= 0;
-            is_miss <= 0;
-            num_remain_clk <= 0;
-            num_remain_data <= 0;
-            //readM1_to_mem <=0;
-            //address1_to_mem <= `WORD_SIZE'bz;    
-            mem_access_done <= 0;
         end
+        is_hit <= 0;
+        is_miss <= 0;
+        num_remain_clk <= 0;
+        num_remain_data <= 0;
+        //readM1_to_mem <=0;
+        //address1_to_mem <= `WORD_SIZE'bz;    
+        mem_access_done <= 0;
+    end
+
+    always @(address1_from_datapath) begin
     // if(reset_n) begin
         is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
         is_miss = !is_hit;
@@ -127,34 +113,29 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     //assign mem_access_done = (num_remain_clk == 0) ? 1 : 0; 
 
     always @ (posedge clk) begin
-        if(reset_n) begin
-            if(readM1_from_datapath) begin
-                // is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) && mem_access_done;
-                // is_miss = !is_hit;
-                //mem_access_done = 0;
+        if(readM1_from_datapath) begin
+            // is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) && mem_access_done;
+            // is_miss = !is_hit;
+            //mem_access_done = 0;
 
-                // if(is_miss && num_remain_clk == 0) begin
-                //     //readM1_to_mem = 1;
-                //     //address1_to_mem = address1_from_datapath;
-                // end
-                if(is_miss && num_remain_data > 0 ) begin
-                    Icache[set_index][4-num_remain_data][`WORD_SIZE-1 : 0] = data1_from_mem;
-                    Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE -1 : `WORD_SIZE] = tag;
-                    Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE] = 1;
-				    num_remain_data = num_remain_data-1;
-                    num_remain_clk = num_remain_clk-1;
-                end
-                else if(is_miss) begin
-                    num_remain_clk = num_remain_clk-1;
-                    mem_access_done = 1;
-                end
-                else if(is_hit) begin
-                    //outputData = Icache[set_index][block_offset][`WORD_SIZE-1 : 0];
-                    mem_access_done = 1;
-                end
-
-
-
+            // if(is_miss && num_remain_clk == 0) begin
+            //     //readM1_to_mem = 1;
+            //     //address1_to_mem = address1_from_datapath;
+            // end
+            if(is_miss && num_remain_data > 0 ) begin
+                Icache[set_index][4-num_remain_data][`WORD_SIZE-1 : 0] = data1_from_mem;
+                Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE -1 : `WORD_SIZE] = tag;
+                Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE] = 1;
+                num_remain_data = num_remain_data-1;
+                num_remain_clk = num_remain_clk-1;
+            end
+            else if(is_miss) begin
+                num_remain_clk = num_remain_clk-1;
+                mem_access_done = 1;
+            end
+            else if(is_hit) begin
+                //outputData = Icache[set_index][block_offset][`WORD_SIZE-1 : 0];
+                mem_access_done = 1;
             end
         end
     end
