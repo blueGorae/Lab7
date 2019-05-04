@@ -20,7 +20,7 @@ module FlushUnit(clk, reset_n, is_NOP, PCSrc, B_OP, B_cond, flush_signal);
     end
 
     always @(*) begin
-        if(!is_NOP) begin
+        // if(!is_NOP) begin
             if(PCSrc == 2) begin
                 flush_signal <= 1;
             end
@@ -33,10 +33,10 @@ module FlushUnit(clk, reset_n, is_NOP, PCSrc, B_OP, B_cond, flush_signal);
             else begin
                 flush_signal <=0;
             end
-        end
-        else begin
-            flush_signal <=0;
-        end
+        // end
+        // else begin
+        //     flush_signal <=0;
+        // end
     end
 endmodule
 

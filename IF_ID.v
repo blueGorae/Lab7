@@ -31,7 +31,7 @@ module IF_ID(clk, reset_n, IF_ID_Write, is_NOP, flush_signal, PC_in, Instruction
         if(reset_n)begin
                 PC_out <= IF_ID_Write ? PC_in : PC_out;
                 Instruction_out <= IF_ID_Write ? Instruction_in : Instruction_out;
-                is_NOP <= flush_signal ? 1'b1 : 1'b0;
+                is_NOP <= IF_ID_Write ? (flush_signal ? 1'b1 : 1'b0) : is_NOP;
         end
     end
 

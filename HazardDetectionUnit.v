@@ -36,11 +36,11 @@ module HazardDetectionUnit(clk, reset_n, MemRead_ID_EX_out, LWD_rd_ID_EX_out, Me
         IF_ID_Write = 1'b1;
         ControlNOP = 1'b0;
 
-        if(MemRead_EX_MEM_out && ((LWD_rd_EX_MEM_out == new_instruction[11:10]) || (LWD_rd_EX_MEM_out== new_instruction[9:8]))) begin
-            PCWrite = 0;
-            IF_ID_Write = 0;
-            ControlNOP = 1;
-        end
+        // if(MemRead_EX_MEM_out && ((LWD_rd_EX_MEM_out == new_instruction[11:10]) || (LWD_rd_EX_MEM_out== new_instruction[9:8]))) begin
+        //     PCWrite = 0;
+        //     IF_ID_Write = 0;
+        //     ControlNOP = 1;
+        // end
 
         if(MemRead_ID_EX_out && ((LWD_rd_ID_EX_out == new_instruction[11:10]) || (LWD_rd_ID_EX_out== new_instruction[9:8]))) begin
             PCWrite = 0;
