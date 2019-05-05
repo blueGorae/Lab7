@@ -115,8 +115,8 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
 
     always @ (posedge clk) begin
         if(address1_from_datapath) begin
-            is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) && mem_access_done;
-            is_miss = !is_hit;
+            //is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) && mem_access_done;
+            //is_miss = !is_hit;
             mem_access_done = 0;
 
             if(is_miss && num_remain_clk == 0) begin
