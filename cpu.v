@@ -14,7 +14,7 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	output readM1; // instruction fetch
 	wire readM1;
 	output [`WORD_SIZE-1:0] address1; //instruction fetch
-	reg [`WORD_SIZE-1:0] address1;
+	wire [`WORD_SIZE-1:0] address1;
 	output readM2; // load 
 	wire readM2;
 	output writeM2; //store
@@ -51,43 +51,13 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	wire [`WORD_SIZE-1:0] address2_to_mem;
 	wire [`WORD_SIZE-1:0] data2_from_mem [0 : 3];
 	wire [`WORD_SIZE-1:0] data2_to_cpu;
-	integer num_remain_data;
-	integer num_remain_clk;
 
 	wire mem_access_done;
 	// TODO : Implement your pipelined CPU!
 
 	assign readM1 = readM1_to_mem;
-	//assign data1_from_mem = data1_from_mem_reg;
-
-
-	initial begin
-		num_remain_data <= 0;
-		num_remain_clk <= 0;
-	end
-
-	always @(negedge reset_n) begin
-		num_remain_data <= 0;
-		num_remain_clk <= 0;
-	end
-
+	assign address1 = address1_to_mem;
 	assign data1_from_mem = data1;
-
-	always @(posedge clk) begin
-		if(is_miss && num_remain_clk == 0) begin
-			address1 = (address1_to_mem / 4) *4;
-			num_remain_data = 4;
-			num_remain_clk = 5;
-		end
-		else if (is_miss && num_remain_data != 0 ) begin
-			address1 =  address1 + 1;
-			num_remain_data = num_remain_data-1;
-			num_remain_clk = num_remain_clk-1;
-		end
-		else if(is_miss) begin
-			num_remain_clk = num_remain_clk-1;
-		end
-	end
 
 	
 	
