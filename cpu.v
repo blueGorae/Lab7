@@ -73,21 +73,21 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 
 	assign data1_from_mem = data1;
 
-	always @(posedge clk) begin
-		if(is_miss && num_remain_clk == 0) begin
-			address1 = (address1_to_mem / 4) *4;
-			num_remain_data = 4;
-			num_remain_clk = 5;
-		end
-		else if (is_miss && num_remain_data != 0 ) begin
-			address1 =  address1 + 1;
-			num_remain_data = num_remain_data-1;
-			num_remain_clk = num_remain_clk-1;
-		end
-		else if(is_miss) begin
-			num_remain_clk = num_remain_clk-1;
-		end
-	end
+	// always @(posedge clk) begin
+	// 	if(is_miss && num_remain_clk == 0) begin
+	// 		address1 = (address1_to_mem / 4) *4;
+	// 		num_remain_data = 4;
+	// 		num_remain_clk = 5;
+	// 	end
+	// 	else if (is_miss && num_remain_data != 0 ) begin
+	// 		address1 =  address1 + 1;
+	// 		num_remain_data = num_remain_data-1;
+	// 		num_remain_clk = num_remain_clk-1;
+	// 	end
+	// 	else if(is_miss) begin
+	// 		num_remain_clk = num_remain_clk-1;
+	// 	end
+	// end
 
 	
 	

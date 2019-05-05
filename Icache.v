@@ -20,7 +20,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     wire readM1_to_mem;
 
     output  [`WORD_SIZE-1 :0] address1_to_mem;
-    wire [`WORD_SIZE-1 :0] address1_to_mem;
+    reg [`WORD_SIZE-1 :0] address1_to_mem;
 
     input [`WORD_SIZE-1 :0] data1_from_mem; // fetching 4 words at once
 
@@ -88,19 +88,19 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
 
     assign is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
     assign is_miss = !is_hit;
-    always @(address1_from_datapath) begin
-    // if(reset_n) begin
-        //is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
-        //is_miss = !is_hit;
-        if(is_miss) begin
-            num_remain_data = 4;
-            num_remain_clk = 5; 
-        end
-        else begin
-            num_remain_data = 0;
-            num_remain_clk = 0; 
-        end
-    end
+    // always @(address1_from_datapath) begin
+    // // if(reset_n) begin
+    //     //is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
+    //     //is_miss = !is_hit;
+    //     if(is_miss) begin
+    //         num_remain_data = 4;
+    //         num_remain_clk = 5; 
+    //     end
+    //     else begin
+    //         num_remain_data = 0;
+    //         num_remain_clk = 0; 
+    //     end
+    // end
     
     assign readM1_to_mem = is_miss ? readM1_from_datapath : 0;
     assign address1_to_mem = is_miss ? address1_from_datapath : `WORD_SIZE'bz;
@@ -120,16 +120,22 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
             // is_miss = !is_hit;
             //mem_access_done = 0;
 
-            // if(is_miss && num_remain_clk == 0) begin
-            //     //readM1_to_mem = 1;
-            //     //address1_to_mem = address1_from_datapath;
-            // end
+            if(is_miss && num_remain_clk == 0) begin
+                address1_to_mem = (address1_from_datapath / 4)*4;
+                num_remain_data = 4;
+                num_remain_clk = 5; 
+                 //readM1_to_mem = 1;
+                 //address1_to_mem = address1_from_datapath;
+            end
+
             if(is_miss && num_remain_data > 0 ) begin
+                address1_to_mem = address1_to_mem + 1;
                 Icache[set_index][4-num_remain_data][`WORD_SIZE-1 : 0] = data1_from_mem;
                 Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE -1 : `WORD_SIZE] = tag;
                 Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE] = 1;
                 num_remain_data = num_remain_data-1;
                 num_remain_clk = num_remain_clk-1;
+
             end
             else if(is_miss) begin
                 num_remain_clk = num_remain_clk-1;
