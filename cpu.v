@@ -14,7 +14,7 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	output readM1; // instruction fetch
 	wire readM1;
 	output [`WORD_SIZE-1:0] address1; //instruction fetch
-	reg [`WORD_SIZE-1:0] address1;
+	wire [`WORD_SIZE-1:0] address1;
 	output readM2; // load 
 	wire readM2;
 	output writeM2; //store
@@ -58,6 +58,7 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	// TODO : Implement your pipelined CPU!
 
 	assign readM1 = readM1_to_mem;
+	assign address1 = is_miss ? address1_to_mem : `WORD_SIZE'bz;
 	//assign data1_from_mem = data1_from_mem_reg;
 
 
