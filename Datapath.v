@@ -223,12 +223,8 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
 
     always @(negedge clk) begin
-        if(is_done_MEM_WB_out && !is_num_inst_updated) begin
+        if(is_done_MEM_WB_out && MEM_stall_clk == 0) begin
             num_inst_reg = num_inst_reg + 1;
-            is_num_inst_updated = 1;
-        end
-        else if(MEM_stall_clk == 0) begin
-            is_num_inst_updated = 0;
         end
     end
 

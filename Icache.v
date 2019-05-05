@@ -67,8 +67,6 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         is_miss <= 0;
         num_remain_clk <= 0;
         num_remain_data <= 0;    
-        //readM1_to_mem <=0;
-        //address1_to_mem <= `WORD_SIZE'bz;    
         mem_access_done <= 0;
         address1_to_mem_reg <= address1_from_datapath;
     end
@@ -83,27 +81,24 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         is_miss <= 0;
         num_remain_clk <= 0;
         num_remain_data <= 0;
-        //readM1_to_mem <=0;
-        //address1_to_mem <= `WORD_SIZE'bz;    
         mem_access_done <= 0;
         address1_to_mem_reg <= address1_from_datapath;
     end
 
     always @(posedge reset_n or address1_from_datapath) begin
         if(reset_n) begin
+            mem_access_done = 0;
             is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
             is_miss = !is_hit;
             if(is_miss) begin
                 address1_to_mem_reg = (address1_from_datapath / 4) *4;
                 num_remain_data = 4;
-                num_remain_clk = 5; 
-                //mem_access_done = 0;
+                num_remain_clk = 5;
             end
             else begin
-                address1_to_mem_reg = address1_from_datapath;
                 num_remain_data = 0;
-                num_remain_clk = 0; 
-                //mem_access_done = 1;
+                num_remain_clk = 0;
+                mem_access_done = 1;
             end
         end
     end
@@ -114,13 +109,6 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     always @(negedge clk) begin
         if(reset_n) begin
             if(num_remain_clk == 0) begin
-                mem_access_done = 1;
-            end
-            else begin
-                mem_access_done = 0;
-            end
-            
-            if(mem_access_done) begin
                 outputData = Icache[set_index][block_offset][`WORD_SIZE-1 : 0];
             end
         end
@@ -134,18 +122,14 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
                 Icache[set_index][4-num_remain_data][`WORD_SIZE-1 : 0] = data1_from_mem;
                 Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE -1 : `WORD_SIZE] = tag;
                 Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE] = 1;
-                address1_to_mem_reg =  address1_to_mem_reg + 1;
+                address1_to_mem_reg = address1_to_mem_reg + 1;
                 num_remain_data = num_remain_data-1;
                 num_remain_clk = num_remain_clk-1;
             end
-            else if(is_miss) begin
+            else if(is_miss && num_remain_data == 0) begin
                 num_remain_clk = num_remain_clk-1;
-                //mem_access_done = 1;
+                mem_access_done = 1;
             end
-            // else if(is_hit) begin
-            //     //outputData = Icache[set_index][block_offset][`WORD_SIZE-1 : 0];
-            //     mem_access_done = 1;
-            // end
         end
     end
 
