@@ -103,7 +103,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     // end
     
     assign readM1_to_mem = is_miss ? readM1_from_datapath : 0;
-    assign address1_to_mem = is_miss ? address1_from_datapath : `WORD_SIZE'bz;
+   // assign address1_to_mem = is_miss ? address1_from_datapath : `WORD_SIZE'bz;
 
     always @(negedge clk) begin
             if(mem_access_done) begin
