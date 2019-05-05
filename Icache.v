@@ -22,7 +22,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     output  [`WORD_SIZE-1 :0] address1_to_mem;
     wire [`WORD_SIZE-1 :0] address1_to_mem;
 
-    input [`WORD_SIZE-1 :0] data1_from_mem; // fetching 4 words at once
+    input [`WORD_SIZE-1 :0] data1_from_mem;
 
     wire [11 : 0] tag;
     wire [1 : 0] set_index;
@@ -65,6 +65,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         end
         is_hit <= 0;
         is_miss <= 0;
+        outputData <= `WORD_SIZE'bz;
         num_remain_clk <= 0;
         num_remain_data <= 0;    
         mem_access_done <= 0;
@@ -79,6 +80,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         end
         is_hit <= 0;
         is_miss <= 0;
+        outputData <= `WORD_SIZE'bz;
         num_remain_clk <= 0;
         num_remain_data <= 0;
         mem_access_done <= 0;

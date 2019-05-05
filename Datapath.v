@@ -15,7 +15,7 @@
 `include "EXForwardUnit.v"
 `include "IDForwardUnit.v"
 
-module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted, is_hit, is_miss, mem_access_done);
+module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2_in, data2_out, num_inst, output_port, is_halted, is_hit, is_miss, mem_access_done);
 
     input reset_n;
     input clk; 
@@ -31,9 +31,10 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     output [`WORD_SIZE-1:0] address1;	
 
     //Memory Data
-    inout [`WORD_SIZE-1:0] data2;
-    wire [`WORD_SIZE-1:0] data2_in;
+    //inout [`WORD_SIZE-1:0] data2;
 
+    input [`WORD_SIZE-1:0] data2_in;
+    output [`WORD_SIZE-1:0] data2_out;
     wire [`WORD_SIZE-1:0] data2_out;
 
     output readM2;
@@ -228,7 +229,6 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
         end
     end
 
-
     assign PC_in = (PCSrc==2) ? r_data1_ID_EX_in : (((B_cond && B_OP) || (PCSrc == 1)) ? target_address : PC_next);
     PC pc(clk, reset_n, PCWrite && (MEM_stall_clk == 0), PC_in, PC_out);
 
@@ -305,12 +305,12 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign func_MEM_WB_in = func_EX_MEM_out;
     assign opcode_MEM_WB_in = func_EX_MEM_out;
 
-    assign data2_in = MemRead_EX_MEM_out ? data2 : `WORD_SIZE'bz;
-    assign data2 =  MemWrite_EX_MEM_out ? data2_out : `WORD_SIZE'bz;
+    //assign data2_in = MemRead_EX_MEM_out ? data2 : `WORD_SIZE'bz;
+    //assign data2 =  MemWrite_EX_MEM_out ? data2_out : `WORD_SIZE'bz;
     assign readM2 = MemRead_EX_MEM_out;
     assign writeM2 = MemWrite_EX_MEM_out;
     assign address1 = PC_out;
-    assign address2 = (MemRead_EX_MEM_out || MemWrite_EX_MEM_out) ? ALU_Result_EX_MEM_out : `WORD_SIZE'b0;
+    assign address2 = (MemRead_EX_MEM_out || MemWrite_EX_MEM_out) ? ALU_Result_EX_MEM_out : `WORD_SIZE'bz;
     assign MemData_MEM_WB_in = MemRead_EX_MEM_out ? data2_in : `WORD_SIZE'bz;
     assign data2_out = MemWrite_EX_MEM_out ? r_data2_EX_MEM_out : `WORD_SIZE'bz;
 
