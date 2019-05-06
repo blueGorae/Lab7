@@ -5,7 +5,7 @@
 `define WORD_SIZE 16
 `define TAG_SIZE 12
 
-module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, is_hit, is_miss, mem_access_done);
+module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, mem_access_done);
     input clk, reset_n;
     input readM2_from_datapath, writeM2_from_datapath;
     input [`WORD_SIZE-1: 0] data2_from_datapath;
@@ -37,9 +37,6 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
 
     output mem_access_done;
     reg mem_access_done;
-
-    output is_hit;
-    output is_miss;
 
     reg is_hit;
     reg is_miss;
@@ -91,11 +88,16 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
         address2_to_mem_reg <= address2_from_datapath;
     end
 
-    always @(posedge reset_n or address2_from_datapath) begin
+    always @(posedge reset_n or address2_from_datapath or posedge readM2_from_datapath or posedge writeM2_from_datapath) begin
         if(reset_n) begin
             if(readM2_from_datapath) begin
                 mem_access_done = 0;
-                is_hit = (tag == Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
+                if(Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) begin
+                    is_hit = (tag == Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
+                end
+                else begin
+                    is_hit = 0;
+                end
                 is_miss = !is_hit;
                 if(is_miss) begin
                     address2_to_mem_reg = (address2_from_datapath / 4) *4;
@@ -111,7 +113,12 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
 
             if(writeM2_from_datapath) begin
                 mem_access_done = 0;
-                is_hit = (tag == Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
+                if(Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) begin
+                    is_hit = (tag == Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
+                end
+                else begin
+                    is_hit = 0;
+                end
                 is_miss = !is_hit;
                 //if miss, write only to memory
                 if(is_miss) begin
@@ -121,7 +128,7 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                 end
                 //if hit, write directly to cache and to memory
                 else begin
-                    Dcache[set_index][4-num_remain_data][`WORD_SIZE-1 : 0] = data2_from_datapath;
+                    Dcache[set_index][block_offset][`WORD_SIZE-1 : 0] = data2_from_datapath;
                     address2_to_mem_reg = address2_from_datapath;
                     num_remain_data = 0;
                     num_remain_clk = 0;
@@ -163,7 +170,7 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
             end
 
             if(writeM2_from_datapath) begin
-                if(is_miss && num_remain_clk > 0 ) begin
+                if(is_miss && num_remain_clk > 1 ) begin
                     num_remain_clk = num_remain_clk-1;
                 end
                 else if(is_miss && num_remain_clk == 1) begin
@@ -175,6 +182,5 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
     end
 
     assign data2_to_datapath = readM2_from_datapath ? outputData : `WORD_SIZE'bz;
-
 
 endmodule

@@ -6,7 +6,7 @@
 `define TAG_SIZE 12
 
 
-module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_datapath, is_hit, is_miss, mem_access_done);
+module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_datapath, mem_access_done);
     input clk, reset_n;
     input readM1_from_datapath;
     input [`WORD_SIZE-1 :0] address1_from_datapath;
@@ -31,9 +31,6 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     output mem_access_done;
     reg mem_access_done;
 
-    output is_hit;
-    output is_miss;
-
     reg is_hit;
     reg is_miss;
 
@@ -53,9 +50,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     assign block_offset = address1_from_datapath[1 : 0];
     assign set_index = address1_from_datapath[3 : 2];
     assign tag = address1_from_datapath[`WORD_SIZE-1 : 4];
-    //assign is_valid = address1_from_datapath[`WORD_SIZE-1];
 
-   
 
     initial begin
         for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
@@ -90,7 +85,12 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     always @(posedge reset_n or address1_from_datapath) begin
         if(reset_n) begin
             mem_access_done = 0;
-            is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]) && (Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]);
+            if(Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) begin
+                is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
+            end
+            else begin
+                is_hit = 0;
+            end
             is_miss = !is_hit;
             if(is_miss) begin
                 address1_to_mem_reg = (address1_from_datapath / 4) *4;
@@ -116,7 +116,6 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         end
     end
 
-    //assign mem_access_done = (num_remain_clk == 0) ? 1 : 0; 
 
     always @ (posedge clk) begin
         if(readM1_from_datapath) begin
