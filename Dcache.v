@@ -131,8 +131,7 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                     Dcache[set_index][block_offset][`WORD_SIZE-1 : 0] = data2_from_datapath;
                     address2_to_mem_reg = address2_from_datapath;
                     num_remain_data = 0;
-                    num_remain_clk = 0;
-                    mem_access_done = 1;
+                    num_remain_clk = 5;
                 end
             end
         end
@@ -170,10 +169,10 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
             end
 
             if(writeM2_from_datapath) begin
-                if(is_miss && num_remain_clk > 1 ) begin
+                if(num_remain_clk > 1 ) begin
                     num_remain_clk = num_remain_clk-1;
                 end
-                else if(is_miss && num_remain_clk == 1) begin
+                else if(num_remain_clk == 1) begin
                     num_remain_clk = num_remain_clk-1;
                     mem_access_done = 1;
                 end
