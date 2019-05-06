@@ -38,64 +38,44 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	wire readM1_from_datapath;
 	wire [`WORD_SIZE-1:0] address1_from_datapath;
 	wire [`WORD_SIZE-1:0] data1_from_mem;
-	reg [`WORD_SIZE-1:0] data1_from_mem_reg;
 
 	wire [`WORD_SIZE-1:0] address1_to_mem;
 	wire [`WORD_SIZE-1:0] data1_to_datapath;
-	wire is_hit;
-	wire is_miss;
 
 	wire readM2_to_mem;
 	wire writeM2_to_mem;
+	wire readM2_from_datapath;
+	wire writeM2_from_datapath;
+
+	wire [`WORD_SIZE-1:0] data2_from_datapath;
 	wire [`WORD_SIZE-1:0] data2_to_mem;
+	wire [`WORD_SIZE-1:0] address2_from_datapath;
 	wire [`WORD_SIZE-1:0] address2_to_mem;
-	wire [`WORD_SIZE-1:0] data2_from_mem [0 : 3];
-	wire [`WORD_SIZE-1:0] data2_to_cpu;
-	integer num_remain_data;
-	integer num_remain_clk;
+	wire [`WORD_SIZE-1:0] data2_from_mem;
+	wire [`WORD_SIZE-1:0] data2_to_datapath;
 
 	wire mem_access_done;
+	wire I_mem_access_done;
+	wire D_mem_access_done;
+
 	// TODO : Implement your pipelined CPU!
 
 	assign readM1 = readM1_to_mem;
-	assign address1 = is_miss ? address1_to_mem : `WORD_SIZE'bz;
-	//assign data1_from_mem = data1_from_mem_reg;
-
-
-	initial begin
-		num_remain_data <= 0;
-		num_remain_clk <= 0;
-	end
-
-	always @(negedge reset_n) begin
-		num_remain_data <= 0;
-		num_remain_clk <= 0;
-	end
-
+	assign address1 = address1_to_mem;
 	assign data1_from_mem = data1;
 
-	// always @(posedge clk) begin
-	// 	if(is_miss && num_remain_clk == 0) begin
-	// 		address1 = (address1_to_mem / 4) *4;
-	// 		num_remain_data = 4;
-	// 		num_remain_clk = 5;
-	// 	end
-	// 	else if (is_miss && num_remain_data != 0 ) begin
-	// 		address1 =  address1 + 1;
-	// 		num_remain_data = num_remain_data-1;
-	// 		num_remain_clk = num_remain_clk-1;
-	// 	end
-	// 	else if(is_miss) begin
-	// 		num_remain_clk = num_remain_clk-1;
-	// 	end
-	// end
+	Icache icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_datapath, I_mem_access_done);
 
-	
-	
-	Icache icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_datapath, is_hit, is_miss, mem_access_done);
+	assign readM2 = readM2_to_mem;
+	assign writeM2 = writeM2_to_mem;
+	assign address2 = address2_to_mem;
+	assign data2_from_mem = readM2_to_mem ? data2 : `WORD_SIZE'bz;
+	assign data2 = writeM2_to_mem ? data2_to_mem : `WORD_SIZE'bz;
 
-	//Dcache dcache(clk, reset_n, readM2, writeM2, data2, address2, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_cpu, is_hit, is_miss);
-	Datapath datapath(clk, reset_n, readM1_from_datapath, address1_from_datapath, data1_to_datapath, readM2, writeM2, address2, data2_to_cpu, num_inst, output_port, is_halted, is_hit, is_miss, mem_access_done);
+	Dcache dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath, data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, D_mem_access_done);
+
+	assign mem_access_done = I_mem_access_done && D_mem_access_done;
+	Datapath datapath(clk, reset_n, readM1_from_datapath, address1_from_datapath, data1_to_datapath, readM2_from_datapath, writeM2_from_datapath, address2_from_datapath, data2_to_datapath, data2_from_datapath, num_inst, output_port, is_halted, mem_access_done);
 
 
 

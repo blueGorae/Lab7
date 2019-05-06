@@ -15,34 +15,32 @@
 `include "EXForwardUnit.v"
 `include "IDForwardUnit.v"
 
-module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted, is_hit, is_miss, mem_access_done);
+module  Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2_in, data2_out, num_inst, output_port, is_halted, mem_access_done);
 
     input reset_n;
     input clk; 
 
-    input is_hit;
-    input is_miss;
     input mem_access_done;
 
 
     //instruction
     input [`WORD_SIZE-1:0] data1; 
     output readM1;
-    output [`WORD_SIZE-1:0] address1;	
+    output [`WORD_SIZE-1:0] address1;   
 
     //Memory Data
-    inout [`WORD_SIZE-1:0] data2;
-    wire [`WORD_SIZE-1:0] data2_in;
 
+    input [`WORD_SIZE-1:0] data2_in;
+    output [`WORD_SIZE-1:0] data2_out;
     wire [`WORD_SIZE-1:0] data2_out;
 
     output readM2;
-    output writeM2;								
+    output writeM2;                             
     output [`WORD_SIZE-1:0] address2; //address that we refer
     
-    output [`WORD_SIZE-1:0] num_inst;		// number of instruction during execution (for debuging & testing purpose)
-	output [`WORD_SIZE-1:0] output_port;	// this will be used for a "WWD" instruction
-	output is_halted;
+    output [`WORD_SIZE-1:0] num_inst;       // number of instruction during execution (for debuging & testing purpose)
+    output [`WORD_SIZE-1:0] output_port;    // this will be used for a "WWD" instruction
+    output is_halted;
 
     reg [`WORD_SIZE-1:0] num_inst_reg;
     wire [1:0] rs;
@@ -211,27 +209,20 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     initial 
     begin
         num_inst_reg <= 0;
-        //MEM_stall_clk <= 0;
         is_num_inst_updated <=0;
     end
 
     always @(negedge reset_n) begin
         num_inst_reg <= 0;     
-        //MEM_stall_clk <= 0;
         is_num_inst_updated <=0;
     end
 
 
     always @(negedge clk) begin
-        if(is_done_MEM_WB_out && !is_num_inst_updated) begin
+        if(is_done_MEM_WB_out && MEM_stall_clk == 0) begin
             num_inst_reg = num_inst_reg + 1;
-            is_num_inst_updated = 1;
-        end
-        else if(MEM_stall_clk == 0) begin
-            is_num_inst_updated = 0;
         end
     end
-
 
     assign PC_in = (PCSrc==2) ? r_data1_ID_EX_in : (((B_cond && B_OP) || (PCSrc == 1)) ? target_address : PC_next);
     PC pc(clk, reset_n, PCWrite && (MEM_stall_clk == 0), PC_in, PC_out);
@@ -309,12 +300,10 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     assign func_MEM_WB_in = func_EX_MEM_out;
     assign opcode_MEM_WB_in = func_EX_MEM_out;
 
-    assign data2_in = MemRead_EX_MEM_out ? data2 : `WORD_SIZE'bz;
-    assign data2 =  MemWrite_EX_MEM_out ? data2_out : `WORD_SIZE'bz;
     assign readM2 = MemRead_EX_MEM_out;
     assign writeM2 = MemWrite_EX_MEM_out;
     assign address1 = PC_out;
-    assign address2 = (MemRead_EX_MEM_out || MemWrite_EX_MEM_out) ? ALU_Result_EX_MEM_out : `WORD_SIZE'b0;
+    assign address2 = (MemRead_EX_MEM_out || MemWrite_EX_MEM_out) ? ALU_Result_EX_MEM_out : `WORD_SIZE'bz;
     assign MemData_MEM_WB_in = MemRead_EX_MEM_out ? data2_in : `WORD_SIZE'bz;
     assign data2_out = MemWrite_EX_MEM_out ? r_data2_EX_MEM_out : `WORD_SIZE'bz;
 
@@ -329,21 +318,6 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
 
     
     assign MEM_stall_clk = mem_access_done ? 0 : 1;
-
-    //stall for Mem Access
-    // always @(posedge clk) begin
-    //     if(reset_n) begin
-    //         if ( is_hit && (MEM_stall_clk == 0)) begin
-    //             MEM_stall_clk = 0;
-    //         end
-    //         else if ( is_miss && (MEM_stall_clk == 0)) begin
-    //             MEM_stall_clk = 5;
-    //         end
-    //         else if( is_miss && (MEM_stall_clk > 0)) begin
-    //             MEM_stall_clk =  MEM_stall_clk - 1;
-    //         end
-    //     end
-    // end
 
     assign ID_EX_Write = MEM_stall_clk == 0 ? 1 : 0;
     assign EX_MEM_Write = MEM_stall_clk == 0 ? 1 : 0;
