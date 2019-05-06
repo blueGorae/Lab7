@@ -34,8 +34,8 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	output is_halted;
 	wire is_halted;
 
-	wire readM1_to_mem;
-	wire readM1_from_datapath;
+	wire readM1_to_mem; //signal to memory
+	wire readM1_from_datapath; // signal from datapath
 	wire [`WORD_SIZE-1:0] address1_from_datapath;
 	wire [`WORD_SIZE-1:0] data1_from_mem;
 
@@ -69,8 +69,8 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	assign readM2 = readM2_to_mem;
 	assign writeM2 = writeM2_to_mem;
 	assign address2 = address2_to_mem;
-	assign data2_from_mem = readM2_to_mem ? data2 : `WORD_SIZE'bz;
-	assign data2 = writeM2_to_mem ? data2_to_mem : `WORD_SIZE'bz;
+	assign data2_from_mem = readM2_to_mem ? data2 : `WORD_SIZE'bz; // load
+	assign data2 = writeM2_to_mem ? data2_to_mem : `WORD_SIZE'bz; // store
 
 	Dcache dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath, data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, D_mem_access_done);
 
