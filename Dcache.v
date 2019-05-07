@@ -57,6 +57,8 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
     assign set_index = address2_from_datapath[3 : 2];
     assign tag = address2_from_datapath[`WORD_SIZE-1 : 4];
 
+    integer num_hit;
+    integer num_miss;
 
     initial begin
         for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
@@ -64,6 +66,8 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                 Dcache[i][j] = {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
             end
         end
+        num_hit <= 0;
+        num_miss <= 0;
         is_hit <= 0;
         is_miss <= 0;
         outputData <= `WORD_SIZE'bz;
@@ -79,6 +83,8 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                 Dcache[i][j] = {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
             end
         end
+        num_hit <= 0;
+        num_miss <= 0;
         is_hit <= 0;
         is_miss <= 0;
         outputData <= `WORD_SIZE'bz;
@@ -89,7 +95,7 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
     end
 
     always @(posedge reset_n or address2_from_datapath or posedge readM2_from_datapath or posedge writeM2_from_datapath) begin
-        if(reset_n) begin
+        if(reset_n && address2_from_datapath !== `WORD_SIZE'bz) begin
             if(readM2_from_datapath) begin
                 mem_access_done = 0;
                 if(Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) begin
@@ -99,6 +105,13 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                     is_hit = 0;
                 end
                 is_miss = !is_hit;
+
+                if (is_hit) 
+                    num_hit = num_hit + 1;
+                else
+                    num_miss = num_miss + 1;
+                
+                $display("Dcache hit : %d, miss : %d", num_hit, num_miss);
                 if(is_miss) begin
                     address2_to_mem_reg = (address2_from_datapath / 4) *4;
                     num_remain_data = 4;

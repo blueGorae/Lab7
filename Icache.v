@@ -51,6 +51,9 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     assign set_index = address1_from_datapath[3 : 2];
     assign tag = address1_from_datapath[`WORD_SIZE-1 : 4];
 
+    integer num_hit;
+    integer num_miss;
+
 
     initial begin
         for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
@@ -58,6 +61,8 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
                 Icache[i][j] = {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
             end
         end
+        num_hit <= 0;
+        num_miss <= 0;
         is_hit <= 0;
         is_miss <= 0;
         outputData <= `WORD_SIZE'bz;
@@ -73,6 +78,10 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
                 Icache[i][j] <= {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
             end
         end
+        
+        num_hit <= 0;
+        num_miss <= 0;
+        
         is_hit <= 0;
         is_miss <= 0;
         outputData <= `WORD_SIZE'bz;
@@ -83,7 +92,7 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
     end
 
     always @(posedge reset_n or address1_from_datapath) begin
-        if(reset_n) begin
+        if(reset_n && address1_from_datapath !== `WORD_SIZE'bz) begin
             mem_access_done = 0;
             if(Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) begin
                 is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
@@ -92,6 +101,13 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
                 is_hit = 0;
             end
             is_miss = !is_hit;
+
+            if (is_hit) 
+                num_hit = num_hit + 1;
+            else
+                num_miss = num_miss + 1;
+            
+            $display("Icache hit : %d, miss : %d", num_hit, num_miss);
             if(is_miss) begin
                 address1_to_mem_reg = (address1_from_datapath / 4) *4;
                 num_remain_data = 4;
