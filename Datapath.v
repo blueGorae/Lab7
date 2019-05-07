@@ -15,7 +15,7 @@
 `include "EXForwardUnit.v"
 `include "IDForwardUnit.v"
 
-module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2_in, data2_out, num_inst, output_port, is_halted, mem_access_done);
+module  Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2_in, data2_out, num_inst, output_port, is_halted, mem_access_done);
 
     input reset_n;
     input clk; 
@@ -26,7 +26,7 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     //instruction
     input [`WORD_SIZE-1:0] data1; 
     output readM1;
-    output [`WORD_SIZE-1:0] address1;	
+    output [`WORD_SIZE-1:0] address1;   
 
     //Memory Data
 
@@ -35,12 +35,12 @@ module	Datapath(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2
     wire [`WORD_SIZE-1:0] data2_out;
 
     output readM2;
-    output writeM2;								
+    output writeM2;                             
     output [`WORD_SIZE-1:0] address2; //address that we refer
     
-    output [`WORD_SIZE-1:0] num_inst;		// number of instruction during execution (for debuging & testing purpose)
-	output [`WORD_SIZE-1:0] output_port;	// this will be used for a "WWD" instruction
-	output is_halted;
+    output [`WORD_SIZE-1:0] num_inst;       // number of instruction during execution (for debuging & testing purpose)
+    output [`WORD_SIZE-1:0] output_port;    // this will be used for a "WWD" instruction
+    output is_halted;
 
     reg [`WORD_SIZE-1:0] num_inst_reg;
     wire [1:0] rs;
