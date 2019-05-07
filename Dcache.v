@@ -48,7 +48,6 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
     //cache design
 
     reg [`BLOCK_SIZE + `TAG_SIZE : 0] Dcache [0 : `NUM_INDICIES -1];
-    //reg [`WORD_SIZE + `TAG_SIZE :0] Dcache [0 : 3] [0 : 3];
     reg [`WORD_SIZE-1 : 0] outputData;
     reg [`WORD_SIZE-1 : 0] address2_to_mem_reg;
 
@@ -82,20 +81,11 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
     end
 
     always @(negedge reset_n) begin
-        // for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
-        //     for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
-        //         Dcache[i][j] = {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
-        //     end
-        // end
         for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
             Dcache[i] = {1'b0, `TAG_SIZE'bz, `BLOCK_SIZE'bz};
         end
-<<<<<<< HEAD
         num_hit <= 0;
         num_miss <= 0;
-=======
-
->>>>>>> 73977ae7ea06ba88d1704915ad540bae50a19cf1
         is_hit <= 0;
         is_miss <= 0;
         outputData <= `WORD_SIZE'bz;
@@ -110,9 +100,6 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
             if(readM2_from_datapath) begin
                 mem_access_done = 0;
 
-                // if(Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) begin
-                //     is_hit = (tag == Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
-                // end
                 if(Dcache[set_index][(`TAG_SIZE + `BLOCK_SIZE)]) begin //is valid?
                     is_hit = (tag == Dcache[set_index][(`TAG_SIZE + `BLOCK_SIZE)-1 :`BLOCK_SIZE]);
                 end
@@ -141,9 +128,6 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
 
             if(writeM2_from_datapath) begin
                 mem_access_done = 0;
-                // if(Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) begin
-                //     is_hit = (tag == Dcache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
-                // end
 
                 if(Dcache[set_index][(`TAG_SIZE + `BLOCK_SIZE)]) begin //is valid?
                     is_hit = (tag == Dcache[set_index][(`TAG_SIZE + `BLOCK_SIZE)-1 :`BLOCK_SIZE]);
@@ -168,7 +152,6 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                         2'b01 : Dcache[set_index][`BLOCK3-1 : `BLOCK4] = data2_from_datapath;
                         2'b00 : Dcache[set_index][`BLOCK4-1 : 0] = data2_from_datapath;
                     endcase
-                   // Dcache[set_index][block_offset][`WORD_SIZE-1 : 0] = data2_from_datapath;
                     address2_to_mem_reg = address2_from_datapath;
                     num_remain_data = 0;
                     num_remain_clk = 5;
@@ -191,7 +174,6 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                     2'b01 : outputData = Dcache[set_index][`BLOCK3-1 : `BLOCK4];
                     2'b00 : outputData = Dcache[set_index][`BLOCK4-1 : 0];
                 endcase
-                //outputData = Dcache[set_index][block_offset][`WORD_SIZE-1 : 0];
             end
         end
     end
@@ -207,7 +189,6 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                         2'b01 : Dcache[set_index][`BLOCK3-1 : `BLOCK4] = data2_from_mem;
                         2'b00 : Dcache[set_index][`BLOCK4-1 : 0] = data2_from_mem;
                     endcase
-                   // Dcache[set_index][4-num_remain_data][`WORD_SIZE-1 : 0] = data2_from_mem;
                     Dcache[set_index][(`TAG_SIZE + `BLOCK_SIZE)-1 :`BLOCK_SIZE] = tag;
                     Dcache[set_index][`TAG_SIZE + `BLOCK_SIZE] = 1;
                     address2_to_mem_reg = address2_to_mem_reg + 1;

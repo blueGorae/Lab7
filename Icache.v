@@ -41,7 +41,6 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
 
     reg [`BLOCK_SIZE + `TAG_SIZE : 0] Icache [0 : `NUM_INDICIES -1];
 
-    //reg [`WORD_SIZE + `TAG_SIZE :0] Icache [0 : 3] [0 : 3];
     reg [`WORD_SIZE-1 : 0] outputData;
     reg [`WORD_SIZE-1 : 0] address1_to_mem_reg;
 
@@ -64,15 +63,8 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
         for(i = 0; i < `NUM_INDICIES; i = i + 1) begin
             Icache[i] = {1'b0, `TAG_SIZE'bz, `BLOCK_SIZE'bz};
         end
-<<<<<<< HEAD
         num_hit <= 0;
         num_miss <= 0;
-=======
-        //     for (j = 0; j < `NUM_BLOCKS; j = j + 1) begin
-        //         Icache[i][j] = {1'b0, `TAG_SIZE'bz , `WORD_SIZE'bz};
-        //     end
-        // end
->>>>>>> 73977ae7ea06ba88d1704915ad540bae50a19cf1
         is_hit <= 0;
         is_miss <= 0;
         outputData <= `WORD_SIZE'bz;
@@ -105,9 +97,6 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
             if(Icache[set_index][(`TAG_SIZE + `BLOCK_SIZE)]) begin //is valid?
                 is_hit = (tag == Icache[set_index][(`TAG_SIZE + `BLOCK_SIZE)-1 :`BLOCK_SIZE]);
             end
-            // if(Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)]) begin //is valid?
-            //     is_hit = (tag == Icache[set_index][block_offset][(`TAG_SIZE + `WORD_SIZE)-1 :`WORD_SIZE]);
-            // end
             else begin
                 is_hit = 0;
             end
@@ -144,7 +133,6 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
                     2'b01 : outputData = Icache[set_index][`BLOCK3-1 : `BLOCK4];
                     2'b00 : outputData = Icache[set_index][`BLOCK4-1 : 0];
                 endcase
-               // outputData = Icache[set_index][block_offset][`WORD_SIZE-1 : 0];
             end
         end
     end
@@ -159,11 +147,8 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
                     2'b01 : Icache[set_index][`BLOCK3-1 : `BLOCK4] = data1_from_mem;
                     2'b00 : Icache[set_index][`BLOCK4-1 : 0] = data1_from_mem;
                 endcase
-                //Icache[set_index][4-num_remain_data][`WORD_SIZE-1 : 0] = data1_from_mem;
                 Icache[set_index][`TAG_SIZE + `BLOCK_SIZE] = 1;
                 Icache[set_index][(`TAG_SIZE + `BLOCK_SIZE)-1 :`BLOCK_SIZE] = tag;
-                // Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE -1 : `WORD_SIZE] = tag;
-                // Icache[set_index][4-num_remain_data][`TAG_SIZE + `WORD_SIZE] = 1;
                 address1_to_mem_reg = address1_to_mem_reg + 1;
                 num_remain_data = num_remain_data-1;
                 num_remain_clk = num_remain_clk-1;
