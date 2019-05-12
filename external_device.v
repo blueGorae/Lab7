@@ -5,19 +5,43 @@
 
 
 // This is a SAMPLE. You should design your own external_device.
-module external_device (data, use_bus, idx, dma_begin_interrupt);
-	/* inout setting */	
-	inout [`BLOCK_SIZE-1:0] data;
+module external_device (interrupt_to_cpu, is_write_to_mem, address_to_mem, data_to_mem, write_info_from_dma, dma_begin_interrupt);
 	
-	/* input */
-	input use_bus;    
-	input [3:0] idx;  
+	output [`WORD_SIZE*3 : 0] interrupt_to_cpu;
+	output is_write_to_mem;
+	output [`WORD_SIZE-1 : 0] address_to_mem;
+	output [`WORD_SIZE * 12 -1 : 0] data_to_mem;
+
+	input [`WORD_SIZE * 2 : 0] write_info_from_dma;
+
+	reg [`WORD_SIZE * 3 : 0] interrupt_to_cpu;
+	reg [`WORD_SIZE-1:0] stored_data [11:0];
+
+	integer i;
+
+	wire is_write_to_mem;
+	wire [`WORD_SIZE-1 : 0] address_to_mem;
+	wire [`WORD_SIZE * 12 -1 : 0] data_to_mem;
+
+	wire [`WORD_SIZE-1 : 0] dst_address = write_info_from_dma[`WORD_SIZE-1 : 0];
+	wire [`WORD_SIZE-1 : 0] src_address = write_info_from_dma[`WORD_SIZE * 2 -1 : `WORD_SIZE];
+
+	assign is_write_to_mem = write_info_from_dma[`WORD_SIZE * 2];
+	assign address_to_mem = is_write_to_mem ? dst_address : 16'bz;
+	assign data_to_mem = is_write_to_mem ? {stored_data[src_address], stored_data[src_address + 1], stored_data[src_address + 2], stored_data[src_address + 3]} : `WORD_SIZE * 12'b0;
+
+	// /* inout setting */	
+	// inout [`BLOCK_SIZE-1:0] data;
+	
+	// /* input */
+	// input use_bus;    
+	// input [3:0] idx;  
     
 	/* output */
 	output reg dma_begin_interrupt;
 	
 	/* external device storage */
-	reg [`WORD_SIZE-1:0] stored_data [11:0];
+	
 
 	
 	/* Initialization */

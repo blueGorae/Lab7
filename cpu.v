@@ -59,24 +59,31 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	wire D_mem_access_done;
 
 	//for DMA
-	input [`INTERRUPT_SIZE -1 : 0] interrupt;
-	input BR;
-	output BG;
+	input [`WORD_SIZE*3 : 0] interrupt_from_ED;
+	input BR_from_DMA;
+	output BG_to_DMA;
+	output [`WORD_SIZE*3 + 2 : 0] command_to_DMA;
+
+	reg BG_to_DMA;
+	wire [`WORD_SIZE*3 + 2 : 0] command_to_DMA;
 
 	// TODO : Implement your pipelined CPU!
 
 	initial begin
-		BG = 0;
+		BG_to_DMA = 0;
 	end
 
-	always @(posedge BR) begin
-		BG = 1;
+	always @(posedge BR_from_DMA) begin
+		BG_to_DMA = 1;
 
 	end
 
-	always @(negedge BR) begin
-		BG = 0;
+	always @(negedge BR_from_DMA) begin
+		BG_to_DMA = 0;
 	end
+
+	assign command_to_DMA = interrupt_from_ED[`WORD_SIZE*3] ? {1'b1, BR_from_DMA, BG_to_DMA, interrupt_from_ED[`WORD_SIZE*3-1:0]} : `WORD_SIZE*3'b0;
+
 
 	assign readM1 = readM1_to_mem;
 	assign address1 = address1_to_mem;
@@ -84,11 +91,14 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 
 	Icache icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_datapath, I_mem_access_done);
 
-	assign readM2 = !BR ? readM2_to_mem : 0;
-	assign writeM2 = !BR ? writeM2_to_mem : 0;
-	assign address2 = !BR ? address2_to_mem : `WORD_SIZE'bz;
-	assign data2_from_mem =  !BR ? (readM2_to_mem ? data2 : `WORD_SIZE'bz) : `WORD_SIZE'bz; // load
-	assign data2 = !BR ? (writeM2_to_mem ? data2_to_mem : `WORD_SIZE'bz) : `WORD_SIZE'bz; // store
+
+//for miss, do not access memory while BG == 1
+
+	assign readM2 = !BG_to_DMA ? readM2to_to_mem : 0;
+	assign writeM2 = !BG_to_DMA ? writeM2_to_mem : 0;
+	assign address2 = !BG_to_DMA ? address2_to_mem : `WORD_SIZE'bz;
+	assign data2_from_mem =  !BG_to_DMA ? (readM2_to_mem ? data2 : `WORD_SIZE'bz) : `WORD_SIZE'bz; // load
+	assign data2 = !BG_to_DMA ? (writeM2_to_mem ? data2_to_mem : `WORD_SIZE'bz) : `WORD_SIZE'bz; // store
 
 	Dcache dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath, data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, D_mem_access_done);
 
