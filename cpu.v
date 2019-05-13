@@ -5,7 +5,13 @@
 `include "Dcache.v"
 
 
-module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
+module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted, dma_begin_interrupt, dma_end_interrupt, address2_to_DMAC);
+
+	input dma_begin_interrupt;
+	input dma_end_interrupt;
+
+	output [`WORD_SIZE-1: 0] address2_to_DMAC;
+	reg [`WORD_SIZE-1: 0] address2_to_DMAC;
 
 	input clk;
 	wire clk;
@@ -59,38 +65,66 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	wire D_mem_access_done;
 
 	//for DMA
-	input [`INTERRUPT_SIZE -1 : 0] interrupt;
 	input BR;
+	reg BR_reg;
 	output BG;
-
+	reg BG;
 	// TODO : Implement your pipelined CPU!
 
 	initial begin
-		BG = 0;
+		BG <= 0;
+		BR_reg <= 0;
+		address2_to_DMAC <= `WORD_SIZE'hz; 
 	end
 
-	always @(posedge BR) begin
-		BG = 1;
+	always @(negedge reset_n) begin
+		BG <= 0;
+		BR_reg <= 0;
+		address2_to_DMAC <= `WORD_SIZE'hz; 
+	end
 
+
+	always @(posedge BR) begin
+		BR_reg = 1;
+	end
+
+	always@(negedge BR) begin
+		BR_reg = 0;
 	end
 
 	always @(negedge BR) begin
-		BG = 0;
+		BR_reg = 0;
 	end
 
+
+	always @(posedge clk) begin
+		if(BR_reg && D_mem_access_done) begin
+			BG = 1;
+		end
+	end
+
+	always @(posedge dma_begin_interrupt) begin
+		address2_to_DMAC = `WORD_SIZE'h17;
+	end
+
+	always @(posedge dma_end_interrupt) begin
+		address2_to_DMAC = `WORD_SIZE'hz;
+		BG = 0;
+	end
+	
 	assign readM1 = readM1_to_mem;
 	assign address1 = address1_to_mem;
 	assign data1_from_mem = data1;
 
 	Icache icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1_to_mem, address1_to_mem, data1_from_mem, data1_to_datapath, I_mem_access_done);
 
-	assign readM2 = !BR ? readM2_to_mem : 0;
-	assign writeM2 = !BR ? writeM2_to_mem : 0;
-	assign address2 = !BR ? address2_to_mem : `WORD_SIZE'bz;
-	assign data2_from_mem =  !BR ? (readM2_to_mem ? data2 : `WORD_SIZE'bz) : `WORD_SIZE'bz; // load
-	assign data2 = !BR ? (writeM2_to_mem ? data2_to_mem : `WORD_SIZE'bz) : `WORD_SIZE'bz; // store
+	assign readM2 = readM2_to_mem;
+	assign writeM2 = writeM2_to_mem;
+	assign address2 = address2_to_mem;
+	assign data2_from_mem =  readM2_to_mem ? data2 : `WORD_SIZE'bz; // load
+	assign data2 = writeM2_to_mem ? data2_to_mem : `WORD_SIZE'bz; // store
 
-	Dcache dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath, data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, D_mem_access_done);
+	Dcache dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath, data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, D_mem_access_done, BG);
 
 	assign mem_access_done = I_mem_access_done && D_mem_access_done;
 	Datapath datapath(clk, reset_n, readM1_from_datapath, address1_from_datapath, data1_to_datapath, readM2_from_datapath, writeM2_from_datapath, address2_from_datapath, data2_to_datapath, data2_from_datapath, num_inst, output_port, is_halted, mem_access_done);

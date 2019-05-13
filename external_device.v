@@ -5,25 +5,29 @@
 
 
 // This is a SAMPLE. You should design your own external_device.
-module external_device (data, use_bus, idx, dma_begin_interrupt);
+module external_device (data, use_bus_from_DMA, idx_from_DMA, dma_begin_interrupt, Mem_access_done);
 	/* inout setting */	
-	inout [`BLOCK_SIZE-1:0] data;
+	output [`BLOCK_SIZE-1:0] data;
 	
 	/* input */
-	input use_bus;    
-	input [3:0] idx;  
+	input use_bus_from_DMA;
+	input [3:0] idx_from_DMA; 
     
 	/* output */
 	output reg dma_begin_interrupt;
-	
+	output reg Mem_access_done;
+
 	/* external device storage */
 	reg [`WORD_SIZE-1:0] stored_data [11:0];
-
 	
 	/* Initialization */
 	//assign data = ...
+
+	assign data = use_bus ? {stored_data[idx_from_DMA + 3], stored_data[idx_from_DMA+2], stored_data[idx_from_DMA+1], stored_data[idx_from_DMA]} : `BLOCK_SIZE'bz;
+	
 	initial begin
 		dma_begin_interrupt <= 0;
+		Mem_access_done <= 1;
 		stored_data[0] <= 16'h0000;
 		stored_data[1] <= 16'h1111;
 		stored_data[2] <= 16'h2222;
@@ -43,7 +47,7 @@ module external_device (data, use_bus, idx, dma_begin_interrupt);
 		#100000;
 		$display("LOG: Start DMA! #1");
 		dma_begin_interrupt = 1;
-		#20;						
+		#20;
 		dma_begin_interrupt = 0;
 		#(185000 - 100000 - 20);
 		$display("LOG: Start DMA! #2");

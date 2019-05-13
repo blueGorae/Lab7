@@ -9,11 +9,12 @@
 `define BLOCK3 32
 `define BLOCK4 16
 
-module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, mem_access_done);
+module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, mem_access_done, BG);
     input clk, reset_n;
     input readM2_from_datapath, writeM2_from_datapath;
     input [`WORD_SIZE-1: 0] data2_from_datapath;
     input [`WORD_SIZE-1 :0] address2_from_datapath;
+    input BG;
 
     // read hit or miss
     output  [`WORD_SIZE-1 :0] data2_to_datapath;
@@ -182,7 +183,7 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
     always @(posedge clk) begin
         if(reset_n) begin
             if(readM2_from_datapath) begin
-                if(is_miss && num_remain_data > 0 ) begin
+                if(is_miss && num_remain_data > 0 && !BG) begin
                     case(4-num_remain_data)
                         2'b11 : Dcache[set_index][`BLOCK1-1 : `BLOCK2] = data2_from_mem;
                         2'b10 : Dcache[set_index][`BLOCK2-1 : `BLOCK3] = data2_from_mem;
@@ -195,17 +196,17 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                     num_remain_data = num_remain_data-1;
                     num_remain_clk = num_remain_clk-1;
                 end
-                else if(is_miss && num_remain_data == 0) begin
+                else if(is_miss && num_remain_data == 0 && !BG) begin
                     num_remain_clk = num_remain_clk-1;
                     mem_access_done = 1;
                 end
             end
 
-            if(writeM2_from_datapath) begin
+            if(writeM2_from_datapath && !BG) begin
                 if(num_remain_clk > 1 ) begin
                     num_remain_clk = num_remain_clk-1;
                 end
-                else if(num_remain_clk == 1) begin
+                else if(num_remain_clk == 1 && !BG) begin
                     num_remain_clk = num_remain_clk-1;
                     mem_access_done = 1;
                 end

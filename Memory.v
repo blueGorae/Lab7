@@ -3,12 +3,14 @@
 `define MEMORY_SIZE 256	//	size of memory is 2^8 words (reduced size)
 `define WORD_SIZE 16	//	instead of 2^16 words to reduce memory
 			//	requirements in the Active-HDL simulator 
+`define BLOCK_SIZE 64
 
-module Memory(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2);
+module Memory(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_data);
 	input clk;
 	wire clk;
 	input reset_n;
 	wire reset_n;
+	input [2:0] num_data;
 	
 	input readM1;
 	wire readM1;
@@ -24,7 +26,7 @@ module Memory(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, 
 	input [`WORD_SIZE-1:0] address2;
 	wire [`WORD_SIZE-1:0] address2;
 	inout data2;
-	wire [`WORD_SIZE-1:0] data2;
+	wire [`BLOCK_SIZE-1:0] data2;
 	
 	reg [`WORD_SIZE-1:0] memory [0:`MEMORY_SIZE-1];
 	reg [`WORD_SIZE-1:0] outputData2;
@@ -236,8 +238,17 @@ module Memory(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, 
 			end
 		else
 			begin
-				if(readM1)data1 <= (writeM2 & address1==address2) ? data2:memory[address1];
-				if(readM2)outputData2 <= memory[address2];
-				if(writeM2)memory[address2] <= data2;															  
+				if(readM1) begin
+					data1 = (writeM2 & address1==address2) ? data2:memory[address1];
+				end
+				if(readM2) begin
+					outputData2 = memory[address2];
+				end
+				if(writeM2) begin
+					for(i = 0 ; i < num_data ; i++) begin
+						memory[address2 + i] = data2[`WORD_SIZE*(i+1)-1 : `WORD_SIZE*i];
+					end
+				end
+
 			end
 endmodule

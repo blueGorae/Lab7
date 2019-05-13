@@ -4,6 +4,10 @@
 
 `define NUM_TEST 56
 `define TESTID_SIZE 5
+`define BLOCK_SIZE 64
+
+`include "external_device.v"
+`include "DMA_controller.v"
 
 module cpu_TB();
 	reg reset_n;    // active-low RESET signal
@@ -14,17 +18,45 @@ module cpu_TB();
 	wire [`WORD_SIZE-1:0] data1;
 	wire readM2;
 	wire writeM2;
-	wire [`WORD_SIZE-1:0] address2;
-	wire [`WORD_SIZE-1:0] data2;
+	wire writeM2_from_cpu;
 
+	wire [`WORD_SIZE-1:0] address2;
+	wire [`WORD_SIZE-1:0] address2_to_DMAC;
+	wire [`BLOCK_SIZE-1:0] data2;
+	wire [`BLOCK_SIZE-1:0] data2_from_ED;
+	wire [`WORD_SIZE-1: 0] data2_from_cpu;
 	// for debuging purpose
 	wire [`WORD_SIZE-1:0] num_inst;		// number of instruction during execution
 	wire [`WORD_SIZE-1:0] output_port;	// this will be used for a "WWD" instruction
 	wire is_halted;				// set if the cpu is halted
 
+	wire Mem_access_done;
+	wire [2:0] num_data;
+	
+	wire BG;
+	wire BR;
+	wire dma_begin_interrupt;
+	wire dma_end_interrupt;
+	wire [3:0] idx;
+
+	assign writeM2 = BG || writeM2_from_cpu;
+
+	wire use_bus_from_DMA;
+	assign use_bus_from_DMA = BG;
+
+	wire [`WORD_SIZE-1:0] address2_from_cpu;
+
+	assign data2 = BG ? data2_from_ED : data2_from_cpu;
+
+	assign num_data = BG ? 3'b100 : 3'b001;
+
+	assign address2 = BG ? address_to_mem : address2_from_cpu;
+	
 	// instantiate the unit under test
-	cpu UUT (clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted);
-	Memory NUUT(!clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2);
+	cpu UUT (clk, reset_n, readM1, address1, data1, readM2, writeM2_from_cpu, address2_from_cpu, data2_from_cpu, num_inst, output_port, is_halted, dma_begin_interrupt, dma_end_interrupt,address2_to_DMAC);
+	Memory NUUT(!clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_data);
+	external_device ED(data2_from_ED, use_bus_from_DMA, idx, dma_begin_interrupt, Mem_access_done);
+	DMA_controller DMAC (clk, reset_n, BR, BG, dma_end_interrupt, idx, address2_to_DMAC, address_to_mem, Mem_access_done);
 
 	// initialize inputs
 	initial begin

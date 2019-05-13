@@ -1,14 +1,58 @@
 `timescale 1ns/1ns	
 
 `define WORD_SIZE 16
-`define BLOCK_SIZE 64
-`define DATA_SIZE 3 * `WORD_SIZE
 
-module DMA_controller (BR, BG, interrupt, address, data);
-	input BG;
-	input interrupt;
-	input [`WORD_SIZE-1 : 0] address;
+module DMA_controller (clk, reset_n, BR_to_cpu, BG_from_cpu, dma_end_interrupt, idx_to_ED, address_from_cpu, address_to_mem, Mem_access_done);
+	input BG_from_cpu;
+
+	output dma_end_interrupt;
+	reg dma_end_interrupt;
+
+	input [`WORD_SIZE-1 : 0] address_from_cpu;
+	output [`WORD_SIZE-1 : 0] address_to_mem;
+	wire [`WORD_SIZE-1 : 0] address_to_mem;
+
+	input Mem_access_done;
+	output [3:0] idx_to_ED;
+	reg [3:0] idx_to_ED
+	output BR_to_cpu;
+	reg BR_to_cpu;
+
+	integer num_data;
+
+	initial begin
+		num_data <= 0;
+		dma_end_interrupt <= 0;
+	end
+	
+	always @(posedge BG_from_cpu) begin
+		num_data <= 3;
+		dma_end_interrupt <= 0;
+	end
 
 
-	output BR;
-	output [`DATA_SIZE-1 : 0] data;
+	always @(posedge clk)begin
+		if(BG_from_cpu && num_data == 3) begin
+			idx_to_ED = 0;
+		end
+		else if(BG_from_cpu && num_data > 0)begin
+			num_data = num_data - 1;
+			idx_to_ED = idx_to_ED + 4;
+		end
+
+		else if(BG_from_cpu &&  num_data == 0) begin
+			BR_to_cpu = 0;
+			dma_end_interrupt = 1;
+			#20;
+			dma_end_interrupt = 0;
+		end
+
+	end
+
+	always @(address_from_cpu) begin
+		BR_to_cpu = 1;
+	end
+
+	assign address_to_mem = BG_from_cpu ? address_from_cpu + idx_to_ED : `WORD_SIZE'bz;
+	
+endmodule
