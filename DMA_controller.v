@@ -60,7 +60,6 @@ module DMA_controller (clk, reset_n, BR_to_cpu, BG_from_cpu, dma_end_interrupt, 
 			$display("dma_end_interrupt raised");
 			#20;
 			dma_end_interrupt = 0;
-			$display("dma_end_interrupt raised");
 		end
 
 	end
