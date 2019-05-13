@@ -46,14 +46,18 @@ module cpu_TB();
 
 	wire [`WORD_SIZE-1:0] address2_from_cpu;
 
-	assign data2 = BG ? data2_from_ED : data2_from_cpu;
+	wire [`BLOCK_SIZE-1:0 ]data2_in_cpu;
+	assign data2 = BG ? data2_from_ED : {`WORD_SIZE*3'bz ,data2_from_cpu};
 
 	assign num_data = BG ? 3'b100 : 3'b001;
 
+	assign data2_in_cpu = readM2 ? data2 : `BLOCK_SIZE'bz;
+
+	wire [`WORD_SIZE-1: 0]address_to_mem;
 	assign address2 = BG ? address_to_mem : address2_from_cpu;
 	
 	// instantiate the unit under test
-	cpu UUT (clk, reset_n, readM1, address1, data1, readM2, writeM2_from_cpu, address2_from_cpu, data2_from_cpu, num_inst, output_port, is_halted, dma_begin_interrupt, dma_end_interrupt,address2_to_DMAC);
+	cpu UUT (clk, reset_n, BR, BG, readM1, address1, data1, readM2, writeM2_from_cpu, address2_from_cpu, data2_in_cpu, data2_from_cpu, num_inst, output_port, is_halted, dma_begin_interrupt, dma_end_interrupt,address2_to_DMAC);
 	Memory NUUT(!clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_data);
 	external_device ED(data2_from_ED, use_bus_from_DMA, idx, dma_begin_interrupt, Mem_access_done);
 	DMA_controller DMAC (clk, reset_n, BR, BG, dma_end_interrupt, idx, address2_to_DMAC, address_to_mem, Mem_access_done);

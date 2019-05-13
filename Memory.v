@@ -31,8 +31,9 @@ module Memory(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, 
 	reg [`WORD_SIZE-1:0] memory [0:`MEMORY_SIZE-1];
 	reg [`WORD_SIZE-1:0] outputData2;
 	
-	assign data2 = readM2?outputData2:`WORD_SIZE'bz;
-	
+	assign data2 = readM2 ? {`WORD_SIZE*3'bz, outputData2}:`BLOCK_SIZE'bz;
+	integer i;
+
 	always@(posedge clk)
 		if(!reset_n)
 			begin
@@ -245,9 +246,17 @@ module Memory(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, 
 					outputData2 = memory[address2];
 				end
 				if(writeM2) begin
-					for(i = 0 ; i < num_data ; i++) begin
-						memory[address2 + i] = data2[`WORD_SIZE*(i+1)-1 : `WORD_SIZE*i];
-					end
+					case(num_data) 
+						1 : begin
+							memory[address2] = data2[`WORD_SIZE-1 : 0];
+						end
+						4 : begin
+							memory[address2] = data2[`WORD_SIZE-1 : 0];
+							memory[address2+1] = data2[`WORD_SIZE*2 -1 : `WORD_SIZE];
+							memory[address2+2] = data2[`WORD_SIZE*3 -1 : `WORD_SIZE*2];
+							memory[address2+3] = data2[`WORD_SIZE*4 -1 : `WORD_SIZE*3];
+						end
+					endcase
 				end
 
 			end

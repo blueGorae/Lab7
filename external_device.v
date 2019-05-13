@@ -23,7 +23,7 @@ module external_device (data, use_bus_from_DMA, idx_from_DMA, dma_begin_interrup
 	/* Initialization */
 	//assign data = ...
 
-	assign data = use_bus ? {stored_data[idx_from_DMA + 3], stored_data[idx_from_DMA+2], stored_data[idx_from_DMA+1], stored_data[idx_from_DMA]} : `BLOCK_SIZE'bz;
+	assign data = use_bus_from_DMA ? {stored_data[idx_from_DMA + 3], stored_data[idx_from_DMA+2], stored_data[idx_from_DMA+1], stored_data[idx_from_DMA]} : `BLOCK_SIZE'bz;
 	
 	initial begin
 		dma_begin_interrupt <= 0;
@@ -44,12 +44,12 @@ module external_device (data, use_bus_from_DMA, idx_from_DMA, dma_begin_interrup
 
 	/* Interrupt CPU at some time */
 	initial begin
-		#100000;
+		#1000;
 		$display("LOG: Start DMA! #1");
 		dma_begin_interrupt = 1;
 		#20;
 		dma_begin_interrupt = 0;
-		#(185000 - 100000 - 20);
+		#(1850 - 1000 - 20);
 		$display("LOG: Start DMA! #2");
 		dma_begin_interrupt = 1;
 		#20;

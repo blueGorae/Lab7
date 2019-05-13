@@ -4,8 +4,9 @@
 `include "Icache.v"
 `include "Dcache.v"
 
+`define BLOCK_SIZE 64
 
-module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, data2, num_inst, output_port, is_halted, dma_begin_interrupt, dma_end_interrupt, address2_to_DMAC);
+module cpu(clk, reset_n, BR, BG, readM1, address1, data1, readM2, writeM2, address2, data2_in, data2_out, num_inst, output_port, is_halted, dma_begin_interrupt, dma_end_interrupt, address2_to_DMAC);
 
 	input dma_begin_interrupt;
 	input dma_end_interrupt;
@@ -30,8 +31,9 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 
 	input [`WORD_SIZE-1:0] data1; // instruction
 	wire [`WORD_SIZE-1:0] data1;
-	inout [`WORD_SIZE-1:0] data2; //memory data
-	wire [`WORD_SIZE-1:0] data2;
+	input [`BLOCK_SIZE-1:0] data2_in; //memory data
+	output [`BLOCK_SIZE-1:0] data2_out; //memory data
+	wire [`BLOCK_SIZE-1:0] data2_out;
 
 	output [`WORD_SIZE-1:0] num_inst;
 	wire [`WORD_SIZE-1:0] num_inst;
@@ -100,15 +102,18 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	always @(posedge clk) begin
 		if(BR_reg && D_mem_access_done) begin
 			BG = 1;
+			$display("BG => 1");
 		end
 	end
 
 	always @(posedge dma_begin_interrupt) begin
 		address2_to_DMAC = `WORD_SIZE'h17;
+		$display ("CPU accept dma_begin_interrupt");
 	end
 
 	always @(posedge dma_end_interrupt) begin
 		address2_to_DMAC = `WORD_SIZE'hz;
+		$display("BG => 0");
 		BG = 0;
 	end
 	
@@ -121,8 +126,8 @@ module cpu(clk, reset_n, readM1, address1, data1, readM2, writeM2, address2, dat
 	assign readM2 = readM2_to_mem;
 	assign writeM2 = writeM2_to_mem;
 	assign address2 = address2_to_mem;
-	assign data2_from_mem =  readM2_to_mem ? data2 : `WORD_SIZE'bz; // load
-	assign data2 = writeM2_to_mem ? data2_to_mem : `WORD_SIZE'bz; // store
+	assign data2_from_mem =  readM2_to_mem ? data2_in[`WORD_SIZE-1:0] : `WORD_SIZE'bz; // load
+	assign data2_out = writeM2_to_mem ? {`WORD_SIZE*3'bz,data2_to_mem} : `WORD_SIZE'bz; // store
 
 	Dcache dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath, data2_from_datapath, address2_from_datapath, readM2_to_mem, writeM2_to_mem, data2_to_mem, address2_to_mem, data2_from_mem, data2_to_datapath, D_mem_access_done, BG);
 

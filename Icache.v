@@ -107,7 +107,6 @@ module Icache(clk, reset_n, readM1_from_datapath, address1_from_datapath, readM1
             else
                 num_miss = num_miss + 1;
             
-            $display("Icache hit : %d, miss : %d", num_hit, num_miss);
             if(is_miss) begin
                 address1_to_mem_reg = (address1_from_datapath / 4) *4;
                 num_remain_data = 4;

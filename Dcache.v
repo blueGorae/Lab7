@@ -114,7 +114,6 @@ module Dcache(clk, reset_n, readM2_from_datapath, writeM2_from_datapath , data2_
                 else
                     num_miss = num_miss + 1;
                 
-                $display("Dcache hit : %d, miss : %d", num_hit, num_miss);
                 if(is_miss) begin
                     address2_to_mem_reg = (address2_from_datapath / 4) *4;
                     num_remain_data = 4;
